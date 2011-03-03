@@ -6,10 +6,10 @@
  * @package		backend
  * @subpackage	faq
  *
- * @author		Lester Lievens <lester@netlash.com>
+ * @author		Lowie Benoot <lowiebenoot@netlash.com>
  * @since		2.1
  */
-final class BackendFaqConfig extends BackendBaseConfig
+final class BackendFeedMuncherConfig extends BackendBaseConfig
 {
 	/**
 	 * The default action
