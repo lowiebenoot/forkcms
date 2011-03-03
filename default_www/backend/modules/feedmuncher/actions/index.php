@@ -51,7 +51,7 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 		$this->dgFeeds = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_FEEDS, array(BL::getWorkingLanguage(), 'N'));
 
 		// set headers
-		$this->dgFeeds->setHeaderLabels(array('author_user_id' => ucfirst(BL::lbl('Author'))));
+		$this->dgFeeds->setHeaderLabels(array('author_user_id' => ucfirst(BL::lbl('Author')), 'category_id' => ucfirst(BL::lbl('Category'))));
 
 		// set hidden columns
 		$this->dgFeeds->setColumnHidden('target');

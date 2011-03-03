@@ -139,6 +139,11 @@ class FeedmuncherInstall extends ModuleInstaller
 		// insert locale (nl)
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'err', 'RSSDescription', 'feedmuncher RSS beschrijving is nog niet geconfigureerd. <a href="%1$s">Configureer</a>');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'Add', 'artikel toevoegen');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'Feed', 'feed');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'Feeds', 'feeds');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'NotPublished', 'niet gepubliceerd');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'PostInBlog', 'publiceer de artikelen in de blog module');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'PostInFeedmuncher', 'publiceer de artikelen in de feedmuncher module');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'Added', 'Het artikel "%1$s" werd toegevoegd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'CommentOnWithURL', 'Reactie op: <a href="%1$s">%2$s</a>');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'ConfirmDelete', 'Ben je zeker dat je het artikel "%1$s" wil verwijderen?');
@@ -155,34 +160,23 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'HelpSummary', 'Maak voor lange artikels een inleiding of samenvatting. Die kan getoond worden op de homepage of het artikeloverzicht.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'HelpSpamFilter', 'Schakel de ingebouwde spam-filter (Akismet) in om spam-berichten in reacties te vermijden.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'MakeDefaultCategory', 'Maak van deze categorie de standaardcategorie (de huidige standaardcategorie is %1$s).');
-		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'NoItems', 'Er zijn nog geen artikels. <a href="%1$s">Schrijf het eerste artikel</a>.');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'NoItems', 'Er zijn nog geen artikels. <a href="%1$s">Voeg een feed toe.</a>.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'NotifyByEmailOnNewComment', 'Verwittig via email als er een nieuwe reactie is.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'NotifyByEmailOnNewCommentToModerate', 'Verwittig via email als er een nieuwe reactie te modereren is.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'NumItemsInRecentArticlesFull', 'Aantal items in recente artikels (volledig) widget');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'NumItemsInRecentArticlesList', 'Aantal items in recente artikels (lijst) widget');
-		$this->insertLocale('nl', 'frontend', 'core', 'act', 'ArticleCommentsRss', 'reacties-op-rss');
-		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'ArticlesInCategory', 'artikels in categorie');
-		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'InTheCategory', 'in de categorie');
-		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'SubscribeToTheRSSFeed', 'schrijf je in op de RSS-feed');
-		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'FeedmuncherArchive', 'feedmuncher archief');
-		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'NextArticle', 'volgend bericht');
-		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'PreviousArticle', 'vorig bericht');
-		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'RecentArticles', 'recente artikels');
-		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'Wrote', 'schreef');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherAllComments', 'Alle reacties op je feedmuncher.');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherNoComments', 'Reageer als eerste');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherNumberOfComments', 'Al %1$s reacties');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherOneComment', 'Al 1 reactie');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherCommentIsAdded', 'Je reactie werd toegevoegd.');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherCommentInModeration', 'Je reactie wacht op goedkeuring.');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherCommentIsSpam', 'Je reactie werd gemarkeerd als spam.');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherEmailNotificationsNewComment', '%1$s reageerde op <a href="%2$s">%3$s</a>.');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherEmailNotificationsNewCommentToModerate', '%1$s reageerde op <a href="%2$s">%3$s</a>. <a href="%4$s">Modereer</a> deze reactie om ze zichtbaar te maken op de website.');
-		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherNoItems', 'Er zijn nog geen feedmuncherposts.');
+		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'AutoPublish', 'publiceer artikelen automatisch');
+		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Feedmuncher', 'feedmuncher');
+		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'FeedmuncherFeeds', 'feeds');
 
 		// insert locale (en)
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'err', 'RSSDescription', 'Feedmuncher RSS description is not yet provided. <a href="%1$s">Configure</a>');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'Add', 'add article');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'Feed', 'feed');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'Feeds', 'feeds');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'NotPublished', 'not published');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'PostInBlog', 'publish the articles in the blog module');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'PostInFeedmuncher', 'publish the articles in the feedmuncher module');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'Added', 'The article "%1$s" was added.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'CommentOnWithURL', 'Comment on: <a href="%1$s">%2$s</a>');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'ConfirmDelete', 'Are your sure you want to delete the article "%1$s"?');
@@ -198,31 +192,15 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'HelpPingServices', 'Let various feedmuncherservices know when you\'ve posted a new article.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'HelpSummary', 'Write an introduction or summary for long articles. It will be shown on the homepage or the article overview.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'HelpSpamFilter', 'Enable the built-in spamfilter (Akismet) to help avoid spam comments.');
-		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'NoItems', 'There are no articles yet. <a href="%1$s">Write the first article</a>.');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'NoItems', 'There are no articles yet. <a href="%1$s">Add a feed</a>.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'NotifyByEmailOnNewComment', 'Notify by email when there is a new comment.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'NotifyByEmailOnNewCommentToModerate', 'Notify by email when there is a new comment to moderate.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'NumItemsInRecentArticlesFull', 'Number of articles in the recent articles (full) widget');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'NumItemsInRecentArticlesList', 'Number of articles in the recent articles (list) widget');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'MakeDefaultCategory', 'Make default category (current default category is: %1$s).');
-		$this->insertLocale('en', 'frontend', 'core', 'act', 'ArticleCommentsRss', 'comments-on-rss');
-		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'ArticlesInCategory', 'articles in category');
-		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'InTheCategory', 'in category');
-		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'SubscribeToTheRSSFeed', 'subscribe to the RSS feed');
-		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'FeedmuncherArchive', 'feedmuncher archive');
-		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'NextArticle', 'next article');
-		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'PreviousArticle', 'previous article');
-		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'RecentArticles', 'recent articles');
-		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'Wrote', 'wrote');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherAllComments', 'All comments on your feedmuncher.');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherNoComments', 'Be the first to comment');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherNumberOfComments', '%1$s comments');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherOneComment', '1 comment already');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherCommentIsAdded', 'Your comment was added.');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherCommentInModeration', 'Your comment is awaiting moderation.');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherCommentIsSpam', 'Your comment was marked as spam.');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherEmailNotificationsNewComment', '%1$s commented on <a href="%2$s">%3$s</a>.');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherEmailNotificationsNewCommentToModerate', '%1$s commented on <a href="%2$s">%3$s</a>. <a href="%4$s">Moderate</a> the comment to publish it.');
-		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherNoItems', 'There are no articles yet.');
+		$this->insertLocale('en', 'backend', 'core', 'lbl', 'AutoPublish', 'publish articles automatic');
+		$this->insertLocale('en', 'backend', 'core', 'lbl', 'Feedmuncher', 'feedmuncher');
+		$this->insertLocale('en', 'backend', 'core', 'lbl', 'FeedmuncherFeeds', 'feeds');
 	}
 
 

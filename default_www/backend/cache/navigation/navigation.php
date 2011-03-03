@@ -28,7 +28,7 @@ $navigation[2]['children'][6]['children'][0] = array('url' => 'faq/index', 'labe
 $navigation[2]['children'][6]['children'][1] = array('url' => 'faq/categories', 'label' => 'Categories', 'selected_for' => array('faq/add_category', 'faq/edit_category'));
 
 // feedmuncher menu
-$navigation[2]['children'][7] = array('url' => 'feedmuncher/index', 'label' => 'feedmuncher');
+$navigation[2]['children'][7] = array('url' => 'feedmuncher/index', 'label' => 'Feedmuncher');
 $navigation[2]['children'][7]['children'][0] = array('url' => 'feedmuncher/index', 'label' => 'Feeds', 'selected_for' => array('feedmuncher/add', 'feedmuncher/edit'));
 $navigation[2]['children'][7]['children'][1] = array('url' => 'feedmuncher/articles', 'label' => 'Articles', 'selected_for' => array('feedmuncher/edit_article'));
 $navigation[2]['children'][7]['children'][2] = array('url' => 'feedmuncher/categories', 'label' => 'Categories', 'selected_for' => array('feedmuncher/add_category', 'feedmuncher/edit_category'));

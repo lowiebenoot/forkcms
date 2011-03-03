@@ -2,7 +2,7 @@
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_start_module.tpl}
 
 <div class="pageTitle">
-	<h2>{$lblFeedmuncher|ucfirst}: {$lblFeeds}</h2>
+	<h2>{$lblFeedmuncher|ucfirst}: {$lblFeedmuncherFeeds}</h2>
 	<div class="buttonHolderRight">
 		<a href="{$var|geturl:'add'}" class="button icon iconAdd" title="{$lblAddFeed|ucfirst}">
 			<span>{$lblAddFeed|ucfirst}</span>
@@ -12,9 +12,6 @@
 
 {option:dgFeeds}
 	<div class="datagridHolder">
-		<div class="tableHeading">
-			<h3>{$lblFeeds|ucfirst}</h3>
-		</div>
 		{$dgFeeds}
 	</div>
 {/option:dgFeeds}

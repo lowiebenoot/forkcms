@@ -226,7 +226,7 @@ class BackendFeedmuncherModel
 	/**
 	 * Checks if a category exists
 	 *
-	 * @return	int
+	 * @return	bool
 	 * @param	int $id		The id of the category to check for existence.
 	 */
 	public static function existsCategory($id)
@@ -241,7 +241,7 @@ class BackendFeedmuncherModel
 	/**
 	 * Checks if a comment exists
 	 *
-	 * @return	int
+	 * @return	bool
 	 * @param	int $id							The id of the comment to check for existence.
 	 */
 	public static function existsComment($id)
@@ -250,6 +250,21 @@ class BackendFeedmuncherModel
 														FROM feedmuncher_comments AS i
 														WHERE i.id = ? AND i.language = ?',
 														array((int) $id, BL::getWorkingLanguage()));
+	}
+
+
+	/**
+	 * Checks if a the feed already has articles posted
+	 *
+	 * @return	bool
+	 * @param	int $id		The id of the feed.
+	 */
+	public static function feedHasArticles($id)
+	{
+		return (bool) BackendModel::getDB()->getVar('SELECT COUNT(id)
+														FROM feedmuncher_posts AS i
+														WHERE i.feed_id = ?',
+														(int) $id);
 	}
 
 

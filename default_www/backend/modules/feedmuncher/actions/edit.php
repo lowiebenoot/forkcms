@@ -91,12 +91,14 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 		// get default category id
 		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage());
 
+		// did the feed already post something?
+		$feedHasArticles = BackendFeedmuncherModel::feedHasArticles($this->id);
+
 		// create elements
 		$this->frm->addText('name', $this->record['name'], 255);
 		$this->frm->addText('url', $this->record['url']);
 		$this->frm->addText('website', $this->record['source'], 255);
-		$this->frm->addRadiobutton('target', array(array('label' => BL::getLabel('PostInFeedmuncher'), 'value' => 'feedmuncher'), array('label' => BL::getLabel('PostInBlog'), 'value' => 'blog')), $this->record['target']);
-
+		$this->frm->addRadiobutton('target', array(array('label' => BL::getLabel('PostInFeedmuncher'), 'value' => 'feedmuncher', 'attributes' => $feedHasArticles ? array('disabled' => '') : null), array('label' => BL::getLabel('PostInBlog'), 'value' => 'blog', 'attributes' => $feedHasArticles ? array('disabled' => '') : null)), $this->record['target']);
 		$this->frm->addDropdown('category', BackendFeedmuncherModel::getCategories(), $feedmuncherCategory);
 		$this->frm->addDropdown('category_blog', BackendFeedmuncherModel::getCategoriesFromBlog(), $blogCategory);
 		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), $this->record['author_user_id']);
@@ -155,9 +157,13 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 				$item['source'] = $this->frm->getField('website')->getValue();
 				$item['author_user_id'] = (int) $this->frm->getField('author')->getValue();
 				$item['target'] = $this->frm->getField('target')->getValue();
-				$item['category_id'] = $item['target'] == 'feedmuncher' ? (int) $this->frm->getField('category')->getValue() : (int) $this->frm->getField('category_blog')->getValue();
 				$item['auto_publish'] = $this->frm->getField('auto_publish')->isChecked() == true ? 'Y' : 'N';
 				$item['language'] = BL::getWorkingLanguage();
+				if(!BackendFeedmuncherModel::feedHasArticles($this->id))
+				{
+					$item['target'] = $this->frm->getField('target')->getValue();
+					$item['category_id'] = $item['target'] == 'feedmuncher' ? (int) $this->frm->getField('category')->getValue() : (int) $this->frm->getField('category_blog')->getValue();
+				}
 
 				// insert in DB
 				BackendFeedmuncherModel::update($this->id, $item);
