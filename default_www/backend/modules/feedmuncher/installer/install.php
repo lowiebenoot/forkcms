@@ -59,10 +59,13 @@ class FeedmuncherInstall extends ModuleInstaller
 		// action rights
 		$this->setActionRights(1, 'feedmuncher', 'add_category');
 		$this->setActionRights(1, 'feedmuncher', 'add');
+		$this->setActionRights(1, 'feedmuncher', 'articles');
 		$this->setActionRights(1, 'feedmuncher', 'categories');
 		$this->setActionRights(1, 'feedmuncher', 'comments');
+		$this->setActionRights(1, 'feedmuncher', 'delete_article');
 		$this->setActionRights(1, 'feedmuncher', 'delete_category');
 		$this->setActionRights(1, 'feedmuncher', 'delete');
+		$this->setActionRights(1, 'feedmuncher', 'edit_article');
 		$this->setActionRights(1, 'feedmuncher', 'edit_category');
 		$this->setActionRights(1, 'feedmuncher', 'edit_comment');
 		$this->setActionRights(1, 'feedmuncher', 'edit');
