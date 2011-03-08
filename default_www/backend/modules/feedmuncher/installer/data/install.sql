@@ -40,6 +40,7 @@ CREATE  TABLE IF NOT EXISTS `feedmuncher_posts` (
   `deleted` ENUM('Y','N') NOT NULL DEFAULT 'N' ,
   `status` enum('active','archived','draft') NOT NULL DEFAULT 'active',
   `target` ENUM('feedmuncher','blog') NOT NULL DEFAULT 'feedmuncher' ,
+  `blog_post_id` INT(11) DEFAULT NULL ,
   PRIMARY KEY (`revision_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 

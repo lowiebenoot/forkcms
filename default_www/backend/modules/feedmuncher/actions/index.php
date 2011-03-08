@@ -101,10 +101,18 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 	 */
 	public static function getCategory($target, $category_id)
 	{
+		// get category name
 		$category = ($target == 'feedmuncher') ? BackendFeedmuncherModel::getCategory((int) $category_id) : BackendFeedmuncherModel::getCategoryFromBlog((int) $category_id);
 
+		// is the blog module installed?
+		if(BackendFeedmuncherModel::blogIsInstalled())
+		{
+			// return a string: target - category url
+			return $target . ' - <a href="' . BackendModel::createURLForAction('edit_category', $target) . '&amp;id=' . $category_id . '">' . $category['name'] . '</a>';
+		}
 
-		return $target . ' - <a href="' . BackendModel::createURLForAction('edit_category', $target) . '&amp;id=' . $category_id . '">' . $category['name'] . '</a>';
+		// blog module not installed
+		else return '<a href="' . BackendModel::createURLForAction('edit_category', $target) . '&amp;id=' . $category_id . '">' . $category['name'] . '</a>';
 	}
 }
 

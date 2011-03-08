@@ -30,13 +30,16 @@ jsBackend.feedmuncher.add =
 	// init, something like a constructor
 	init: function()
 	{
-		// hide or show the dropdownmenus
-		jsBackend.feedmuncher.add.changeDropdownMenu();
-		
-		$('input[name=target]').click(function()
+		if($('input[name=target]').length != 0)
 		{
+			// hide or show the dropdownmenus
 			jsBackend.feedmuncher.add.changeDropdownMenu();
-		});
+			
+			$('input[name=target]').click(function()
+			{
+				jsBackend.feedmuncher.add.changeDropdownMenu();
+			});
+		}
 	},
 	
 	changeDropdownMenu: function()
@@ -98,6 +101,43 @@ jsBackend.feedmuncher.controls =
 		{
 			$('form').append('<input type="hidden" name="status" value="draft" />');
 			$('form').submit();
+		});
+		
+		$('.publishButton').click(function(evt)
+		{
+			// get the article id
+			var articleId = $(this).attr('id').substr(8);
+			
+			// get the table row from the datagrid (from the pushed button)
+			var tableRow = $(this).parent().parent();
+			tableRow.hide('slow', function() { tableRow.remove(); });
+
+			// make ajax call
+			$.ajax(
+			{
+				cache: false, type: 'POST', dataType: 'json', 
+				url: '/backend/ajax.php?module=' + jsBackend.current.module + '&action=publish_article&language=' + jsBackend.current.language,
+				data: 'articleId=' + articleId,
+				success: function(data, textStatus)
+				{ 
+					// not a succes so revert the changes
+					if(data.code == 200)
+					{ 
+						// show message
+						jsBackend.messages.add('success', data.message);
+						
+						// hide row and remove
+						tableRow.hide('slow', function() { tableRow.remove(); });
+					}
+					
+					else
+					{
+						jsBackend.messages.add('error', data.message);
+					}
+				}
+			});
+			
+			return false;
 		});
 	},
 

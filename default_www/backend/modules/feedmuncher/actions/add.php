@@ -21,6 +21,9 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 		// call parent, this will probably add some general CSS/JS or other required files
 		parent::execute();
 
+		// is the blog installed?
+		$this->blogIsInstalled = BackendFeedmuncherModel::blogIsInstalled();
+
 		// load the form
 		$this->loadForm();
 
@@ -53,13 +56,18 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 		$this->frm->addText('name', null, 255);
 		$this->frm->addText('url');
 		$this->frm->addText('website', null, 255);
-		$this->frm->addRadiobutton('target', array(array('label' => BL::getLabel('PostInFeedmuncher'), 'value' => 'feedmuncher'), array('label' => BL::getLabel('PostInBlog'), 'value' => 'blog')), 'feedmuncher');
 		$this->frm->addDropdown('category', BackendFeedmuncherModel::getCategories(), $defaultCategoryId);
-		$this->frm->addDropdown('category_blog', BackendFeedmuncherModel::getCategoriesFromBlog(), $defaultCategoryIdFromBlog);
+		if($this->blogIsInstalled)
+		{
+			$this->frm->addRadiobutton('target', array(array('label' => BL::getLabel('PostInFeedmuncher'), 'value' => 'feedmuncher'), array('label' => BL::getLabel('PostInBlog'), 'value' => 'blog')), 'feedmuncher');
+			$this->frm->addDropdown('category_blog', BackendFeedmuncherModel::getCategoriesFromBlog(), $defaultCategoryIdFromBlog);
+		}
 		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), BackendAuthentication::getUser()->getUserId());
 		$this->frm->addCheckbox('auto_publish', BackendModel::getModuleSetting('feedmuncher', 'auto_publish'));
-	}
 
+		// assign whether blog is installed or not
+		$this->tpl->assign('blogIsInstalled', $this->blogIsInstalled);
+	}
 
 	/**
 	 * Validate the form
@@ -96,7 +104,7 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 				$item['url'] = $this->frm->getField('url')->getValue();
 				$item['source'] = $this->frm->getField('website')->getValue();
 				$item['author_user_id'] = (int) $this->frm->getField('author')->getValue();
-				$item['target'] = $this->frm->getField('target')->getValue();
+				$item['target'] = ($this->blogIsInstalled) ? $this->frm->getField('target')->getValue() : 'feedmuncher';
 				$item['category_id'] = $item['target'] == 'feedmuncher' ? (int) $this->frm->getField('category')->getValue() : (int) $this->frm->getField('category_blog')->getValue();
 				$item['auto_publish'] = $this->frm->getField('auto_publish')->isChecked() == true ? 'Y' : 'N';
 				$item['language'] = BL::getWorkingLanguage();

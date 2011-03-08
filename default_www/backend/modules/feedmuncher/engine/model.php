@@ -11,10 +11,14 @@
  */
 class BackendFeedmuncherModel
 {
-	const QRY_DATAGRID_BROWSE_ARTICLES = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id, i.num_comments AS comments, i.hidden
+	const QRY_DATAGRID_BROWSE_ARTICLES = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id, i.num_comments AS comments, i.hidden, blog_post_id
 									FROM feedmuncher_posts AS i
 									INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-									WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ?';
+									WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ? AND hidden = ?';
+	const QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id, i.hidden
+									FROM feedmuncher_posts AS i
+									INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
+									WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND hidden = ?';
 	const QRY_DATAGRID_BROWSE_CATEGORIES = 'SELECT i.id, i.name
 											FROM feedmuncher_categories AS i
 											WHERE i.language = ?';
@@ -53,6 +57,20 @@ class BackendFeedmuncherModel
 													FROM feedmuncher_posts AS i
 													WHERE i.status = ? AND i.id = ? AND i.language = ? AND i.deleted = ? AND i.target = ?
 													ORDER BY i.date DESC';
+
+	/**
+	 * checks if the blog module is installed
+	 *
+	 * @return bool
+ 	 */
+	public static function blogIsInstalled()
+	{
+		// exists?
+		return (bool) ((int) BackendModel::getDB()->getVar('SELECT COUNT(i.name)
+															FROM modules AS i
+															WHERE i.name = ?;',
+															'blog') > 0);
+	}
 
 
 	/**
@@ -741,6 +759,18 @@ class BackendFeedmuncherModel
 
 
 	/**
+	 * sets the article published
+	 *
+	 * @return	int					number of affected rows
+	 * @param	int $id				the id of of the article to publish
+	 */
+	public static function publishArticle($id)
+	{
+		$numAffectedRows =  BackendModel::getDB(true)->update('feedmuncher_posts', array('hidden' => 'N'), 'id = ?', (int) $id);
+	}
+
+
+	/**
 	 * Recalculate the commentcount
 	 *
 	 * @return	bool
@@ -779,6 +809,19 @@ class BackendFeedmuncherModel
 		}
 
 		return true;
+	}
+
+
+	/**
+	 * sets the blog post id for a feedmuncher posts (that is posted in the blog)
+	 *
+	 * @return	int					number of affected rows
+	 * @param	int $id				the id of the feedmuncher posts to update
+	 * @param	int $blog_posts_id	the blog post id
+	 */
+	public static function setBlogPostsId($id, $blogPostId)
+	{
+		return BackendModel::getDB(true)->update('feedmuncher_posts', array('blog_post_id' => $blogPostId), 'id = ?', (int) $id);
 	}
 
 

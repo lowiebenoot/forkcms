@@ -108,7 +108,7 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 						BackendFeedmuncherModel::insertArticle($item);
 
 						// posting in blog?
-						if($feed['target'] == 'blog')
+						if($feed['target'] == 'blog' && $item['hidden'] == 'N')
 						{
 							// require the blog engine
 							require_once BACKEND_MODULES_PATH . '/blog/engine/model.php';
@@ -120,8 +120,11 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 							unset($item['target']);
 							unset($item['feed_id']);
 
-							// insert in db
+							// insert in blog posts
 							BackendBlogModel::insert($item);
+
+							// save the blog post id in the feedmuncher post
+							BackendFeedmuncherModel::setBlogPostsId($item['id'], BackendBlogModel::getMaximumId());
 						}
 					}
 				}

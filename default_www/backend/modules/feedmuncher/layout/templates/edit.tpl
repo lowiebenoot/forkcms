@@ -19,16 +19,18 @@
 				<label for="website">{$lblWebsite|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtWebsite} {$txtWebsiteError}
 			</p>
-			<ul class="inputList">
-				{iteration:target}
-				<li>
-					{$target.rbtTarget} <label for="{$target.id}">{$target.label|ucfirst}</label>
-				</li>
-				{/iteration:target}
-			</ul>
+			{option:blogIsInstalled}
+				<ul class="inputList">
+					{iteration:target}
+					<li>
+						{$target.rbtTarget} <label for="{$target.id}">{$target.label|ucfirst}</label>
+					</li>
+					{/iteration:target}
+				</ul>
+			{/option:blogIsInstalled}
 			<p>
 				<label for="category">{$lblCategory|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$ddmCategory} {$ddmCategoryBlog} {$ddmCategoryError}
+				{$ddmCategory} {option:blogIsInstalled}{$ddmCategoryBlog}{/option:blogIsInstalled} {$ddmCategoryError}
 			</p>
 			<p>
 				<label for="author">{$lblAuthor|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>

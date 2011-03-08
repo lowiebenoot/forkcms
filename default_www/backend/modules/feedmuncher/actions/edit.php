@@ -27,6 +27,9 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 			// call parent, this will probably add some general CSS/JS or other required files
 			parent::execute();
 
+			// is the blog installed?
+			$this->blogIsInstalled = BackendFeedmuncherModel::blogIsInstalled();
+
 			// get the data of the feed
 			$this->getData();
 
@@ -98,9 +101,12 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 		$this->frm->addText('name', $this->record['name'], 255);
 		$this->frm->addText('url', $this->record['url']);
 		$this->frm->addText('website', $this->record['source'], 255);
-		$this->frm->addRadiobutton('target', array(array('label' => BL::getLabel('PostInFeedmuncher'), 'value' => 'feedmuncher', 'attributes' => $feedHasArticles ? array('disabled' => '') : null), array('label' => BL::getLabel('PostInBlog'), 'value' => 'blog', 'attributes' => $feedHasArticles ? array('disabled' => '') : null)), $this->record['target']);
+		if($this->blogIsInstalled)
+		{
+			$this->frm->addRadiobutton('target', array(array('label' => BL::getLabel('PostInFeedmuncher'), 'value' => 'feedmuncher', 'attributes' => $feedHasArticles ? array('disabled' => '') : null), array('label' => BL::getLabel('PostInBlog'), 'value' => 'blog', 'attributes' => $feedHasArticles ? array('disabled' => '') : null)), $this->record['target']);
+			$this->frm->addDropdown('category_blog', BackendFeedmuncherModel::getCategoriesFromBlog(), $blogCategory);
+		}
 		$this->frm->addDropdown('category', BackendFeedmuncherModel::getCategories(), $feedmuncherCategory);
-		$this->frm->addDropdown('category_blog', BackendFeedmuncherModel::getCategoriesFromBlog(), $blogCategory);
 		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), $this->record['author_user_id']);
 		$this->frm->addCheckbox('auto_publish', ($this->record['auto_publish'] == 'Y' ? true : false));
 	}
@@ -115,6 +121,9 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 	{
 		// call parent
 		parent::parse();
+
+		// assign whether blog is installed or not
+		$this->tpl->assign('blogIsInstalled', $this->blogIsInstalled);
 
 		// pare the record
 		$this->tpl->assign('item', $this->record);
@@ -156,12 +165,11 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 				$item['url'] = $this->frm->getField('url')->getValue();
 				$item['source'] = $this->frm->getField('website')->getValue();
 				$item['author_user_id'] = (int) $this->frm->getField('author')->getValue();
-				$item['target'] = $this->frm->getField('target')->getValue();
 				$item['auto_publish'] = $this->frm->getField('auto_publish')->isChecked() == true ? 'Y' : 'N';
 				$item['language'] = BL::getWorkingLanguage();
 				if(!BackendFeedmuncherModel::feedHasArticles($this->id))
 				{
-					$item['target'] = $this->frm->getField('target')->getValue();
+					$item['target'] = ($this->blogIsInstalled) ? $this->frm->getField('target')->getValue() : 'feedmuncher';
 					$item['category_id'] = $item['target'] == 'feedmuncher' ? (int) $this->frm->getField('category')->getValue() : (int) $this->frm->getField('category_blog')->getValue();
 				}
 

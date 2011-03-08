@@ -20,7 +20,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	 *
 	 * @var	SpoonDataGrid
 	 */
-	private $dgDrafts, $dgPosts, $dgRecent;
+	private $dgFeedmuncherDrafts, $dgFeedmuncherPosts, $dgBlogDrafts, $dgBlogPosts, $dgNotPublishedBlog, $dgNotPublished;
 
 
 	/**
@@ -32,6 +32,9 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	{
 		// call parent, this will probably add some general CSS/JS or other required files
 		parent::execute();
+
+		// is the blog installed?
+		$this->blogIsInstalled = BackendFeedmuncherModel::blogIsInstalled();
 
 		// load datagrid
 		$this->loadDataGrids();
@@ -45,15 +48,54 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 
 
 	/**
-	 * this function returns a string that includes an image tag. The image shows wether the post is published or not
+	 * creates a url for an item for the publish column
 	 *
-	 * @return	string
-	 * @param	int $published
+	 * @return	void
 	 */
-	public static function getPublishedStateForDatagrid($date, $notPublished)
+	public static function getPublishURL($id)
 	{
-		if($notPublished == 'N') return BackendDataGridFunctions::getLongDate($date);
-		else return BL::getLabel('NotPublished');
+		// redefine id
+		$id = (int) $id;
+
+		// create link and return
+		return '<a href="#" class="button publishButton" id="article-' . $id . '">' . BL::lbl('Publish') . '</a>';
+
+	}
+
+
+	/**
+	 * Loads the datagrid with all the blog posts
+	 *
+	 * @return	void
+	 */
+	private function loadDatagridAllBlogPosts()
+	{
+		// create datagrid
+		$this->dgBlogPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'N', 'blog', 'N'));
+
+		// set headers
+		$this->dgBlogPosts->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author')), 'publish_on' => ucfirst(BL::lbl('PublishedOn'))));
+
+		// hide columns
+		$this->dgBlogPosts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'blog_post_id'));
+
+		// sorting columns
+		$this->dgBlogPosts->setSortingColumns(array('publish_on', 'title', 'user_id', 'comments'), 'created_on');
+		$this->dgBlogPosts->setSortParameter('desc');
+
+		// set colum URLs
+		$this->dgBlogPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]');
+		$this->dgBlogPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
+
+		// set column functions
+		$this->dgBlogPosts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
+		$this->dgBlogPosts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
+
+		// add edit column
+		$this->dgBlogPosts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit', 'blog') .'&amp;id=[blog_post_id]', BL::lbl('Edit'));
+
+		// our JS needs to know an id, so we can highlight it
+		$this->dgBlogPosts->setRowAttributes(array('id' => 'row-[revision_id]'));
 	}
 
 
@@ -62,34 +104,34 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	 *
 	 * @return	void
 	 */
-	private function loadDatagridAllPosts()
+	private function loadDatagridAllFeedmuncherPosts()
 	{
 		// create datagrid
-		$this->dgPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'N', 'feedmuncher'));
+		$this->dgFeedmuncherPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'N', 'feedmuncher', 'N'));
 
 		// set headers
-		$this->dgPosts->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author')), 'publish_on' => ucfirst(BL::lbl('PublishedOn'))));
+		$this->dgFeedmuncherPosts->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author')), 'publish_on' => ucfirst(BL::lbl('PublishedOn'))));
 
 		// hide columns
-		$this->dgPosts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on'));
+		$this->dgFeedmuncherPosts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'blog_post_id'));
 
 		// sorting columns
-		$this->dgPosts->setSortingColumns(array('publish_on', 'title', 'user_id', 'comments'), 'created_on');
-		$this->dgPosts->setSortParameter('desc');
+		$this->dgFeedmuncherPosts->setSortingColumns(array('publish_on', 'title', 'user_id', 'comments'), 'created_on');
+		$this->dgFeedmuncherPosts->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]');
-		$this->dgPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
+		$this->dgFeedmuncherPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]');
+		$this->dgFeedmuncherPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
 
 		// set column functions
-		$this->dgPosts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
-		$this->dgPosts->setColumnFunction(array('BackendFeedmuncherArticles', 'getPublishedStateForDatagrid'), array('[publish_on]', '[hidden]'), 'publish_on', true);
+		$this->dgFeedmuncherPosts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
+		$this->dgFeedmuncherPosts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column
-		$this->dgPosts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]', BL::lbl('Edit'));
+		$this->dgFeedmuncherPosts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]', BL::lbl('Edit'));
 
 		// our JS needs to know an id, so we can highlight it
-		$this->dgPosts->setRowAttributes(array('id' => 'row-[revision_id]'));
+		$this->dgFeedmuncherPosts->setRowAttributes(array('id' => 'row-[revision_id]'));
 	}
 
 
@@ -98,67 +140,73 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	 *
 	 * @return	void
 	 */
-	private function loadDatagridDrafts()
+	private function loadDatagridFeedmuncherDrafts()
 	{
 		// create datagrid
-		$this->dgDrafts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_DRAFTS, array('draft', BackendAuthentication::getUser()->getUserId(), BL::getWorkingLanguage(), 'N', 'feedmuncher'));
+		$this->dgFeedmuncherDrafts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_DRAFTS, array('draft', BackendAuthentication::getUser()->getUserId(), BL::getWorkingLanguage(), 'N', 'feedmuncher'));
 
 		// set headers
-		$this->dgDrafts->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author'))));
+		$this->dgFeedmuncherDrafts->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author'))));
 
 		// hide columns
-		$this->dgDrafts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on'));
+		$this->dgFeedmuncherDrafts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'blog_post_id'));
 
 		// sorting columns
-		$this->dgDrafts->setSortingColumns(array('edited_on', 'title', 'user_id', 'comments'), 'created_on');
-		$this->dgDrafts->setSortParameter('desc');
+		$this->dgFeedmuncherDrafts->setSortingColumns(array('edited_on', 'title', 'user_id', 'comments'), 'created_on');
+		$this->dgFeedmuncherDrafts->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgDrafts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]');
+		$this->dgFeedmuncherDrafts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]');
 
 		// set column functions
-		$this->dgDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
-		$this->dgDrafts->setColumnFunction(array('BackendFeedmuncherArticles', 'getPublishedStateForDatagrid'), array('[publish_on]', '[hidden]'), 'publish_on', true);
+		$this->dgFeedmuncherDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
+		$this->dgFeedmuncherDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column
-		$this->dgDrafts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]', BL::lbl('Edit'));
+		$this->dgFeedmuncherDrafts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]', BL::lbl('Edit'));
 
 		// our JS needs to know an id, so we can highlight it
-		$this->dgDrafts->setRowAttributes(array('id' => 'row-[revision_id]'));
+		$this->dgFeedmuncherDrafts->setRowAttributes(array('id' => 'row-[revision_id]'));
 	}
 
 
 	/**
-	 * Loads the datagrid with the most recent posts.
+	 * Loads the datagrid with not published articles for the blog
 	 *
 	 * @return	void
 	 */
-	private function loadDatagridRecentPosts()
+	private function loadDatagridNotPublished()
 	{
 		// create datagrid
-		$this->dgRecent = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_RECENT, array('active', BL::getWorkingLanguage(), 'N', 'feedmuncher', 4));
+		$this->dgNotPublished = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED, array('active', BL::getWorkingLanguage(), 'N', 'Y'));
 
 		// set headers
-		$this->dgRecent->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author'))));
+		$this->dgNotPublished->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author')), 'publish_on' => ucfirst(BL::lbl('PublishedOn'))));
 
 		// hide columns
-		$this->dgRecent->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on'));
+		$this->dgNotPublished->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'publish_on'));
 
-		// set paging
-		$this->dgRecent->setPaging(false);
+		// sorting columns
+		$this->dgNotPublished->setSortingColumns(array('publish_on', 'title', 'user_id'), 'created_on');
+		$this->dgNotPublished->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgRecent->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]');
+		$this->dgNotPublished->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]');
+		$this->dgNotPublished->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
 
 		// set column functions
-		$this->dgRecent->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
-		$this->dgRecent->setColumnFunction(array('BackendFeedmuncherArticles', 'getPublishedStateForDatagrid'), array('[publish_on]', '[hidden]'), 'publish_on', true);
+		$this->dgNotPublished->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
+		$this->dgNotPublished->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column
-		$this->dgRecent->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]', BL::lbl('Edit'));
+		$this->dgNotPublished->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]', BL::lbl('Edit'));
+
+		// add publish column
+		$this->dgNotPublished->addColumn('publish');
+		$this->dgNotPublished->setColumnFunction(array('BackendFeedmuncherArticles', 'getPublishURL'), array('[id]'), 'publish', true);
 
 		// our JS needs to know an id, so we can highlight it
-		$this->dgRecent->setRowAttributes(array('id' => 'row-[revision_id]'));
+		$this->dgNotPublished->setRowAttributes(array('id' => 'row-[revision_id]'));
 	}
 
 
@@ -169,14 +217,17 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	 */
 	private function loadDataGrids()
 	{
-		// all posts
-		$this->loadDatagridAllPosts();
+		// all feedmuncher posts
+		$this->loadDatagridAllFeedmuncherPosts();
 
-		// drafts
-		$this->loadDatagridDrafts();
+		// feedmuncher drafts
+		$this->loadDatagridFeedmuncherDrafts();
 
-		// the most recent posts, only shown when we have more than 1 page in total
-		if($this->dgPosts->getNumResults() > $this->dgPosts->getPagingLimit()) $this->loadDatagridRecentPosts();
+		// all blog posts
+		if($this->blogIsInstalled) $this->loadDatagridAllBlogPosts();
+
+		// load not published articles
+		$this->loadDatagridNotPublished();
 	}
 
 
@@ -187,14 +238,20 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	 */
 	private function parse()
 	{
-		// parse the datagrid for the drafts
-		$this->tpl->assign('dgDrafts', ($this->dgDrafts->getNumResults() != 0) ? $this->dgDrafts->getContent() : false);
+		// parse the datagrid for the feedmuncher drafts
+		$this->tpl->assign('dgFeedmuncherDrafts', ($this->dgFeedmuncherDrafts->getNumResults() != 0) ? $this->dgFeedmuncherDrafts->getContent() : false);
 
-		// parse the datagrid for all posts
-		$this->tpl->assign('dgPosts', ($this->dgPosts->getNumResults() != 0) ? $this->dgPosts->getContent() : false);
+		// parse the datagrid for all feedmuncher posts
+		$this->tpl->assign('dgFeedmuncherPosts', ($this->dgFeedmuncherPosts->getNumResults() != 0) ? $this->dgFeedmuncherPosts->getContent() : false);
 
-		// parse the datagrid for the most recent posts
-		$this->tpl->assign('dgRecent', (is_object($this->dgRecent) && $this->dgRecent->getNumResults() != 0) ? $this->dgRecent->getContent() : false);
+		// parse the datagrid for all blog posts
+		if($this->blogIsInstalled) $this->tpl->assign('dgBlogPosts', ($this->dgBlogPosts->getNumResults() != 0) ? $this->dgBlogPosts->getContent() : false);
+
+		// parse the datagrids for the not published articles
+		$this->tpl->assign('dgNotPublished', ($this->dgNotPublished->getNumResults() != 0) ? $this->dgNotPublished->getContent() : false);
+
+		// assign whether blog is installed or not
+		$this->tpl->assign('blogIsInstalled', $this->blogIsInstalled);
 	}
 }
 

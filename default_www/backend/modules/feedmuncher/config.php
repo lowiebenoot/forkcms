@@ -9,7 +9,7 @@
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
  * @since		2.1
  */
-final class BackendFeedMuncherConfig extends BackendBaseConfig
+final class BackendFeedmuncherConfig extends BackendBaseConfig
 {
 	/**
 	 * The default action
