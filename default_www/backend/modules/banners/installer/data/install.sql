@@ -9,7 +9,7 @@ CREATE  TABLE IF NOT EXISTS `banners_standards` (
 
 
 CREATE  TABLE IF NOT EXISTS `banners` (
-  `id` INT(11) NOT NULL ,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL ,
   `standard_id` INT(11) NOT NULL ,
   `file` VARCHAR(255) NOT NULL ,
@@ -23,7 +23,7 @@ CREATE  TABLE IF NOT EXISTS `banners` (
 
 
 CREATE  TABLE IF NOT EXISTS `banners_groups` (
-  `id` INT(11) NOT NULL ,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL ,
   `standard_id` INT(11) NOT NULL ,
   PRIMARY KEY (`id`)
@@ -31,7 +31,7 @@ CREATE  TABLE IF NOT EXISTS `banners_groups` (
 
 
 CREATE  TABLE IF NOT EXISTS `banners_groups_members` (
-  `id` INT(11) NOT NULL ,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `group_id` INT(11) NOT NULL ,
   `banner_id` INT(11) NOT NULL ,
   PRIMARY KEY (`id`)
