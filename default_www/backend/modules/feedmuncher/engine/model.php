@@ -74,6 +74,24 @@ class BackendFeedmuncherModel
 
 
 	/**
+	 * checks if there are blogposts that are deleted, if so, mark them as deleted in feedmuncher_posts
+	 *
+ 	 */
+	public static function checkForDeletedBlogPosts()
+	{
+		// exists?
+		$deletedArticles = (array) BackendModel::getDB()->getColumn('SELECT i.id
+															FROM feedmuncher_posts AS i
+															LEFT JOIN blog_posts AS b on b.id = i.blog_post_id
+															WHERE i.target = ? AND i.hidden = ? AND b.id IS NULL;',
+															array('blog', 'N'));
+
+		// delete the articles
+		self::deleteArticle((int) $deletedArticles);
+	}
+
+
+	/**
 	 * Deletes one or more feeds
 	 *
 	 * @param 	mixed $ids		The ids to delete.
@@ -117,21 +135,17 @@ class BackendFeedmuncherModel
 
 
 	/**
-	 * Deletes an article
+	 * Deletes one or more articles
 	 *
-	 * @return	void
-	 * @param	int $id		The id of the article to delete.
+	 * @param 	mixed $ids		The ids to delete.
 	 */
-	public static function deleteArticle($id)
+	public static function deleteArticle($ids)
 	{
-		// redefine
-		$id = (int) $id;
+		// make sure $ids is an array
+		$ids = (array) $ids;
 
-		// get db
-		$db = BackendModel::getDB(true);
-
-		// delete category (mark it as deleted)
-		$db->update('feedmuncher_posts', array('deleted' => 'Y'), 'id = ?', array($id));
+		// delete feed in db (mark as deleted)
+		BackendModel::getDB(true)->update('feedmuncher_posts', array('deleted' => 'Y') , 'id IN ('. implode(',', $ids) .') AND language = ?', array(BL::getWorkingLanguage()));
 
 		// invalidate the cache for feedmuncher
 		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
@@ -260,7 +274,7 @@ class BackendFeedmuncherModel
 	 * Checks if a comment exists
 	 *
 	 * @return	bool
-	 * @param	int $id							The id of the comment to check for existence.
+	 * @param	int $id		The id of the comment to check for existence.
 	 */
 	public static function existsComment($id)
 	{
@@ -290,7 +304,7 @@ class BackendFeedmuncherModel
 	 * Get a feed
 	 *
 	 * @return	array
-	 * @param	int		$id		the id of the feed to get
+	 * @param	int $id		the id of the feed to get
 	 */
 	public static function get($id)
 	{
@@ -305,7 +319,7 @@ class BackendFeedmuncherModel
 	 * Get all feeds
 	 *
 	 * @return	array
-	 * @param	int		$id		the id of the feed to get
+	 * @param	int $id		the id of the feed to get
 	 */
 	public static function getAllFeeds()
 	{
@@ -766,7 +780,44 @@ class BackendFeedmuncherModel
 	 */
 	public static function publishArticle($id)
 	{
-		$numAffectedRows =  BackendModel::getDB(true)->update('feedmuncher_posts', array('hidden' => 'N'), 'id = ?', (int) $id);
+		return BackendModel::getDB(true)->update('feedmuncher_posts', array('hidden' => 'N'), 'id = ?', (int) $id);
+	}
+
+
+	public static function publishArticles($ids)
+	{
+		foreach($ids as $id)
+		{
+			// set published (not hidden)
+			if(self::publishArticle($id) != 0)
+			{
+				// get the article
+				$record = self::getArticle($id);
+
+				// should the article be posted in the blog module?
+				if($record['target'] == 'blog')
+				{
+					// require the blog model
+					require_once PATH_WWW . '/backend/modules/blog/engine/model.php';
+
+					// create item to insert in the blog posts
+					$item = $record;
+					$item['id'] = BackendBlogModel::getMaximumId() + 1;
+					$item['hidden'] = 'N';
+					$item['publish_on'] = $record['date'];
+					$item['meta_id'] = BackendFeedmuncherModel::insertMetaForBlog($record['title'], BackendBlogModel::getURL($record['title']));
+
+					// unset the keys that don't exist for blog
+					unset($item['date'], $item['target'], $item['feed_id'], $item['deleted'], $item['target'], $item['blog_post_id'], $item['url']);
+
+					// insert in db
+					BackendBlogModel::insert($item);
+
+					// save the blog post id in the feedmuncher post
+					BackendFeedmuncherModel::setBlogPostsId($id, $item['id']);
+				}
+			}
+		}
 	}
 
 

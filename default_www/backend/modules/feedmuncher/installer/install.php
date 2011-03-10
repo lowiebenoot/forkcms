@@ -151,6 +151,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'CommentOnWithURL', 'Reactie op: <a href="%1$s">%2$s</a>');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'ConfirmDelete', 'Ben je zeker dat je het artikel "%1$s" wil verwijderen?');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'Deleted', 'De geselecteerde artikels werden verwijderd.');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeletedArticles', 'De artikels werden verwijderd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeletedSpam', 'Alle spamberichten werden verwijderd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeleteAllSpam', 'Alle spam verwijderen:');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'EditArticle', 'bewerk artikel "%1$s"');
@@ -169,7 +170,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'NotifyByEmailOnNewCommentToModerate', 'Verwittig via email als er een nieuwe reactie te modereren is.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'NumItemsInRecentArticlesFull', 'Aantal items in recente artikels (volledig) widget');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'NumItemsInRecentArticlesList', 'Aantal items in recente artikels (lijst) widget');
-		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'PublishedArticle', 'Het artikel "%1$s" werd gepubliceerd.');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'PublishedArticles', 'De artikels werden gepubliceerd.');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'AddFeed', 'artikel toevoegen');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'AutoPublish', 'publiceer artikelen automatisch');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Feedmuncher', 'feedmuncher');
@@ -190,6 +191,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'CommentOnWithURL', 'Comment on: <a href="%1$s">%2$s</a>');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'ConfirmDelete', 'Are your sure you want to delete the article "%1$s"?');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'Deleted', 'The selected articles were deleted.');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeletedArticles', 'The articles were deleted.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeletedSpam', 'All spam-comments were deleted.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeleteAllSpam', 'Delete all spam:');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'EditArticle', 'edit article "%1$s"');
@@ -208,7 +210,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'NumItemsInRecentArticlesFull', 'Number of articles in the recent articles (full) widget');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'NumItemsInRecentArticlesList', 'Number of articles in the recent articles (list) widget');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'MakeDefaultCategory', 'Make default category (current default category is: %1$s).');
-		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'PublishedArticle', 'The article "%1$s" was published.');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'PublishedArticles', 'The articles were published.');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'AddFeed', 'add feed');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'AutoPublish', 'publish articles automatic');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'Feedmuncher', 'feedmuncher');

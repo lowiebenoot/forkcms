@@ -53,7 +53,9 @@
 	<div id="tabNotPublished">
 		{option:dgNotPublished}
 			<div class="datagridHolder">
-				{$dgNotPublished}
+				<form action="{$var|geturl:'mass_action'}" method="get" class="forkForms submitWithLink" id="massFeedmuncherAction">
+					{$dgNotPublished}
+				</form>
 			</div>
 		{/option:dgNotPublished}
 	</div>

@@ -48,28 +48,15 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 
 
 	/**
-	 * creates a url for an item for the publish column
-	 *
-	 * @return	void
-	 */
-	public static function getPublishURL($id)
-	{
-		// redefine id
-		$id = (int) $id;
-
-		// create link and return
-		return '<a href="#" class="button publishButton" id="article-' . $id . '">' . BL::lbl('Publish') . '</a>';
-
-	}
-
-
-	/**
 	 * Loads the datagrid with all the blog posts
 	 *
 	 * @return	void
 	 */
 	private function loadDatagridAllBlogPosts()
 	{
+		// check for deleted blog posts
+		BackendFeedmuncherModel::checkForDeletedBlogPosts();
+
 		// create datagrid
 		$this->dgBlogPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'N', 'blog', 'N'));
 
@@ -201,9 +188,12 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		// add edit column
 		$this->dgNotPublished->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]', BL::lbl('Edit'));
 
-		// add publish column
-		$this->dgNotPublished->addColumn('publish');
-		$this->dgNotPublished->setColumnFunction(array('BackendFeedmuncherArticles', 'getPublishURL'), array('[id]'), 'publish', true);
+		// add the multicheckbox column
+		$this->dgNotPublished->setMassActionCheckboxes('checkbox', '[id]');
+
+		// add mass action dropdown
+		$ddmMassAction = new SpoonFormDropdown('action', array('publish' => BL::lbl('Publish'), 'delete' => BL::lbl('Delete')), 'publish');
+		$this->dgNotPublished->setMassAction($ddmMassAction);
 
 		// our JS needs to know an id, so we can highlight it
 		$this->dgNotPublished->setRowAttributes(array('id' => 'row-[revision_id]'));
