@@ -26,6 +26,12 @@ $navigation[2]['children'][4] = array('url' => 'location/index', 'label' => 'Loc
 $navigation[2]['children'][6] = array('url' => 'faq/index', 'label' => 'Faq');
 $navigation[2]['children'][6]['children'][0] = array('url' => 'faq/index', 'label' => 'Questions', 'selected_for' => array('faq/add', 'faq/edit'));
 $navigation[2]['children'][6]['children'][1] = array('url' => 'faq/categories', 'label' => 'Categories', 'selected_for' => array('faq/add_category', 'faq/edit_category'));
+
+$navigation[2]['children'][7] = array('url' => 'banners/index', 'label' => 'Banners');
+$navigation[2]['children'][7]['children'][0] = array('url' => 'banners/index', 'label' => 'Banners', 'selected_for' => array('banners/add', 'banners/edit'));
+$navigation[2]['children'][7]['children'][1] = array('url' => 'banners/groups', 'label' => 'Groups', 'selected_for' => array('banners/groups', 'banners/add_group', 'banners/edit_group'));
+
+
 $navigation[3] = array('url' => 'analytics/index', 'label' => 'Marketing');
 $navigation[3]['children'][0] = array('url' => 'analytics/index', 'label' => 'Analytics', 'selected_for' => 'analytics/loading');
 $navigation[3]['children'][0]['children'][0] = array('url' => 'analytics/content', 'label' => 'Content');

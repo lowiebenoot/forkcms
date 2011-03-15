@@ -48,7 +48,7 @@ class BackendBannersAdd extends BackendBaseActionAdd
 		// create elements
 		$this->frm->addText('name');
 		$this->frm->addText('url');
-		$this->frm->addDropdown('size', array('wide skyscraper - 160x600'));
+		$this->frm->addDropdown('size', BackendBannersModel::getStandards());
 		$this->frm->addFile('image');
 		$this->frm->addDate('start_date');
 		$this->frm->addTime('start_time', null, 'inputText time');
