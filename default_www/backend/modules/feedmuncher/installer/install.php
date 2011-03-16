@@ -144,6 +144,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'Add', 'artikel toevoegen');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'Feed', 'feed');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'Feeds', 'feeds');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'FeedURL', 'feed URL');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'NotPublished', 'niet gepubliceerd');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'PostInBlog', 'publiceer de artikelen in de blog module');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'PostInFeedmuncher', 'publiceer de artikelen in de feedmuncher module');
@@ -194,6 +195,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'Add', 'add article');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'Feed', 'feed');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'Feeds', 'feeds');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'FeedURL', 'feed URL');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'NotPublished', 'not published');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'PostInBlog', 'publish the articles in the blog module');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'PostInFeedmuncher', 'publish the articles in the feedmuncher module');
