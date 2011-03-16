@@ -17,12 +17,12 @@
 					{/option:pagination.first}
 
 					{iteration:pagination.pages}
-						<li{option:paginationPages.current} class="currentPage"{/option:paginationPages.current}>
-							{option:!paginationPages.current}<a href="{$paginationPages.url}" rel="nofollow" title="{$lblGoToPage|ucfirst} {$paginationPages.label}">{/option:!paginationPages.current}
-							{option:paginationPages.current}<span>{/option:paginationPages.current}
-								{$paginationPages.label}
-							{option:paginationPages.current}</span>{/option:paginationPages.current}
-							{option:!paginationPages.current}</a>{/option:!paginationPages.current}
+						<li{option:pagination.pages.current} class="currentPage"{/option:pagination.pages.current}>
+							{option:!pagination.pages.current}<a href="{$pagination.pages.url}" rel="nofollow" title="{$lblGoToPage|ucfirst} {$pagination.pages.label}">{/option:!pagination.pages.current}
+							{option:pagination.pages.current}<span>{/option:pagination.pages.current}
+								{$pagination.pages.label}
+							{option:pagination.pages.current}</span>{/option:pagination.pages.current}
+							{option:!pagination.pages.current}</a>{/option:!pagination.pages.current}
 						</li>
 					{/iteration:pagination.pages}
 
