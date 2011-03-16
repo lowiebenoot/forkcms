@@ -12,7 +12,7 @@
 				{$txtName} {$txtNameError}
 			</p>
 			<p>
-				<label for="url">{$lblURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+				<label for="url">{$lblFeedmuncherFeedURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtUrl} {$txtUrlError}
 			</p>
 			<p>
