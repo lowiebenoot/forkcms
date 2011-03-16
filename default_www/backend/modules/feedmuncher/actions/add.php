@@ -95,8 +95,11 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 					if(BackendFeedmuncherModel::existsByURL($this->frm->getField('url')->getValue())) $this->frm->getField('url')->addError(BL::getError('FeedAlreadyExists'));
 				}
 			}
+
+			// is website filled in?
 			if($this->frm->getField('website')->isFilled(BL::err('WebsiteIsRequired'))) $this->frm->getField('website')->isURL(BL::err('WebsiteIsInvalid'));
 
+			// is the form correct?
 			if($this->frm->isCorrect())
 			{
 				// build item
