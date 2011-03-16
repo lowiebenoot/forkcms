@@ -61,13 +61,13 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgBlogPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'N', 'blog', 'N'));
 
 		// set headers
-		$this->dgBlogPosts->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author')), 'publish_on' => ucfirst(BL::lbl('PublishedOn'))));
+		$this->dgBlogPosts->setHeaderLabels(array('publish_on' => ucfirst(BL::lbl('PublishedOn'))));
 
 		// hide columns
 		$this->dgBlogPosts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'blog_post_id'));
 
 		// sorting columns
-		$this->dgBlogPosts->setSortingColumns(array('publish_on', 'title', 'user_id', 'comments'), 'created_on');
+		$this->dgBlogPosts->setSortingColumns(array('publish_on', 'title', 'author', 'comments'), 'created_on');
 		$this->dgBlogPosts->setSortParameter('desc');
 
 		// set colum URLs
@@ -75,7 +75,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgBlogPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
 
 		// set column functions
-		$this->dgBlogPosts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
+		$this->dgBlogPosts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
 		$this->dgBlogPosts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column
@@ -97,13 +97,13 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgFeedmuncherPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'N', 'feedmuncher', 'N'));
 
 		// set headers
-		$this->dgFeedmuncherPosts->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author')), 'publish_on' => ucfirst(BL::lbl('PublishedOn'))));
+		$this->dgFeedmuncherPosts->setHeaderLabels(array('publish_on' => ucfirst(BL::lbl('PublishedOn'))));
 
 		// hide columns
 		$this->dgFeedmuncherPosts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'blog_post_id'));
 
 		// sorting columns
-		$this->dgFeedmuncherPosts->setSortingColumns(array('publish_on', 'title', 'user_id', 'comments'), 'created_on');
+		$this->dgFeedmuncherPosts->setSortingColumns(array('publish_on', 'title', 'author', 'comments'), 'created_on');
 		$this->dgFeedmuncherPosts->setSortParameter('desc');
 
 		// set colum URLs
@@ -111,7 +111,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgFeedmuncherPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
 
 		// set column functions
-		$this->dgFeedmuncherPosts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
+		$this->dgFeedmuncherPosts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
 		$this->dgFeedmuncherPosts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column
@@ -132,21 +132,18 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		// create datagrid
 		$this->dgFeedmuncherDrafts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_DRAFTS, array('draft', BackendAuthentication::getUser()->getUserId(), BL::getWorkingLanguage(), 'N', 'feedmuncher'));
 
-		// set headers
-		$this->dgFeedmuncherDrafts->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author'))));
-
 		// hide columns
 		$this->dgFeedmuncherDrafts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'blog_post_id'));
 
 		// sorting columns
-		$this->dgFeedmuncherDrafts->setSortingColumns(array('edited_on', 'title', 'user_id', 'comments'), 'created_on');
+		$this->dgFeedmuncherDrafts->setSortingColumns(array('edited_on', 'title', 'author', 'comments'), 'created_on');
 		$this->dgFeedmuncherDrafts->setSortParameter('desc');
 
 		// set colum URLs
 		$this->dgFeedmuncherDrafts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]');
 
 		// set column functions
-		$this->dgFeedmuncherDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
+		$this->dgFeedmuncherDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
 		$this->dgFeedmuncherDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column
@@ -168,13 +165,13 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgNotPublished = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED, array('active', BL::getWorkingLanguage(), 'N', 'Y'));
 
 		// set headers
-		$this->dgNotPublished->setHeaderLabels(array('user_id' => ucfirst(BL::lbl('Author')), 'publish_on' => ucfirst(BL::lbl('PublishedOn'))));
+		$this->dgNotPublished->setHeaderLabels(array('publish_on' => ucfirst(BL::lbl('PublishedOn'))));
 
 		// hide columns
 		$this->dgNotPublished->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'publish_on'));
 
 		// sorting columns
-		$this->dgNotPublished->setSortingColumns(array('publish_on', 'title', 'user_id'), 'created_on');
+		$this->dgNotPublished->setSortingColumns(array('publish_on', 'title', 'author'), 'created_on');
 		$this->dgNotPublished->setSortParameter('desc');
 
 		// set colum URLs
@@ -182,7 +179,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgNotPublished->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
 
 		// set column functions
-		$this->dgNotPublished->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[user_id]'), 'user_id', true);
+		$this->dgNotPublished->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
 		$this->dgNotPublished->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column

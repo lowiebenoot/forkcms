@@ -50,9 +50,6 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 		// create feeds datagrid
 		$this->dgFeeds = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_FEEDS, array(BL::getWorkingLanguage(), 'N'));
 
-		// set headers
-		$this->dgFeeds->setHeaderLabels(array('author_user_id' => ucfirst(BL::lbl('Author')), 'category_id' => ucfirst(BL::lbl('Category'))));
-
 		// set hidden columns
 		$this->dgFeeds->setColumnHidden('target');
 
@@ -64,14 +61,14 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 		$this->dgFeeds->setColumnURL('source', '[source]');
 
 		// set column functions
-		$this->dgFeeds->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author_user_id]'), 'author_user_id', true);
-		$this->dgFeeds->setColumnFunction(array('BackendFeedmuncherIndex', 'getCategory'), array('[target]', '[category_id]'), 'category_id', true);
+		$this->dgFeeds->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
+		$this->dgFeeds->setColumnFunction(array('BackendFeedmuncherIndex', 'getCategory'), array('[target]', '[category]'), 'category', true);
 
 		// add edit column
 		$this->dgFeeds->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit') .'&amp;id=[id]', BL::lbl('Edit'));
 
 		// set sorting columns
-		$this->dgFeeds->setSortingColumns(array('name', 'author_user_id'), 'id');
+		$this->dgFeeds->setSortingColumns(array('name', 'author'), 'id');
 		$this->dgFeeds->setSortParameter('desc');
 
 		// our JS needs to know an id, so we can highlight it

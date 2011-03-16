@@ -11,11 +11,11 @@
  */
 class BackendFeedmuncherModel
 {
-	const QRY_DATAGRID_BROWSE_ARTICLES = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id, i.num_comments AS comments, i.hidden, blog_post_id
+	const QRY_DATAGRID_BROWSE_ARTICLES = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.num_comments AS comments, i.hidden, blog_post_id
 									FROM feedmuncher_posts AS i
 									INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
 									WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ? AND hidden = ?';
-	const QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id, i.hidden
+	const QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.hidden
 									FROM feedmuncher_posts AS i
 									INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
 									WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND hidden = ?';
@@ -29,7 +29,7 @@ class BackendFeedmuncherModel
 											INNER JOIN meta AS m ON p.meta_id = m.id
 											WHERE i.status = ? AND i.language = ?
 											GROUP BY i.id';
-	const QRY_DATAGRID_BROWSE_DRAFTS = 'SELECT i.id, i.user_id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.num_comments AS comments, i.hidden
+	const QRY_DATAGRID_BROWSE_DRAFTS = 'SELECT i.id, i.user_id AS author, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.num_comments AS comments, i.hidden
 										FROM feedmuncher_posts AS i
 										INNER JOIN
 										(
@@ -40,7 +40,7 @@ class BackendFeedmuncherModel
 										) AS p
 										INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
 										WHERE i.revision_id = p.revision_id  AND i.deleted = ? AND i.target = ?';
-	const QRY_DATAGRID_BROWSE_FEEDS = 'SELECT i.id, i.name, i.source, i.author_user_id, i.category_id, i.target
+	const QRY_DATAGRID_BROWSE_FEEDS = 'SELECT i.id, i.name, i.source, i.category_id AS category, i.target, i.author_user_id AS author
 										FROM feedmuncher_feeds AS i
 										WHERE i.language = ? AND deleted = ?';
 	const QRY_DATAGRID_BROWSE_RECENT = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id, i.num_comments AS comments, i.hidden
