@@ -37,7 +37,9 @@
 				{$ddmAuthor} {$ddmAuthorError}
 			</p>
 			<p>
-				{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label>
+				<ul class="inputList">
+					<li>{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label></li>
+				</ul>
 			</p>
 		</div>
 	</div>
