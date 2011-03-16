@@ -68,7 +68,7 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 		$this->dgFeeds->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit') .'&amp;id=[id]', BL::lbl('Edit'));
 
 		// set sorting columns
-		$this->dgFeeds->setSortingColumns(array('name', 'author'), 'id');
+		$this->dgFeeds->setSortingColumns(array('name', 'author', 'source'), 'id');
 		$this->dgFeeds->setSortParameter('desc');
 
 		// our JS needs to know an id, so we can highlight it
