@@ -29,7 +29,7 @@ class BackendFeedmuncherModel
 											INNER JOIN meta AS m ON p.meta_id = m.id
 											WHERE i.status = ? AND i.language = ?
 											GROUP BY i.id';
-	const QRY_DATAGRID_BROWSE_DRAFTS = 'SELECT i.id, i.user_id AS author, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.num_comments AS comments, i.hidden
+	const QRY_DATAGRID_BROWSE_DRAFTS = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.num_comments AS comments, i.hidden
 										FROM feedmuncher_posts AS i
 										INNER JOIN
 										(
@@ -59,17 +59,17 @@ class BackendFeedmuncherModel
 													ORDER BY i.date DESC';
 
 	/**
-	 * checks if the blog module is installed
+	 * checks if the blog module is installed (and active)
 	 *
 	 * @return bool
  	 */
 	public static function blogIsInstalled()
 	{
-		// exists?
-		return (bool) ((int) BackendModel::getDB()->getVar('SELECT COUNT(i.name)
-															FROM modules AS i
-															WHERE i.name = ?;',
-															'blog') > 0);
+		// get active modules
+		$activeModules = BackendModel::getModules(true);
+
+		// blog is active? and return
+		return in_array('blog', $activeModules);
 	}
 
 
