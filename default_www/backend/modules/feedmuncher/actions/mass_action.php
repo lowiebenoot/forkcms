@@ -44,7 +44,7 @@ class BackendFeedmuncherMassAction extends BackendBaseAction
 			}
 
 			// publish items
-			else if($action == 'publish')
+			elseif($action == 'publish')
 			{
 				// publish articles
 				BackendFeedmuncherModel::publishArticles($aIds);
@@ -53,8 +53,6 @@ class BackendFeedmuncherMassAction extends BackendBaseAction
 				$this->redirect(BackendModel::createURLForAction('articles') . '&report=publishedArticles#tabNotPublished');
 			}
 		}
-
-
 	}
 }
 

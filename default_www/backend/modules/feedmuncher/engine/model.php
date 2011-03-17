@@ -783,6 +783,12 @@ class BackendFeedmuncherModel
 	}
 
 
+	/**
+	 * publishes articles
+	 *
+	 * @return	void
+	 * @param	array $ids		the id of of the articles to publish.
+	 */
 	public static function publishArticles($ids)
 	{
 		foreach($ids as $id)
