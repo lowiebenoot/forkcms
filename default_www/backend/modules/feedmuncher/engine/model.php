@@ -39,7 +39,7 @@ class BackendFeedmuncherModel
 											GROUP BY i.id
 										) AS p
 										INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-										WHERE i.revision_id = p.revision_id  AND i.deleted = ? AND i.target = ?';
+										WHERE i.revision_id = p.revision_id  AND i.deleted = ?';
 	const QRY_DATAGRID_BROWSE_FEEDS = 'SELECT i.id, i.name, i.source, i.category_id AS category, i.target, i.author_user_id AS author
 										FROM feedmuncher_feeds AS i
 										WHERE i.language = ? AND deleted = ?';

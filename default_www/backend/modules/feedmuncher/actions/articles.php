@@ -20,7 +20,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	 *
 	 * @var	SpoonDataGrid
 	 */
-	private $dgFeedmuncherDrafts, $dgFeedmuncherPosts, $dgBlogDrafts, $dgBlogPosts, $dgNotPublishedBlog, $dgNotPublished;
+	private $dgDrafts, $dgFeedmuncherPosts, $dgBlogPosts, $dgNotPublishedBlog, $dgNotPublished;
 
 
 	/**
@@ -127,35 +127,35 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	 *
 	 * @return	void
 	 */
-	private function loadDatagridFeedmuncherDrafts()
+	private function loadDatagridDrafts()
 	{
 		// create datagrid
-		$this->dgFeedmuncherDrafts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_DRAFTS, array('draft', BackendAuthentication::getUser()->getUserId(), BL::getWorkingLanguage(), 'N', 'feedmuncher'));
+		$this->dgDrafts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_DRAFTS, array('draft', BackendAuthentication::getUser()->getUserId(), BL::getWorkingLanguage(), 'N'));
 
 		// hide columns
-		$this->dgFeedmuncherDrafts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'blog_post_id'));
+		$this->dgDrafts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on'));
 
 		// sorting columns
-		$this->dgFeedmuncherDrafts->setSortingColumns(array('edited_on', 'title', 'author', 'comments'), 'created_on');
-		$this->dgFeedmuncherDrafts->setSortParameter('desc');
+		$this->dgDrafts->setSortingColumns(array('edited_on', 'title', 'author', 'comments'), 'created_on');
+		$this->dgDrafts->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgFeedmuncherDrafts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]');
+		$this->dgDrafts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]');
 
 		// set column functions
-		$this->dgFeedmuncherDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
-		$this->dgFeedmuncherDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
+		$this->dgDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
+		$this->dgDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[edited_on]'), 'edited_on', true);
 
 		// add edit column
-		$this->dgFeedmuncherDrafts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]', BL::lbl('Edit'));
+		$this->dgDrafts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]', BL::lbl('Edit'));
 
 		// our JS needs to know an id, so we can highlight it
-		$this->dgFeedmuncherDrafts->setRowAttributes(array('id' => 'row-[revision_id]'));
+		$this->dgDrafts->setRowAttributes(array('id' => 'row-[revision_id]'));
 	}
 
 
 	/**
-	 * Loads the datagrid with not published articles for the blog
+	 * Loads the datagrid with not published articles
 	 *
 	 * @return	void
 	 */
@@ -171,7 +171,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgNotPublished->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on', 'publish_on'));
 
 		// sorting columns
-		$this->dgNotPublished->setSortingColumns(array('publish_on', 'title', 'author'), 'created_on');
+		$this->dgNotPublished->setSortingColumns(array('publish_on', 'title', 'author'), 'publish_on');
 		$this->dgNotPublished->setSortParameter('desc');
 
 		// set colum URLs
@@ -208,9 +208,9 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->loadDatagridAllFeedmuncherPosts();
 
 		// feedmuncher drafts
-		$this->loadDatagridFeedmuncherDrafts();
+		$this->loadDatagridDrafts();
 
-		// all blog posts
+		// load blogposts if blog is installed
 		if($this->blogIsInstalled) $this->loadDatagridAllBlogPosts();
 
 		// load not published articles
@@ -226,7 +226,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	private function parse()
 	{
 		// parse the datagrid for the feedmuncher drafts
-		$this->tpl->assign('dgFeedmuncherDrafts', ($this->dgFeedmuncherDrafts->getNumResults() != 0) ? $this->dgFeedmuncherDrafts->getContent() : false);
+		$this->tpl->assign('dgDrafts', ($this->dgDrafts->getNumResults() != 0) ? $this->dgDrafts->getContent() : false);
 
 		// parse the datagrid for all feedmuncher posts
 		$this->tpl->assign('dgFeedmuncherPosts', ($this->dgFeedmuncherPosts->getNumResults() != 0) ? $this->dgFeedmuncherPosts->getContent() : false);

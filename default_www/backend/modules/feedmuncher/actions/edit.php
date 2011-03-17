@@ -101,11 +101,14 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 		$this->frm->addText('name', $this->record['name'], 255);
 		$this->frm->addText('url', $this->record['url']);
 		$this->frm->addText('website', $this->record['source'], 255);
+
+		//  add dropdown and radiobutton if blog is installed
 		if($this->blogIsInstalled)
 		{
 			$this->frm->addRadiobutton('target', array(array('label' => BL::getLabel('PostInFeedmuncher'), 'value' => 'feedmuncher', 'attributes' => $feedHasArticles ? array('disabled' => '') : null), array('label' => BL::getLabel('PostInBlog'), 'value' => 'blog', 'attributes' => $feedHasArticles ? array('disabled' => '') : null)), $this->record['target']);
 			$this->frm->addDropdown('category_blog', BackendFeedmuncherModel::getCategoriesFromBlog(), $blogCategory);
 		}
+
 		$this->frm->addDropdown('category', BackendFeedmuncherModel::getCategories(), $feedmuncherCategory);
 		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), $this->record['author_user_id']);
 		$this->frm->addCheckbox('auto_publish', ($this->record['auto_publish'] == 'Y' ? true : false));

@@ -108,7 +108,7 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 			return $target . ' - <a href="' . BackendModel::createURLForAction('edit_category', $target) . '&amp;id=' . $category_id . '">' . $category['name'] . '</a>';
 		}
 
-		// blog module not installed
+		// blog module not installed, just return the category
 		else return '<a href="' . BackendModel::createURLForAction('edit_category', $target) . '&amp;id=' . $category_id . '">' . $category['name'] . '</a>';
 	}
 }

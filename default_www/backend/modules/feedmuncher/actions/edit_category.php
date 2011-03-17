@@ -96,7 +96,7 @@ class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage(), null);
 
 		// get default category
-		$defaultCategory = BackendBlogModel::getCategory($defaultCategoryId);
+		$defaultCategory = BackendFeedmuncherModel::getCategory($defaultCategoryId);
 
 		// assign
 		if($defaultCategoryId !== null) $this->tpl->assign('defaultCategory', $defaultCategory);

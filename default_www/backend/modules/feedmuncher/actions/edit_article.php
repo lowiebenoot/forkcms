@@ -106,7 +106,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 		}
 
 		// no item found, throw an exceptions, because somebody is fucking with our URL
-		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('index') .'&error=non-existing');
+		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('articles') .'&error=non-existing');
 	}
 
 
@@ -158,13 +158,16 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 		$rbtHiddenValues[] = array('label' => BL::lbl('Hidden'), 'value' => 'Y');
 		$rbtHiddenValues[] = array('label' => BL::lbl('Published'), 'value' => 'N');
 
+		// get categories
+		$categories = $this->record['target'] == 'feedmuncher' ? BackendFeedmuncherModel::getCategories() : BackendFeedmuncherModel::getCategoriesFromBlog();
+
 		// create elements
 		$this->frm->addText('title', $this->record['title']);
 		$this->frm->addEditor('text', $this->record['text']);
 		$this->frm->addEditor('introduction', $this->record['introduction']);
 		$this->frm->addRadiobutton('hidden', $rbtHiddenValues, $this->record['hidden']);
 		$this->frm->addCheckbox('allow_comments', ($this->record['allow_comments'] === 'Y' ? true : false));
-		$this->frm->addDropdown('category_id', BackendFeedmuncherModel::getCategories(), $this->record['category_id']);
+		$this->frm->addDropdown('category_id', $categories, $this->record['category_id']);
 		$this->frm->addDropdown('user_id', BackendUsersModel::getUsers(), $this->record['user_id']);
 		$this->frm->addText('tags', BackendTagsModel::getTags($this->URL->getModule(), $this->record['revision_id']), null, 'inputText tagBox', 'inputTextError tagBox');
 		$this->frm->addDate('publish_on_date', $this->record['publish_on']);
@@ -217,7 +220,8 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 		parent::parse();
 
 		// get url
-		$url = BackendModel::getURLForBlock($this->URL->getModule(), 'detail');
+		if($this->record['target'] == 'feedmuncher') $url = BackendModel::getURLForBlock($this->URL->getModule(), 'detail');
+		else $url = BackendModel::getURLForBlock('blog', 'detail');
 		$url404 = BackendModel::getURL(404);
 
 		// parse additional variables
@@ -280,6 +284,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 				$item['status'] = $status;
 				$item['feed_id'] = $this->record['feed_id'];
 				$item['edited_on'] = BackendModel::getUTCDate();
+				$item['target'] = $this->record['target'];
 
 				// update the item
 				$item['revision_id'] = BackendFeedmuncherModel::updateArticle($item);

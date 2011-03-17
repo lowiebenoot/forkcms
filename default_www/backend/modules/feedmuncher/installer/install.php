@@ -35,7 +35,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		// load install.sql
 		$this->importSQL(dirname(__FILE__) .'/data/install.sql');
 
-		// add 'blog' as a module
+		// add 'feedmuncher' as a module
 		$this->addModule('feedmuncher', 'The feemuncher module.');
 
 		// general settings
@@ -75,7 +75,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->setActionRights(1, 'feedmuncher', 'get_articles');
 
 		// add extra's
-		$blogID = $this->insertExtra('feedmuncher', 'block', 'Feedmuncher', null, null, 'N', 8000);
+		$extraID = $this->insertExtra('feedmuncher', 'block', 'Feedmuncher', null, null, 'N', 8000);
 		$this->insertExtra('feedmuncher', 'widget', 'RecentComments', 'recent_comments', null, 'N', 8001);
 		$this->insertExtra('feedmuncher', 'widget', 'Categories', 'categories', null, 'N', 8002);
 		$this->insertExtra('feedmuncher', 'widget', 'Archive', 'archive', null, 'N', 8003);
@@ -122,18 +122,18 @@ class FeedmuncherInstall extends ModuleInstaller
 			$this->setSetting('feedmuncher', 'rss_description_'. $language, '');
 
 
-			// check if a page for blog already exists in this language
+			// check if a page for feedmuncher already exists in this language
 			if(!(bool) $this->getDB()->getVar('SELECT COUNT(p.id)
 												FROM pages AS p
 												INNER JOIN pages_blocks AS b ON b.revision_id = p.revision_id
 												WHERE b.extra_id = ? AND p.language = ?',
-												array($blogID, $language)))
+												array($extraID, $language)))
 			{
 				// insert page
 				$this->insertPage(array('title' => 'Feedmuncher',
 										'language' => $language),
 									null,
-									array('extra_id' => $blogID));
+									array('extra_id' => $extraID));
 			}
 
 		}
@@ -175,10 +175,10 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'AddFeed', 'artikel toevoegen');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'AutoPublish', 'publiceer artikelen automatisch');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Feedmuncher', 'feedmuncher');
-		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'FeedmuncherFeeds', 'feeds');
-		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'FeedmuncherPublishedInFeedmuncher', 'gepubliceerd in feedmuncher');
-		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'FeedmuncherPublishedInBlog', 'gepubliceerd in blog');
-		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'FeedmuncherNotPublished', 'niet gepubliceerd');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'Feeds', 'feeds');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'PublishedInFeedmuncher', 'gepubliceerd in feedmuncher');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'PublishedInBlog', 'gepubliceerd in blog');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'NotPublished', 'niet gepubliceerd');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'PingFeedmuncherServices', 'ping feedmuncherservices');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Source', 'bron');
 		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'Source', 'Bron: <a href="%2$s" title="%1$s">%1$s</a>');
@@ -229,10 +229,10 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'AddFeed', 'add feed');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'AutoPublish', 'publish articles automatically');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'Feedmuncher', 'feedmuncher');
-		$this->insertLocale('en', 'backend', 'core', 'lbl', 'FeedmuncherFeeds', 'feeds');
-		$this->insertLocale('en', 'backend', 'core', 'lbl', 'FeedmuncherPublishedInFeedmuncher', 'published in feedmuncher');
-		$this->insertLocale('en', 'backend', 'core', 'lbl', 'FeedmuncherPublishedInBlog', 'published in blog');
-		$this->insertLocale('en', 'backend', 'core', 'lbl', 'FeedmuncherNotPublished', 'not published');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'Feeds', 'feeds');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'PublishedInFeedmuncher', 'published in feedmuncher');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'PublishedInBlog', 'published in blog');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'NotPublished', 'not published');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'PingFeedmuncherServices', 'ping feedmuncherservices');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'Source', 'source');
 		$this->insertLocale('en', 'frontend', 'core', 'msg', 'Source', 'Source: <a href="%2$s" title="%1$s">%1$s</a>');

@@ -4,7 +4,7 @@
  * This action will delete a category
  *
  * @package		backend
- * @subpackage	blog
+ * @subpackage	feedmuncher
  *
  * @author		Davy Hellemans <davy@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>

@@ -1,10 +1,10 @@
 <?php
 
 /**
- * This is the categories-action, it will display the overview of blog categories
+ * This is the categories-action, it will display the overview of feedmuncher categories
  *
  * @package		backend
- * @subpackage	blog
+ * @subpackage	feedmuncher
  *
  * @author		Davy Hellemans <davy@netlash.com>
  * @author		Tijs Verkoyen <tijs@sumocoders.be>

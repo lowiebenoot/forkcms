@@ -7,27 +7,16 @@
 
 <div id="tabs" class="tabs">
 	<ul>
-		<li><a href="#tabFeedmuncher">{$lblFeedmuncherPublishedInFeedmuncher|ucfirst}</a></li>
-		{option:blogIsInstalled}<li><a href="#tabBlog">{$lblFeedmuncherPublishedInBlog|ucfirst}</a></li>{/option:blogIsInstalled}
-		<li><a href="#tabNotPublished">{$lblFeedmuncherNotPublished|ucfirst}</a></li>
+		<li><a href="#tabFeedmuncher">{$lblPublishedInFeedmuncher|ucfirst}</a></li>
+		{option:blogIsInstalled}<li><a href="#tabBlog">{$lblPublishedInBlog|ucfirst}</a></li>{/option:blogIsInstalled}
+		<li><a href="#tabNotPublished">{$lblNotPublished|ucfirst}</a></li>
+		<li><a href="#tabDrafts">{$lblDrafts|ucfirst}</a></li>
 	</ul>
 
 
 	<div id="tabFeedmuncher">
-		{option:dgFeedmuncherDrafts}
-			<div class="datagridHolder">
-				<div class="tableHeading">
-					<h3>{$lblDrafts|ucfirst}</h3>
-				</div>
-				{$dgFeedmuncherDrafts}
-			</div>
-		{/option:dgFeedmuncherDrafts}
-
 		{option:dgFeedmuncherPosts}
 			<div class="datagridHolder">
-				<div class="tableHeading">
-					<h3>{$lblPublishedArticles|ucfirst}</h3>
-				</div>
 				{$dgFeedmuncherPosts}
 			</div>
 		{/option:dgFeedmuncherPosts}
@@ -39,9 +28,6 @@
 		<div id="tabBlog">
 			{option:dgBlogPosts}
 				<div class="datagridHolder">
-					<div class="tableHeading">
-						<h3>{$lblPublishedArticles|ucfirst}</h3>
-					</div>
 					{$dgBlogPosts}
 				</div>
 			{/option:dgBlogPosts}
@@ -58,6 +44,20 @@
 				</form>
 			</div>
 		{/option:dgNotPublished}
+		{option:!dgNotPublished}
+			<p>{$msgNoItems|sprintf:{$var|geturl:'add'}}</p>
+		{/option:!dgNotPublished}
+	</div>
+
+	<div id="tabDrafts">
+		{option:dgDrafts}
+			<div class="datagridHolder">
+				{$dgDrafts}
+			</div>
+		{/option:dgDrafts}
+		{option:!dgDrafts}
+			<p>{$msgCoreNoItems}</p>
+		{/option:!dgDrafts}
 	</div>
 
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}
