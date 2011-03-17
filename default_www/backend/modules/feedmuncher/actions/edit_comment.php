@@ -45,7 +45,7 @@ class BackendFeedmuncherEditComment extends BackendBaseActionEdit
 		}
 
 		// no item found, throw an exception, because somebody is fucking with our URL
-		else $this->redirect(BackendModel::createURLForAction('index') .'&error=non-existing');
+		else $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 	}
 
 
@@ -61,7 +61,7 @@ class BackendFeedmuncherEditComment extends BackendBaseActionEdit
 		$this->record = (array) BackendFeedmuncherModel::getComment($this->id);
 
 		// no item found, throw an exceptions, because somebody is fucking with our URL
-		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('index') .'&error=non-existing');
+		if(empty($this->record)) $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 	}
 
 
@@ -82,7 +82,7 @@ class BackendFeedmuncherEditComment extends BackendBaseActionEdit
 		$this->frm->addTextarea('text', $this->record['text']);
 
 		// assign URL
-		$this->tpl->assign('itemURL', BackendModel::getURLForBlock('feedmuncher', 'detail') .'/'. $this->record['post_url'] .'#comment-'. $this->record['post_id']);
+		$this->tpl->assign('itemURL', BackendModel::getURLForBlock('feedmuncher', 'detail') . '/' . $this->record['post_url'] . '#comment-' . $this->record['post_id']);
 		$this->tpl->assign('itemTitle', $this->record['post_title']);
 	}
 
@@ -121,7 +121,7 @@ class BackendFeedmuncherEditComment extends BackendBaseActionEdit
 				BackendFeedmuncherModel::updateComment($item);
 
 				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('comments') .'&report=edited-comment&id='. $item['id'] .'&highlight=row-'. $item['id'] .'#tab'. SpoonFilter::toCamelCase($item['status']));
+				$this->redirect(BackendModel::createURLForAction('comments') . '&report=edited-comment&id=' . $item['id'] . '&highlight=row-' . $item['id'] . '#tab' . SpoonFilter::toCamelCase($item['status']));
 			}
 		}
 	}

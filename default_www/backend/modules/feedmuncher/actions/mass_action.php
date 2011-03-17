@@ -6,7 +6,7 @@
  * @package		backend
  * @subpackage	feedmuncher
  *
- * @author		Lowie Benoot <lowiebenoot@netlash.com
+ * @author		Lowie Benoot <lowiebenoot@netlash.com>
  * @since		2.1
  */
 class BackendFeedmuncherMassAction extends BackendBaseAction

@@ -77,7 +77,7 @@ class FrontendFeedmuncherArticleCommentsRSS extends FrontendBaseBlock
 	{
 		// get vars
 		$title = vsprintf(FL::msg('CommentsOn'), array($this->record['title']));
-		$link = SITE_URL . FrontendNavigation::getURLForBlock('feedmuncher', 'article_comments_rss') .'/'. $this->record['url'];
+		$link = SITE_URL . FrontendNavigation::getURLForBlock('feedmuncher', 'article_comments_rss') . '/' . $this->record['url'];
 		$detailLink = SITE_URL . FrontendNavigation::getURLForBlock('feedmuncher', 'detail');
 		$description = null;
 
@@ -88,8 +88,8 @@ class FrontendFeedmuncherArticleCommentsRSS extends FrontendBaseBlock
 		foreach($this->items as $item)
 		{
 			// init vars
-			$title = $item['author'] .' '. FL::lbl('On') .' '. $this->record['title'];
-			$link = $detailLink .'/'. $this->record['url'] .'/#comment-'. $item['id'];
+			$title = $item['author'] . ' ' . FL::lbl('On') . ' ' . $this->record['title'];
+			$link = $detailLink . '/' . $this->record['url'] . '/#comment-' . $item['id'];
 			$description = $item['text'];
 
 			// create new instance

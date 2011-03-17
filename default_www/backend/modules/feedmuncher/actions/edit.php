@@ -47,7 +47,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 		}
 
 		// no item found, throw an exception, because somebody is fucking with our URL
-		else $this->redirect(BackendModel::createURLForAction('index') .'&error=non-existing');
+		else $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 	}
 
 
@@ -79,7 +79,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 			$feedmuncherCategory = $this->record['category_id'];
 
 			// get default category for blog
-			$blogCategory = BackendModel::getModuleSetting('blog', 'default_category_'. BL::getWorkingLanguage());
+			$blogCategory = BackendModel::getModuleSetting('blog', 'default_category_' . BL::getWorkingLanguage());
 		}
 
 		else
@@ -88,11 +88,11 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 			$blogCategory = $this->record['category_id'];
 
 			// get default category for feedmuncher
-			$feedmuncherCategory = BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage());
+			$feedmuncherCategory = BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage());
 		}
 
 		// get default category id
-		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage());
+		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage());
 
 		// did the feed already post something?
 		$feedHasArticles = BackendFeedmuncherModel::feedHasArticles($this->id);
@@ -180,7 +180,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 				BackendFeedmuncherModel::update($this->id, $item);
 
 				// return to the feeds overview
-				$this->redirect(BackendModel::createURLForAction('index') .'&report=edited&var='. urlencode($item['name']) .'&highlight=row-'. $this->id);
+				$this->redirect(BackendModel::createURLForAction('index') . '&report=edited&var=' . urlencode($item['name']) . '&highlight=row-' . $this->id);
 			}
 		}
 	}

@@ -49,8 +49,8 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 		$this->frm = new BackendForm('addFeed');
 
 		// get default category id
-		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage());
-		$defaultCategoryIdFromBlog = BackendModel::getModuleSetting('blog', 'default_category_'. BL::getWorkingLanguage());
+		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage());
+		$defaultCategoryIdFromBlog = BackendModel::getModuleSetting('blog', 'default_category_' . BL::getWorkingLanguage());
 
 		// create elements
 		$this->frm->addText('name', null, 255);
@@ -117,7 +117,7 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 				$feedID = BackendFeedmuncherModel::insert($item);
 
 				// return to the feeds overview
-				$this->redirect(BackendModel::createURLForAction('index') .'&report=added&var='. urlencode($item['name']) .'&highlight=row-'. $feedID);
+				$this->redirect(BackendModel::createURLForAction('index') . '&report=added&var=' . urlencode($item['name']) . '&highlight=row-' . $feedID);
 			}
 		}
 	}

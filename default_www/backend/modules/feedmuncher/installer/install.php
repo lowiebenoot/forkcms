@@ -33,7 +33,7 @@ class FeedmuncherInstall extends ModuleInstaller
 	protected function execute()
 	{
 		// load install.sql
-		$this->importSQL(dirname(__FILE__) .'/data/install.sql');
+		$this->importSQL(dirname(__FILE__) . '/data/install.sql');
 
 		// add 'feedmuncher' as a module
 		$this->addModule('feedmuncher', 'The feemuncher module.');
@@ -96,30 +96,30 @@ class FeedmuncherInstall extends ModuleInstaller
 				$defaultCategoryId = $this->addCategory($language, 'Default', 'default');
 
 				// insert default category setting
-				$this->setSetting('feedmuncher', 'default_category_'. $language, $defaultCategoryId, true);
+				$this->setSetting('feedmuncher', 'default_category_' . $language, $defaultCategoryId, true);
 			}
 
 			// category exists
 			else
 			{
 				// current default categoryId
-				$currentDefaultCategoryId = $this->getSetting('feedmuncher', 'default_category_'. $language);
+				$currentDefaultCategoryId = $this->getSetting('feedmuncher', 'default_category_' . $language);
 
 				// does not exist
 				if(!$this->existsCategory($language, $currentDefaultCategoryId))
 				{
 					// insert default category setting
-					$this->setSetting('feedmuncher', 'default_category_'. $language, $currentCategoryId, true);
+					$this->setSetting('feedmuncher', 'default_category_' . $language, $currentCategoryId, true);
 				}
 			}
 
 			// feedburner URL
-			$this->setSetting('feedmuncher', 'feedburner_url_'. $language, '');
+			$this->setSetting('feedmuncher', 'feedburner_url_' . $language, '');
 
 			// RSS settings
-			$this->setSetting('feedmuncher', 'rss_meta_'. $language, true);
-			$this->setSetting('feedmuncher', 'rss_title_'. $language, 'RSS');
-			$this->setSetting('feedmuncher', 'rss_description_'. $language, '');
+			$this->setSetting('feedmuncher', 'rss_meta_' . $language, true);
+			$this->setSetting('feedmuncher', 'rss_title_' . $language, 'RSS');
+			$this->setSetting('feedmuncher', 'rss_description_' . $language, '');
 
 
 			// check if a page for feedmuncher already exists in this language

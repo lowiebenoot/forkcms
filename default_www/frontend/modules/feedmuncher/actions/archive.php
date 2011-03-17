@@ -78,7 +78,7 @@ class FrontendFeedmuncherArchive extends FrontendBaseBlock
 		$this->month = $this->URL->getParameter(2);
 
 		// redirect /2010/6 to /2010/06 to avoid duplicate content
-		if($this->month !== null && mb_strlen($this->month) != 2) $this->redirect(FrontendNavigation::getURLForBlock('feedmuncher', 'archive') .'/'. $this->year .'/'. str_pad($this->month, 2, '0', STR_PAD_LEFT), 301);
+		if($this->month !== null && mb_strlen($this->month) != 2) $this->redirect(FrontendNavigation::getURLForBlock('feedmuncher', 'archive') . '/' . $this->year . '/' . str_pad($this->month, 2, '0', STR_PAD_LEFT), 301);
 		if(mb_strlen($this->year) != 4) $this->redirect(FrontendNavigation::getURL(404));
 
 		// redefine
@@ -99,7 +99,7 @@ class FrontendFeedmuncherArchive extends FrontendBaseBlock
 		{
 			$this->startDate = gmmktime(00, 00, 00, $this->month, 01, $this->year);
 			$this->endDate = gmmktime(23, 59, 59, $this->month, gmdate('t', $this->startDate), $this->year);
-			$url .= '/'. $this->month;
+			$url .= '/' . $this->month;
 		}
 
 		// year
@@ -110,7 +110,7 @@ class FrontendFeedmuncherArchive extends FrontendBaseBlock
 		}
 
 		// set URL and limit
-		$this->pagination['url'] = FrontendNavigation::getURLForBlock('feedmuncher', 'archive') .'/'. $url;
+		$this->pagination['url'] = FrontendNavigation::getURLForBlock('feedmuncher', 'archive') . '/' . $url;
 		$this->pagination['limit'] = FrontendModel::getModuleSetting('feedmuncher', 'overview_num_items', 10);
 
 		// populate count fields in pagination
@@ -137,11 +137,11 @@ class FrontendFeedmuncherArchive extends FrontendBaseBlock
 	private function parse()
 	{
 		// get RSS-link
-		$rssLink = FrontendModel::getModuleSetting('feedmuncher', 'feedburner_url_'. FRONTEND_LANGUAGE);
+		$rssLink = FrontendModel::getModuleSetting('feedmuncher', 'feedburner_url_' . FRONTEND_LANGUAGE);
 		if($rssLink == '') $rssLink = FrontendNavigation::getURLForBlock('feedmuncher', 'rss');
 
 		// add RSS-feed into the metaCustom
-		$this->header->addMetaCustom('<link rel="alternate" type="application/rss+xml" title="'. FrontendModel::getModuleSetting('feedmuncher', 'rss_title_'. FRONTEND_LANGUAGE) .'" href="'. $rssLink .'" />');
+		$this->header->addMetaCustom('<link rel="alternate" type="application/rss+xml" title="' . FrontendModel::getModuleSetting('feedmuncher', 'rss_title_' . FRONTEND_LANGUAGE) . '" href="' . $rssLink . '" />');
 
 		// add into breadcrumb
 		$this->breadcrumb->addElement(ucfirst(FL::lbl('Archive')));

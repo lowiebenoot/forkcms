@@ -29,7 +29,7 @@ class BackendFeedmuncherMassCommentAction extends BackendBaseAction
 		$action = SpoonFilter::getGetValue('action', array('published', 'moderation', 'spam', 'delete'), 'spam');
 
 		// no id's provided
-		if(!isset($_GET['id'])) $this->redirect(BackendModel::createURLForAction('comments') .'&error=no-comments-selected');
+		if(!isset($_GET['id'])) $this->redirect(BackendModel::createURLForAction('comments') . '&error=no-comments-selected');
 
 		// at least one id
 		else
@@ -134,7 +134,7 @@ class BackendFeedmuncherMassCommentAction extends BackendBaseAction
 			if($action == 'delete') $report .= 'deleted';
 
 			// redirect
-			$this->redirect(BackendModel::createURLForAction('comments') .'&report='. $report .'#tab'. ucfirst($from));
+			$this->redirect(BackendModel::createURLForAction('comments') . '&report=' . $report . '#tab' . ucfirst($from));
 		}
 	}
 }

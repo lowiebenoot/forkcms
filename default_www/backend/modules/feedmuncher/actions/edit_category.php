@@ -46,7 +46,7 @@ class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 		}
 
 		// no item found, throw an exceptions, because somebody is fucking with our URL
-		else $this->redirect(BackendModel::createURLForAction('index') .'&error=non-existing');
+		else $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
 	}
 
 
@@ -73,8 +73,8 @@ class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 
 		// create elements
 		$this->frm->addText('name', $this->record['name']);
-		$this->frm->addCheckbox('is_default', (BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage(), null) == $this->id));
-		if((BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage(), null) == $this->id)) $this->frm->getField('is_default')->setAttribute('disabled', 'disabled');
+		$this->frm->addCheckbox('is_default', (BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null) == $this->id));
+		if((BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null) == $this->id)) $this->frm->getField('is_default')->setAttribute('disabled', 'disabled');
 	}
 
 
@@ -93,7 +93,7 @@ class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 		$this->tpl->assign('name', $this->record['name']);
 
 		// get default category id
-		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage(), null);
+		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null);
 
 		// get default category
 		$defaultCategory = BackendFeedmuncherModel::getCategory($defaultCategoryId);
@@ -134,14 +134,14 @@ class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 				BackendFeedmuncherModel::updateCategory($item);
 
 				// it isn't the default category but it should be.
-				if(BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage(), null) != $item['id'] && $this->frm->getField('is_default')->getChecked())
+				if(BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null) != $item['id'] && $this->frm->getField('is_default')->getChecked())
 				{
 					// store
-					BackendModel::setModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage(), $item['id']);
+					BackendModel::setModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), $item['id']);
 				}
 
 				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('categories') .'&report=edited-category&var='. urlencode($item['name']) .'&highlight=row-'. $item['id']);
+				$this->redirect(BackendModel::createURLForAction('categories') . '&report=edited-category&var=' . urlencode($item['name']) . '&highlight=row-' . $item['id']);
 			}
 		}
 	}

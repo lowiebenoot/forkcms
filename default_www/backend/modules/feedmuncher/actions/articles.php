@@ -71,15 +71,15 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgBlogPosts->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgBlogPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]');
-		$this->dgBlogPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
+		$this->dgBlogPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article') . '&amp;id=[id]');
+		$this->dgBlogPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') . '&amp;id=[feed_id]');
 
 		// set column functions
 		$this->dgBlogPosts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
 		$this->dgBlogPosts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column
-		$this->dgBlogPosts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit', 'blog') .'&amp;id=[blog_post_id]', BL::lbl('Edit'));
+		$this->dgBlogPosts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit', 'blog') . '&amp;id=[blog_post_id]', BL::lbl('Edit'));
 
 		// our JS needs to know an id, so we can highlight it
 		$this->dgBlogPosts->setRowAttributes(array('id' => 'row-[revision_id]'));
@@ -107,15 +107,15 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgFeedmuncherPosts->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgFeedmuncherPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]');
-		$this->dgFeedmuncherPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
+		$this->dgFeedmuncherPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article') . '&amp;id=[id]');
+		$this->dgFeedmuncherPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') . '&amp;id=[feed_id]');
 
 		// set column functions
 		$this->dgFeedmuncherPosts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
 		$this->dgFeedmuncherPosts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column
-		$this->dgFeedmuncherPosts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]', BL::lbl('Edit'));
+		$this->dgFeedmuncherPosts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') . '&amp;id=[id]', BL::lbl('Edit'));
 
 		// our JS needs to know an id, so we can highlight it
 		$this->dgFeedmuncherPosts->setRowAttributes(array('id' => 'row-[revision_id]'));
@@ -140,14 +140,14 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgDrafts->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgDrafts->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]');
+		$this->dgDrafts->setColumnURL('title', BackendModel::createURLForAction('edit_article') . '&amp;id=[id]&amp;draft=[revision_id]');
 
 		// set column functions
 		$this->dgDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
 		$this->dgDrafts->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[edited_on]'), 'edited_on', true);
 
 		// add edit column
-		$this->dgDrafts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]&amp;draft=[revision_id]', BL::lbl('Edit'));
+		$this->dgDrafts->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') . '&amp;id=[id]&amp;draft=[revision_id]', BL::lbl('Edit'));
 
 		// our JS needs to know an id, so we can highlight it
 		$this->dgDrafts->setRowAttributes(array('id' => 'row-[revision_id]'));
@@ -175,15 +175,15 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgNotPublished->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgNotPublished->setColumnURL('title', BackendModel::createURLForAction('edit_article') .'&amp;id=[id]');
-		$this->dgNotPublished->setColumnURL('feed', BackendModel::createURLForAction('edit') .'&amp;id=[feed_id]');
+		$this->dgNotPublished->setColumnURL('title', BackendModel::createURLForAction('edit_article') . '&amp;id=[id]');
+		$this->dgNotPublished->setColumnURL('feed', BackendModel::createURLForAction('edit') . '&amp;id=[feed_id]');
 
 		// set column functions
 		$this->dgNotPublished->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
 		$this->dgNotPublished->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[publish_on]'), 'publish_on', true);
 
 		// add edit column
-		$this->dgNotPublished->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') .'&amp;id=[id]', BL::lbl('Edit'));
+		$this->dgNotPublished->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_article') . '&amp;id=[id]', BL::lbl('Edit'));
 
 		// add the multicheckbox column
 		$this->dgNotPublished->setMassActionCheckboxes('checkbox', '[id]');

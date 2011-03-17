@@ -103,7 +103,7 @@ class BackendFeedmuncherModel
 		$ids = (array) $ids;
 
 		// delete feed in db (mark as deleted)
-		$db = BackendModel::getDB(true)->update('feedmuncher_feeds', array('deleted' => 'Y') , 'id IN ('. implode(',', $ids) .') AND language = ?', array(BL::getWorkingLanguage()));
+		$db = BackendModel::getDB(true)->update('feedmuncher_feeds', array('deleted' => 'Y') , 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
 	}
 
 
@@ -119,7 +119,7 @@ class BackendFeedmuncherModel
 		$ids = (array) $ids;
 
 		// delete feed in db (mark as deleted)
-		BackendModel::getDB(true)->update('feedmuncher_posts', array('deleted' => 'Y') , 'id IN ('. implode(',', $ids) .') AND language = ?', array(BL::getWorkingLanguage()));
+		BackendModel::getDB(true)->update('feedmuncher_posts', array('deleted' => 'Y') , 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
 
 		// invalidate the cache for feedmuncher
 		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
@@ -144,7 +144,7 @@ class BackendFeedmuncherModel
 		$db->delete('feedmuncher_categories', 'id = ?', array($id));
 
 		// default category
-		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage(), null);
+		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null);
 
 		// update category for the posts that might be in this category
 		$db->update('feedmuncher_posts', array('category_id' => $defaultCategoryId), 'category_id = ?', array($id));
@@ -171,10 +171,10 @@ class BackendFeedmuncherModel
 		// get feedmuncherpost ids
 		$postIds = (array) $db->getColumn('SELECT i.post_id
 											FROM feedmuncher_comments AS i
-											WHERE i.id IN ('. implode(',', $ids) .') AND i.language = ?', array(BL::getWorkingLanguage()));
+											WHERE i.id IN (' . implode(',', $ids) . ') AND i.language = ?', array(BL::getWorkingLanguage()));
 
 		// update record
-		$db->delete('feedmuncher_comments', 'id IN ('. implode(',', $ids) .') AND language = ?', array(BL::getWorkingLanguage()));
+		$db->delete('feedmuncher_comments', 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
 
 		// recalculate the comment count
 		if(!empty($postIds)) self::reCalculateCommentCount($postIds);
@@ -390,7 +390,7 @@ class BackendFeedmuncherModel
 			$id = self::insertCategory($category);
 
 			// store in settings
-			BackendModel::setModuleSetting('feedmuncher', 'default_category_'. BL::getWorkingLanguage(), $id);
+			BackendModel::setModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), $id);
 
 			// recall
 			return self::getCategories();
@@ -474,7 +474,7 @@ class BackendFeedmuncherModel
 	{
 		return (array) BackendModel::getDB()->getRecords('SELECT *
 															FROM feedmuncher_comments AS i
-															WHERE i.id IN ('. implode(',', $ids) .')');
+															WHERE i.id IN (' . implode(',', $ids) . ')');
 	}
 
 
@@ -517,7 +517,7 @@ class BackendFeedmuncherModel
 		foreach($comments as $key => &$row)
 		{
 			// add full url
-			$row['full_url'] = BackendModel::getURLForBlock('feedmuncher', 'detail', $row['language']) .'/'. $row['url'];
+			$row['full_url'] = BackendModel::getURLForBlock('feedmuncher', 'detail', $row['language']) . '/' . $row['url'];
 		}
 
 		// return
@@ -844,7 +844,7 @@ class BackendFeedmuncherModel
 		$commentCounts = (array) $db->getPairs('SELECT i.post_id, COUNT(i.id) AS comment_count
 												FROM feedmuncher_comments AS i
 												INNER JOIN feedmuncher_posts AS p ON i.post_id = p.id AND i.language = p.language
-												WHERE i.status = ? AND i.post_id IN ('. implode(',', $ids) .') AND i.language = ? AND p.status = ?
+												WHERE i.status = ? AND i.post_id IN (' . implode(',', $ids) . ') AND i.language = ? AND p.status = ?
 												GROUP BY i.post_id',
 												array('published', BL::getWorkingLanguage(), 'active'));
 
@@ -927,7 +927,7 @@ class BackendFeedmuncherModel
 																		 array($item['id'], $archiveType, BL::getWorkingLanguage(), $rowsToKeep));
 
 		// delete other revisions
-		if(!empty($revisionIdsToKeep)) BackendModel::getDB(true)->delete('feedmuncher_posts', 'id = ? AND status = ? AND revision_id NOT IN ('. implode(', ', $revisionIdsToKeep) .')', array($item['id'], $archiveType));
+		if(!empty($revisionIdsToKeep)) BackendModel::getDB(true)->delete('feedmuncher_posts', 'id = ? AND status = ? AND revision_id NOT IN (' . implode(', ', $revisionIdsToKeep) . ')', array($item['id'], $archiveType));
 
 		// insert new version
 		$item['revision_id'] = BackendModel::getDB(true)->insert('feedmuncher_posts', $item);
@@ -987,12 +987,12 @@ class BackendFeedmuncherModel
 		// get feedmuncherpost ids
 		$postIds = (array) BackendModel::getDB()->getColumn('SELECT i.post_id
 																FROM feedmuncher_comments AS i
-																WHERE i.id IN ('. implode(',', $ids) .')');
+																WHERE i.id IN (' . implode(',', $ids) . ')');
 
 		// update record
 		BackendModel::getDB(true)->execute('UPDATE feedmuncher_comments
 											SET status = ?
-											WHERE id IN ('. implode(',', $ids) .')',
+											WHERE id IN (' . implode(',', $ids) . ')',
 											array((string) $status));
 
 		// recalculate the comment count
@@ -1001,5 +1001,4 @@ class BackendFeedmuncherModel
 		// invalidate the cache for feedmuncher
 		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
 	}
-
 }

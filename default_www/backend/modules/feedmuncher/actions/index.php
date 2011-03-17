@@ -46,7 +46,7 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 	 *
 	 * @return	string
 	 * @param	string $target		the target module.
-	 * @param	int	$category_id	the category id.
+	 * @param	int $category_id	the category id.
 	 */
 	public static function getCategory($target, $category_id)
 	{
@@ -82,7 +82,7 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 		$this->dgFeeds->setPaging(false);
 
 		// set colum URLs
-		$this->dgFeeds->setColumnURL('name', BackendModel::createURLForAction('edit') .'&amp;id=[id]');
+		$this->dgFeeds->setColumnURL('name', BackendModel::createURLForAction('edit') . '&amp;id=[id]');
 		$this->dgFeeds->setColumnURL('source', '[source]');
 
 		// set column functions
@@ -90,7 +90,7 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 		$this->dgFeeds->setColumnFunction(array('BackendFeedmuncherIndex', 'getCategory'), array('[target]', '[category]'), 'category', true);
 
 		// add edit column
-		$this->dgFeeds->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit') .'&amp;id=[id]', BL::lbl('Edit'));
+		$this->dgFeeds->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit') . '&amp;id=[id]', BL::lbl('Edit'));
 
 		// set sorting columns
 		$this->dgFeeds->setSortingColumns(array('name', 'author', 'source'), 'id');

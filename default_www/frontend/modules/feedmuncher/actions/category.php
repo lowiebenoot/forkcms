@@ -84,7 +84,7 @@ class FrontendFeedmuncherCategory extends FrontendBaseBlock
 		$this->category = $categories[$possibleCategories[$requestedCategory]];
 
 		// set URL and limit
-		$this->pagination['url'] = FrontendNavigation::getURLForBlock('feedmuncher', 'category') .'/'. $requestedCategory;
+		$this->pagination['url'] = FrontendNavigation::getURLForBlock('feedmuncher', 'category') . '/' . $requestedCategory;
 		$this->pagination['limit'] = FrontendModel::getModuleSetting('feedmuncher', 'overview_num_items', 10);
 
 		// populate count fields in pagination
@@ -111,11 +111,11 @@ class FrontendFeedmuncherCategory extends FrontendBaseBlock
 	private function parse()
 	{
 		// get RSS-link
-		$rssLink = FrontendModel::getModuleSetting('feedmuncher', 'feedburner_url_'. FRONTEND_LANGUAGE);
+		$rssLink = FrontendModel::getModuleSetting('feedmuncher', 'feedburner_url_' . FRONTEND_LANGUAGE);
 		if($rssLink == '') $rssLink = FrontendNavigation::getURLForBlock('feedmuncher', 'rss');
 
 		// add RSS-feed into the metaCustom
-		$this->header->addMetaCustom('<link rel="alternate" type="application/rss+xml" title="'. FrontendModel::getModuleSetting('feedmuncher', 'rss_title_'. FRONTEND_LANGUAGE) .'" href="'. $rssLink .'" />');
+		$this->header->addMetaCustom('<link rel="alternate" type="application/rss+xml" title="' . FrontendModel::getModuleSetting('feedmuncher', 'rss_title_' . FRONTEND_LANGUAGE) . '" href="' . $rssLink . '" />');
 
 		// add into breadcrumb
 		$this->breadcrumb->addElement(ucfirst(FL::lbl('Category')));

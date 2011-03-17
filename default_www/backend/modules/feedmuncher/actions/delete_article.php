@@ -39,11 +39,11 @@ class BackendFeedmuncherDeleteArticle extends BackendBaseActionDelete
 			if(method_exists('BackendSearchModel', 'removeIndex')) BackendSearchModel::removeIndex('feedmuncher', $this->id);
 
 			// item was deleted, so redirect
-			$this->redirect(BackendModel::createURLForAction('articles') .'&report=deleted&var='. urlencode($this->record['title']));
+			$this->redirect(BackendModel::createURLForAction('articles') . '&report=deleted&var=' . urlencode($this->record['title']));
 		}
 
 		// something went wrong
-		else $this->redirect(BackendModel::createURLForAction('articles') .'&error=non-existing');
+		else $this->redirect(BackendModel::createURLForAction('articles') . '&error=non-existing');
 	}
 }
 
