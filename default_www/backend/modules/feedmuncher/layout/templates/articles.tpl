@@ -7,9 +7,9 @@
 
 <div id="tabs" class="tabs">
 	<ul>
-		<li><a href="#tabFeedmuncher">{$lblPublishedInFeedmuncher|ucfirst}</a></li>
-		{option:blogIsInstalled}<li><a href="#tabBlog">{$lblPublishedInBlog|ucfirst}</a></li>{/option:blogIsInstalled}
-		<li><a href="#tabNotPublished">{$lblNotPublished|ucfirst}</a></li>
+		<li><a href="#tabFeedmuncher">{$lblFeedmuncherPublishedInFeedmuncher|ucfirst}</a></li>
+		{option:blogIsInstalled}<li><a href="#tabBlog">{$lblFeedmuncherPublishedInBlog|ucfirst}</a></li>{/option:blogIsInstalled}
+		<li><a href="#tabNotPublished">{$lblFeedmuncherNotPublished|ucfirst}</a></li>
 	</ul>
 
 
