@@ -4,7 +4,7 @@
  * This is the configuration-object for the faq module
  *
  * @package		backend
- * @subpackage	faq
+ * @subpackage	feedmuncher
  *
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
  * @since		2.1

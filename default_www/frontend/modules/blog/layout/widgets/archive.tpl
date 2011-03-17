@@ -5,12 +5,12 @@
 
 {cache:{$LANGUAGE}_blogWidgetArchiveCache}
 	{option:widgetBlogArchive}
-		<div id="blogArchiveWidget" class="mod">
+		<section id="blogArchiveWidget" class="mod">
 			<div class="inner">
-				<div class="hd">
+				<header class="hd">
 					<h3>{$lblArchive|ucfirst}</h3>
-				</div>
-				<div class="bd">
+				</header>
+				<div class="bd content">
 					<ul>
 						{iteration:widgetBlogArchive}
 							<li>
@@ -18,15 +18,15 @@
 									{$widgetBlogArchive.label}
 									{option:widgetBlogArchive.url}({$widgetBlogArchive.total}){/option:widgetBlogArchive.url}
 								{option:widgetBlogArchive.url}</a>{/option:widgetBlogArchive.url}
-            	
+
 								{option:widgetBlogArchive.months}
 									<ul>
 										{iteration:widgetBlogArchive.months}
 											<li>
-												{option:months.url}<a href="{$months.url}">{/option:months.url}
-													{$months.label|date:'F':{$LANGUAGE}}
-													{option:months.url}({$months.total}){/option:months.url}
-												{option:months.url}</a>{/option:months.url}
+												{option:widgetBlogArchive.months.url}<a href="{$widgetBlogArchive.months.url}">{/option:widgetBlogArchive.months.url}
+													{$widgetBlogArchive.months.label|date:'F':{$LANGUAGE}}
+													{option:widgetBlogArchive.months.url}({$widgetBlogArchive.months.total}){/option:widgetBlogArchive.months.url}
+												{option:widgetBlogArchive.months.url}</a>{/option:widgetBlogArchive.months.url}
 											</li>
 										{/iteration:widgetBlogArchive.months}
 									</ul>
@@ -36,6 +36,6 @@
 					</ul>
 				</div>
 			</div>
-		</div>
+		</section>
 	{/option:widgetBlogArchive}
 {/cache:{$LANGUAGE}_blogWidgetArchiveCache}

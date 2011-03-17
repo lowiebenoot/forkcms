@@ -83,7 +83,7 @@ class BackendFeedmuncherModel
 		$deletedArticles = (array) BackendModel::getDB()->getColumn('SELECT i.id
 															FROM feedmuncher_posts AS i
 															LEFT JOIN blog_posts AS b on b.id = i.blog_post_id
-															WHERE i.target = ? AND i.hidden = ? AND b.id IS NULL;',
+															WHERE i.target = ? AND i.hidden = ? AND b.id IS NULL',
 															array('blog', 'N'));
 
 		// delete the articles
@@ -94,6 +94,7 @@ class BackendFeedmuncherModel
 	/**
 	 * Deletes one or more feeds
 	 *
+	 * @return	void
 	 * @param 	mixed $ids		The ids to delete.
 	 */
 	public static function delete($ids)
@@ -103,6 +104,25 @@ class BackendFeedmuncherModel
 
 		// delete feed in db (mark as deleted)
 		$db = BackendModel::getDB(true)->update('feedmuncher_feeds', array('deleted' => 'Y') , 'id IN ('. implode(',', $ids) .') AND language = ?', array(BL::getWorkingLanguage()));
+	}
+
+
+	/**
+	 * Deletes one or more articles
+	 *
+	 * @return	void
+	 * @param 	mixed $ids		The ids to delete.
+	 */
+	public static function deleteArticle($ids)
+	{
+		// make sure $ids is an array
+		$ids = (array) $ids;
+
+		// delete feed in db (mark as deleted)
+		BackendModel::getDB(true)->update('feedmuncher_posts', array('deleted' => 'Y') , 'id IN ('. implode(',', $ids) .') AND language = ?', array(BL::getWorkingLanguage()));
+
+		// invalidate the cache for feedmuncher
+		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
 	}
 
 
@@ -128,24 +148,6 @@ class BackendFeedmuncherModel
 
 		// update category for the posts that might be in this category
 		$db->update('feedmuncher_posts', array('category_id' => $defaultCategoryId), 'category_id = ?', array($id));
-
-		// invalidate the cache for feedmuncher
-		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
-	}
-
-
-	/**
-	 * Deletes one or more articles
-	 *
-	 * @param 	mixed $ids		The ids to delete.
-	 */
-	public static function deleteArticle($ids)
-	{
-		// make sure $ids is an array
-		$ids = (array) $ids;
-
-		// delete feed in db (mark as deleted)
-		BackendModel::getDB(true)->update('feedmuncher_posts', array('deleted' => 'Y') , 'id IN ('. implode(',', $ids) .') AND language = ?', array(BL::getWorkingLanguage()));
 
 		// invalidate the cache for feedmuncher
 		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
@@ -212,14 +214,14 @@ class BackendFeedmuncherModel
 	 * Checks if a feed exists by URL
 	 *
 	 * @return	bool
-	 * @param	int $id		The id of the feed
+	 * @param	int $id		The id of the feed.
 	 */
 	public static function exists($id)
 	{
 		// exists?
 		return (bool) ((int) BackendModel::getDB()->getVar('SELECT COUNT(i.id)
 															FROM feedmuncher_feeds AS i
-															WHERE i.id = ? AND i.language = ?;',
+															WHERE i.id = ? AND i.language = ?',
 															array((int) $id, BL::getWorkingLanguage())) > 0);
 	}
 
@@ -243,14 +245,14 @@ class BackendFeedmuncherModel
 	 * Checks if a feed exists by URL
 	 *
 	 * @return	bool
-	 * @param	string $URL		the url to check for existing
+	 * @param	string $URL		the url to check for existing.
 	 */
 	public static function existsByURL($URL)
 	{
 		// exists?
 		return (bool) ((int) BackendModel::getDB()->getVar('SELECT COUNT(i.id)
 															FROM feedmuncher_feeds AS i
-															WHERE i.url = ? AND i.language = ?;',
+															WHERE i.url = ? AND i.language = ?',
 															array($URL, BL::getWorkingLanguage())) > 0);
 	}
 
@@ -304,13 +306,13 @@ class BackendFeedmuncherModel
 	 * Get a feed
 	 *
 	 * @return	array
-	 * @param	int $id		the id of the feed to get
+	 * @param	int $id		the id of the feed to get.
 	 */
 	public static function get($id)
 	{
 		return (array) BackendModel::getDB()->getRecord('SELECT i.*
 														FROM feedmuncher_feeds as i
-														WHERE i.id = ?;',
+														WHERE i.id = ?',
 														(int) $id);
 	}
 
@@ -319,13 +321,12 @@ class BackendFeedmuncherModel
 	 * Get all feeds
 	 *
 	 * @return	array
-	 * @param	int $id		the id of the feed to get
 	 */
 	public static function getAllFeeds()
 	{
 		return (array) BackendModel::getDB()->getRecords('SELECT i.*
 														FROM feedmuncher_feeds as i
-														WHERE deleted = ?;',
+														WHERE deleted = ?',
 														'N');
 	}
 
@@ -418,25 +419,6 @@ class BackendFeedmuncherModel
 	 * Get all data for a given id
 	 *
 	 * @return	array
-	 * @param	int $id							The Id of the comment to fetch?
-	 */
-	public static function getComment($id)
-	{
-		return (array) BackendModel::getDB()->getRecord('SELECT i.*, UNIX_TIMESTAMP(i.created_on) AS created_on,
-															p.id AS post_id, p.title AS post_title, m.url AS post_url
-															FROM feedmuncher_comments AS i
-															INNER JOIN feedmuncher_posts AS p ON i.post_id = p.id AND i.language = p.language
-															INNER JOIN meta AS m ON p.meta_id = m.id
-															WHERE i.id = ?
-															LIMIT 1',
-															array((int) $id));
-	}
-
-
-	/**
-	 * Get all data for a given id
-	 *
-	 * @return	array
 	 * @param	int $id							The id of the category to fetch.
 	 */
 	public static function getCategory($id)
@@ -460,6 +442,25 @@ class BackendFeedmuncherModel
 														FROM blog_categories AS i
 														WHERE i.id = ? AND i.language = ?',
 														array((int) $id, BL::getWorkingLanguage()));
+	}
+
+
+	/**
+	 * Get all data for a given id
+	 *
+	 * @return	array
+	 * @param	int $id							The Id of the comment to fetch?
+	 */
+	public static function getComment($id)
+	{
+		return (array) BackendModel::getDB()->getRecord('SELECT i.*, UNIX_TIMESTAMP(i.created_on) AS created_on,
+															p.id AS post_id, p.title AS post_title, m.url AS post_url
+															FROM feedmuncher_comments AS i
+															INNER JOIN feedmuncher_posts AS p ON i.post_id = p.id AND i.language = p.language
+															INNER JOIN meta AS m ON p.meta_id = m.id
+															WHERE i.id = ?
+															LIMIT 1',
+															array((int) $id));
 	}
 
 
@@ -525,6 +526,29 @@ class BackendFeedmuncherModel
 
 
 	/**
+	 * Get the maximum id
+	 *
+	 * @return	int
+	 */
+	public static function getMaximumId()
+	{
+		return (int) BackendModel::getDB()->getVar('SELECT MAX(id) FROM feedmuncher_posts LIMIT 1');
+	}
+
+
+	/**
+	 * Get all the dates from the publicated articles from a feed
+	 *
+	 * @return	array
+	 * @param	int $feedID		the id of the feed.
+	 */
+	public static function getPublishedDates($feedID)
+	{
+		return (array) BackendModel::getDB()->getColumn('SELECT date FROM feedmuncher_posts WHERE feed_id = ?', (int) $feedID);
+	}
+
+
+	/**
 	 * Get all data for a given revision
 	 *
 	 * @return	array
@@ -538,29 +562,6 @@ class BackendFeedmuncherModel
 															INNER JOIN meta AS m ON m.id = i.meta_id
 															WHERE i.id = ? AND i.revision_id = ?',
 															array((int) $id, (int) $revisionId));
-	}
-
-
-	/**
-	 * Get all the dates from the publicated articles from a feed
-	 *
-	 * @return	array
-	 * @param	int $feedID		the id of the feed
-	 */
-	public static function getPublishedDates($feedID)
-	{
-		return (array) BackendModel::getDB()->getColumn('SELECT date FROM feedmuncher_posts WHERE feed_id = ?', (int) $feedID);
-	}
-
-
-	/**
-	 * Get the maximum id
-	 *
-	 * @return	int
-	 */
-	public static function getMaximumId()
-	{
-		return (int) BackendModel::getDB()->getVar('SELECT MAX(id) FROM feedmuncher_posts LIMIT 1');
 	}
 
 
@@ -713,51 +714,10 @@ class BackendFeedmuncherModel
 
 
 	/**
-	 * Inserts a meta
-	 *
-	 * @return	int
-	 * @param	string $title	the title for the meta
-	 */
-	public static function insertMeta($title)
-	{
-		// build the meta item
-		$item['keywords'] = $title;
-		$item['description'] = $title;
-		$item['title'] = $title;
-		$item['url'] = self::getURL(SpoonFilter::urlise($title));
-
-		// insert in db and return id
-		return (int) BackendModel::getDB(true)->insert('meta', $item);
-	}
-
-
-
-
-	/**
-	 * Inserts a meta for a blogpost
-	 *
-	 * @return	int
-	 * @param	string $title	the title for the meta
-	 * @param	string $url		the url for the meta
-	 */
-	public static function insertMetaForBlog($title, $url)
-	{
-		// build the meta item
-		$item['keywords'] = $title;
-		$item['description'] = $title;
-		$item['title'] = $title;
-		$item['url'] = $url;
-
-		// insert in db and return id
-		return (int) BackendModel::getDB(true)->insert('meta', $item);
-	}
-
-
-	/**
 	 * Inserts a new category into the database
 	 *
 	 * @return	int
-	 * @param	array $item						The data for the category to insert.
+	 * @param	array $item		The data for the category to insert.
 	 */
 	public static function insertCategory(array $item)
 	{
@@ -773,10 +733,49 @@ class BackendFeedmuncherModel
 
 
 	/**
+	 * Inserts a meta
+	 *
+	 * @return	int
+	 * @param	string $title	the title for the meta.
+	 */
+	public static function insertMeta($title)
+	{
+		// build the meta item
+		$item['keywords'] = $title;
+		$item['description'] = $title;
+		$item['title'] = $title;
+		$item['url'] = self::getURL(SpoonFilter::urlise($title));
+
+		// insert in db and return id
+		return (int) BackendModel::getDB(true)->insert('meta', $item);
+	}
+
+
+	/**
+	 * Inserts a meta for a blogpost
+	 *
+	 * @return	int
+	 * @param	string $title	the title for the meta.
+	 * @param	string $url		the url for the meta.
+	 */
+	public static function insertMetaForBlog($title, $url)
+	{
+		// build the meta item
+		$item['keywords'] = $title;
+		$item['description'] = $title;
+		$item['title'] = $title;
+		$item['url'] = $url;
+
+		// insert in db and return id
+		return (int) BackendModel::getDB(true)->insert('meta', $item);
+	}
+
+
+	/**
 	 * sets the article published
 	 *
-	 * @return	int					number of affected rows
-	 * @param	int $id				the id of of the article to publish
+	 * @return	int			number of affected rows.
+	 * @param	int $id		the id of of the article to publish.
 	 */
 	public static function publishArticle($id)
 	{
@@ -866,9 +865,9 @@ class BackendFeedmuncherModel
 	/**
 	 * sets the blog post id for a feedmuncher posts (that is posted in the blog)
 	 *
-	 * @return	int					number of affected rows
-	 * @param	int $id				the id of the feedmuncher posts to update
-	 * @param	int $blog_posts_id	the blog post id
+	 * @return	int					number of affected rows.
+	 * @param	int $id				the id of the feedmuncher posts to update.
+	 * @param	int $blogPostId		the blog post id.
 	 */
 	public static function setBlogPostsId($id, $blogPostId)
 	{
@@ -879,8 +878,8 @@ class BackendFeedmuncherModel
 	/**
 	 * updates a feed
 	 *
-	 * @return	int				number of affected rows
-	 * @param	int $id			the id of the feed to update
+	 * @return	int				number of affected rows.
+	 * @param	int $id			the id of the feed to update.
 	 * @param	array $item		The data to insert.
 	 */
 	public static function update($id, array $item)

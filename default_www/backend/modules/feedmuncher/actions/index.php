@@ -41,6 +41,31 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 
 
 	/**
+	 * get the target category to use in the datagrid
+	 * example: 'blog - default'
+	 *
+	 * @return	string
+	 * @param	string $target		the target module.
+	 * @param	int	$category_id	the category id.
+	 */
+	public static function getCategory($target, $category_id)
+	{
+		// get category name
+		$category = ($target == 'feedmuncher') ? BackendFeedmuncherModel::getCategory((int) $category_id) : BackendFeedmuncherModel::getCategoryFromBlog((int) $category_id);
+
+		// is the blog module installed?
+		if(BackendFeedmuncherModel::blogIsInstalled())
+		{
+			// return a string: target - category url
+			return $target . ' - <a href="' . BackendModel::createURLForAction('edit_category', $target) . '&amp;id=' . $category_id . '">' . $category['name'] . '</a>';
+		}
+
+		// blog module not installed, just return the category
+		else return '<a href="' . BackendModel::createURLForAction('edit_category', $target) . '&amp;id=' . $category_id . '">' . $category['name'] . '</a>';
+	}
+
+
+	/**
 	 * Load the datagrids
 	 *
 	 * @return	void
@@ -85,31 +110,6 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 	{
 		// parse the feeds datagrid
 		$this->tpl->assign('dgFeeds', ($this->dgFeeds->getNumResults() != 0) ? $this->dgFeeds->getContent() : false);
-	}
-
-
-	/**
-	 * get the target category to use in the datagrid
-	 * example: 'blog - default'
-	 *
-	 * @return	string
-	 * @param	string $target		the target module
-	 * @param	int	$category_id
-	 */
-	public static function getCategory($target, $category_id)
-	{
-		// get category name
-		$category = ($target == 'feedmuncher') ? BackendFeedmuncherModel::getCategory((int) $category_id) : BackendFeedmuncherModel::getCategoryFromBlog((int) $category_id);
-
-		// is the blog module installed?
-		if(BackendFeedmuncherModel::blogIsInstalled())
-		{
-			// return a string: target - category url
-			return $target . ' - <a href="' . BackendModel::createURLForAction('edit_category', $target) . '&amp;id=' . $category_id . '">' . $category['name'] . '</a>';
-		}
-
-		// blog module not installed, just return the category
-		else return '<a href="' . BackendModel::createURLForAction('edit_category', $target) . '&amp;id=' . $category_id . '">' . $category['name'] . '</a>';
 	}
 }
 

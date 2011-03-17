@@ -64,7 +64,10 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 					$feed['type'] = 'ATOM';
 				}
 
-				catch(Exception $e) { $feedIsValid = false; }
+				catch(Exception $e)
+				{
+					$feedIsValid = false;
+				}
 			}
 
 			// is it a valid RSS feed?

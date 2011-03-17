@@ -8,7 +8,7 @@
  *
  * @author		Davy Hellemans <davy@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
- * @since		2.0
+ * @since		2.1
  */
 class BackendFeedmuncherMassCommentAction extends BackendBaseAction
 {

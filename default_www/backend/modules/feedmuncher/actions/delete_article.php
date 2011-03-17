@@ -8,8 +8,8 @@
  *
  * @author		Dave Lens <dave@netlash.com>
  * @author		Davy Hellemans <davy@netlash.com>
- * @author		Lowie Benoot <lowiebenoot>
- * @since		2.0
+ * @author		Lowie Benoot <lowiebenoot@netlash.com>
+ * @since		2.1
  */
 class BackendFeedmuncherDeleteArticle extends BackendBaseActionDelete
 {

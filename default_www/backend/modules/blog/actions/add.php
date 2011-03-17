@@ -47,7 +47,7 @@ class BackendBlogAdd extends BackendBaseActionAdd
 	private function loadForm()
 	{
 		// get default category id
-		$defaultCategoryId = BackendModel::getModuleSetting('blog', 'default_category_'. BL::getWorkingLanguage());
+		$defaultCategoryId = BackendModel::getModuleSetting('blog', 'default_category_' . BL::getWorkingLanguage());
 
 		// create form
 		$this->frm = new BackendForm('add');
@@ -56,13 +56,17 @@ class BackendBlogAdd extends BackendBaseActionAdd
 		$rbtHiddenValues[] = array('label' => BL::lbl('Hidden', $this->URL->getModule()), 'value' => 'Y');
 		$rbtHiddenValues[] = array('label' => BL::lbl('Published'), 'value' => 'N');
 
+		// get categories
+		$categories = BackendBlogModel::getCategories();
+		$categories['new_category'] = ucfirst(BL::getLabel('AddCategory'));
+
 		// create elements
 		$this->frm->addText('title');
 		$this->frm->addEditor('text');
 		$this->frm->addEditor('introduction');
 		$this->frm->addRadiobutton('hidden', $rbtHiddenValues, 'N');
 		$this->frm->addCheckbox('allow_comments', BackendModel::getModuleSetting('blog', 'allow_comments', false));
-		$this->frm->addDropdown('category_id', BackendBlogModel::getCategories(), $defaultCategoryId);
+		$this->frm->addDropdown('category_id', $categories, $defaultCategoryId);
 		$this->frm->addDropdown('user_id', BackendUsersModel::getUsers(), BackendAuthentication::getUser()->getUserId());
 		$this->frm->addText('tags', null, null, 'inputText tagBox', 'inputTextError tagBox');
 		$this->frm->addDate('publish_on_date');
@@ -147,20 +151,20 @@ class BackendBlogAdd extends BackendBaseActionAdd
 				if($item['status'] == 'active')
 				{
 					// add search index
-					if(method_exists('BackendSearchModel', 'addIndex')) BackendSearchModel::addIndex('blog', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
+					if(is_callable(array('BackendSearchModel', 'addIndex'))) BackendSearchModel::addIndex('blog', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
 
 					// ping
-					if(BackendModel::getModuleSetting('blog', 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('blog', 'detail') .'/'. $this->meta->getURL());
+					if(BackendModel::getModuleSetting('blog', 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('blog', 'detail') . '/' . $this->meta->getURL());
 
 					// everything is saved, so redirect to the overview
-					$this->redirect(BackendModel::createURLForAction('index') .'&report=added&var='. urlencode($item['title']) .'&highlight=row-'. $item['revision_id']);
+					$this->redirect(BackendModel::createURLForAction('index') . '&report=added&var=' . urlencode($item['title']) . '&highlight=row-' . $item['revision_id']);
 				}
 
 				// draft
 				elseif($item['status'] == 'draft')
 				{
 					// everything is saved, so redirect to the edit action
-					$this->redirect(BackendModel::createURLForAction('edit') .'&report=saved_as_draft&var='. urlencode($item['title']) .'&id='. $item['id'] .'&draft='. $item['revision_id'] .'&highlight=row-'. $item['revision_id']);
+					$this->redirect(BackendModel::createURLForAction('edit') . '&report=saved_as_draft&var=' . urlencode($item['title']) . '&id=' . $item['id'] . '&draft=' . $item['revision_id'] . '&highlight=row-' . $item['revision_id']);
 				}
 			}
 		}

@@ -69,6 +69,7 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 		$this->tpl->assign('blogIsInstalled', $this->blogIsInstalled);
 	}
 
+
 	/**
 	 * Validate the form
 	 *

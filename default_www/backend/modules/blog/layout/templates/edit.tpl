@@ -11,13 +11,13 @@
 </div>
 
 {form:edit}
-
-	{option:!detailURL}<div class="generalMessage infoMessage singleMessage"><p>{$errNoModuleLinked}</p></div>{/option:!detailURL}
-
+	<label for="title">{$lblTitle|ucfirst}</label>
 	{$txtTitle} {$txtTitleError}
+
 	<div id="pageUrl">
 		<div class="oneLiner">
 			{option:detailURL}<p><span><a href="{$detailURL}/{$item.url}">{$detailURL}/<span id="generatedUrl">{$item.url}</span></a></span></p>{/option:detailURL}
+			{option:!detailURL}<p class="infoMessage">{$errNoModuleLinked}</p>{/option:!detailURL}
 		</div>
 	</div>
 
@@ -88,18 +88,19 @@
 							</div>
 
 							<div class="options">
-								<p class="p0"><label for="publishOnDate">{$lblPublishOn|ucfirst}:</label></p>
+								<p class="p0"><label for="publishOnDate">{$lblPublishOn|ucfirst}</label></p>
 								<div class="oneLiner">
 									<p>
 										{$txtPublishOnDate} {$txtPublishOnDateError}
 									</p>
 									<p>
 										<label for="publishOnTime">{$lblAt}</label>
+									</p>
+									<p>
 										{$txtPublishOnTime} {$txtPublishOnTimeError}
 									</p>
 								</div>
 							</div>
-
 						</div>
 
 						<div class="box" id="articleMeta">
@@ -186,6 +187,16 @@
 		<p>
 			{$msgConfirmDelete|sprintf:{$item.title}}
 		</p>
+	</div>
+
+	<div id="addCategoryDialog" class="forkForms" title="{$lblAddCategory|ucfirst}" style="display: none;">
+		<div id="templateList">
+			<p>
+				<label for="categoryTitle">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+				<input type="text" name="categoryTitle" id="categoryTitle" class="inputText" maxlength="255" />
+				<span class="formError" id="categoryTitleError" style="display: none;">{$errFieldIsRequired|ucfirst}</span>
+			</p>
+		</div>
 	</div>
 {/form:edit}
 
