@@ -176,6 +176,9 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'AutoPublish', 'publiceer artikelen automatisch');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Feedmuncher', 'feedmuncher');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'FeedmuncherFeeds', 'feeds');
+		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'FeedmuncherPublishedInFeedmuncher', 'gepubliceerd in feedmuncher');
+		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'FeedmuncherPublishedInBlog', 'gepubliceerd in blog');
+		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'FeedmuncherNotPublished', 'niet gepubliceerd');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'PingFeedmuncherServices', 'ping feedmuncherservices');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Source', 'bron');
 		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'Source', 'Bron: <a href="%2$s" title="%1$s">%1$s</a>');
@@ -227,6 +230,9 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'AutoPublish', 'publish articles automatically');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'Feedmuncher', 'feedmuncher');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'FeedmuncherFeeds', 'feeds');
+		$this->insertLocale('en', 'backend', 'core', 'lbl', 'FeedmuncherPublishedInFeedmuncher', 'published in feedmuncher');
+		$this->insertLocale('en', 'backend', 'core', 'lbl', 'FeedmuncherPublishedInBlog', 'published in blog');
+		$this->insertLocale('en', 'backend', 'core', 'lbl', 'FeedmuncherNotPublished', 'not published');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'PingFeedmuncherServices', 'ping feedmuncherservices');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'Source', 'source');
 		$this->insertLocale('en', 'frontend', 'core', 'msg', 'Source', 'Source: <a href="%2$s" title="%1$s">%1$s</a>');
