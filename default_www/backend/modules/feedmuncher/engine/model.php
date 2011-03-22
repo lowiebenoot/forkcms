@@ -812,8 +812,8 @@ class BackendFeedmuncherModel
 					$item['publish_on'] = $record['date'];
 					$item['meta_id'] = BackendFeedmuncherModel::insertMetaForBlog($record['title'], BackendBlogModel::getURL($record['title']));
 
-					// unset the keys that don't exist for blog
-					unset($item['date'], $item['target'], $item['feed_id'], $item['deleted'], $item['target'], $item['blog_post_id'], $item['url']);
+					// unset the keys that we don't need forr blog
+					unset($item['revision_id'], $item['date'], $item['target'], $item['feed_id'], $item['deleted'], $item['target'], $item['blog_post_id'], $item['url']);
 
 					// insert in db
 					BackendBlogModel::insert($item);
