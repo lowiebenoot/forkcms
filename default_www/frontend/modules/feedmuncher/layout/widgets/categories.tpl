@@ -4,12 +4,12 @@
 *}
 
 {option:widgetFeedmuncherCategories}
-	<div id="feedmuncherCategoriesWidget" class="mod">
+	<section id="feedmuncherCategoriesWidget" class="mod">
 		<div class="inner">
-			<div class="hd">
+			<header class="hd">
 				<h3>{$lblCategories|ucfirst}</h3>
-			</div>
-			<div class="bd">
+			</header>
+			<div class="bd content">
 				<ul>
 					{iteration:widgetFeedmuncherCategories}
 						<li>
@@ -21,5 +21,5 @@
 				</ul>
 			</div>
 		</div>
-	</div>
+	</section>
 {/option:widgetFeedmuncherCategories}

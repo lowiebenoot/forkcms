@@ -19,7 +19,7 @@ class BackendFeedmuncherModel
 									FROM feedmuncher_posts AS i
 									INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
 									WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND hidden = ?';
-	const QRY_DATAGRID_BROWSE_CATEGORIES = 'SELECT i.id, i.name
+	const QRY_DATAGRID_BROWSE_CATEGORIES = 'SELECT i.id, i.title
 											FROM feedmuncher_categories AS i
 											WHERE i.language = ?';
 	const QRY_DATAGRID_BROWSE_COMMENTS = 'SELECT i.id, UNIX_TIMESTAMP(i.created_on) AS created_on, i.author, i.text,
@@ -374,7 +374,7 @@ class BackendFeedmuncherModel
 	public static function getCategories()
 	{
 		// get records and return them
-		$categories = (array) BackendModel::getDB()->getPairs('SELECT i.id, i.name
+		$categories = (array) BackendModel::getDB()->getPairs('SELECT i.id, i.title
 																FROM feedmuncher_categories AS i
 																WHERE i.language = ?', array(BL::getWorkingLanguage()));
 
@@ -409,9 +409,9 @@ class BackendFeedmuncherModel
 	public static function getCategoriesFromBlog()
 	{
 		// get records and return them
-		return (array) BackendModel::getDB()->getPairs('SELECT i.id, i.name
-																FROM blog_categories AS i
-																WHERE i.language = ?', array(BL::getWorkingLanguage()));
+		return (array) BackendModel::getDB()->getPairs('SELECT i.id, i.title
+														FROM blog_categories AS i
+														WHERE i.language = ?', array(BL::getWorkingLanguage()));
 	}
 
 
@@ -419,7 +419,7 @@ class BackendFeedmuncherModel
 	 * Get all data for a given id
 	 *
 	 * @return	array
-	 * @param	int $id							The id of the category to fetch.
+	 * @param	int $id		The id of the category to fetch.
 	 */
 	public static function getCategory($id)
 	{
@@ -648,7 +648,8 @@ class BackendFeedmuncherModel
 			// get number of categories with this URL
 			$number = (int) $db->getVar('SELECT COUNT(i.id)
 											FROM feedmuncher_categories AS i
-											WHERE i.language = ? AND i.url = ?',
+											INNER JOIN meta AS m ON i.meta_id = m.id
+											WHERE i.language = ? AND m.url = ?',
 											array(BL::getWorkingLanguage(), $URL));
 
 			// already exists
@@ -668,7 +669,8 @@ class BackendFeedmuncherModel
 			// get number of items with this URL
 			$number = (int) $db->getVar('SELECT COUNT(i.id)
 											FROM feedmuncher_categories AS i
-											WHERE i.language = ? AND i.url = ? AND i.id != ?',
+											INNER JOIN meta AS m ON i.meta_id = m.id
+											WHERE i.language = ? AND m.url = ? AND i.id != ?',
 											array(BL::getWorkingLanguage(), $URL, $categoryId));
 
 			// already exists
@@ -717,14 +719,21 @@ class BackendFeedmuncherModel
 	 * Inserts a new category into the database
 	 *
 	 * @return	int
-	 * @param	array $item		The data for the category to insert.
+	 * @param	array $item				The data for the category to insert.
+	 * @param	array[optional] $meta	The metadata for the category to insert.
 	 */
-	public static function insertCategory(array $item)
+	public static function insertCategory(array $item, $meta = null)
 	{
-		// create category
-		$item['id'] = BackendModel::getDB(true)->insert('feedmuncher_categories', $item);
+		// get db
+		$db = BackendModel::getDB(true);
 
-		// invalidate the cache for feedmuncher
+		// meta given?
+		if($meta !== null) $item['meta_id'] = $db->insert('meta', $meta);
+
+		// create category
+		$item['id'] = $db->insert('feedmuncher_categories', $item);
+
+		// invalidate the cache for blog
 		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
 
 		// return the id

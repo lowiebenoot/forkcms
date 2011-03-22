@@ -3,14 +3,14 @@
 	- {$widgetFeedmuncherArchive}:
 *}
 
-{cache:{$LANGUAGE}_feedmuncherWidgetArchiveCache}
+{cache:{$LANGUAGE}_blogWidgetArchiveCache}
 	{option:widgetFeedmuncherArchive}
-		<div id="feedmuncherArchiveWidget" class="mod">
+		<section id="blogArchiveWidget" class="mod">
 			<div class="inner">
-				<div class="hd">
+				<header class="hd">
 					<h3>{$lblArchive|ucfirst}</h3>
-				</div>
-				<div class="bd">
+				</header>
+				<div class="bd content">
 					<ul>
 						{iteration:widgetFeedmuncherArchive}
 							<li>
@@ -23,10 +23,10 @@
 									<ul>
 										{iteration:widgetFeedmuncherArchive.months}
 											<li>
-												{option:months.url}<a href="{$months.url}">{/option:months.url}
-													{$months.label|date:'F':{$LANGUAGE}}
-													{option:months.url}({$months.total}){/option:months.url}
-												{option:months.url}</a>{/option:months.url}
+												{option:widgetFeedmuncherArchive.months.url}<a href="{$widgetFeedmuncherArchive.months.url}">{/option:widgetFeedmuncherArchive.months.url}
+													{$widgetFeedmuncherArchive.months.label|date:'F':{$LANGUAGE}}
+													{option:widgetFeedmuncherArchive.months.url}({$widgetFeedmuncherArchive.months.total}){/option:widgetFeedmuncherArchive.months.url}
+												{option:widgetFeedmuncherArchive.months.url}</a>{/option:widgetFeedmuncherArchive.months.url}
 											</li>
 										{/iteration:widgetFeedmuncherArchive.months}
 									</ul>
@@ -36,6 +36,6 @@
 					</ul>
 				</div>
 			</div>
-		</div>
+		</section>
 	{/option:widgetFeedmuncherArchive}
-{/cache:{$LANGUAGE}_feedmuncherWidgetArchiveCache}
+{/cache:{$LANGUAGE}_blogWidgetArchiveCache}

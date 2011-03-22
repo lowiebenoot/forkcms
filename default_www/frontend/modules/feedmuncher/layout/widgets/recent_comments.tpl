@@ -4,23 +4,23 @@
 *}
 
 {option:widgetFeedmuncherRecentComments}
-	<div id="feedmuncherRecentCommentsWidget" class="mod">
+	<section id="feedmuncherRecentCommentsWidget" class="mod">
 		<div class="inner">
-			<div class="hd">
+			<header class="hd">
 				<h3>{$lblRecentComments|ucfirst}</h3>
-			</div>
-			<div class="bd">
+			</header>
+			<div class="bd content">
 				<ul>
 					{iteration:widgetFeedmuncherRecentComments}
-					<li>
-						{option:widgetFeedmuncherRecentComments.website}<a href="{$widgetFeedmuncherRecentComments.website}" rel="nofollow">{/option:widgetFeedmuncherRecentComments.website}
-							{$widgetFeedmuncherRecentComments.author}
-						{option:widgetFeedmuncherRecentComments.website}</a>{/option:widgetFeedmuncherRecentComments.website}
-						{$lblCommentedOn} <a href="{$widgetFeedmuncherRecentComments.full_url}">{$widgetFeedmuncherRecentComments.post_title}</a>
-					</li>
+						<li>
+							{option:widgetFeedmuncherRecentComments.website}<a href="{$widgetFeedmuncherRecentComments.website}" rel="nofollow">{/option:widgetFeedmuncherRecentComments.website}
+								{$widgetFeedmuncherRecentComments.author}
+							{option:widgetFeedmuncherRecentComments.website}</a>{/option:widgetFeedmuncherRecentComments.website}
+							{$lblCommentedOn} <a href="{$widgetFeedmuncherRecentComments.full_url}">{$widgetFeedmuncherRecentComments.post_title}</a>
+						</li>
 					{/iteration:widgetFeedmuncherRecentComments}
 				</ul>
 			</div>
 		</div>
-	</div>
+	</section>
 {/option:widgetFeedmuncherRecentComments}

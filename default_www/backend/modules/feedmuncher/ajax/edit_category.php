@@ -26,20 +26,20 @@ class BackendFeedmuncherAjaxEditCategory extends BackendBaseAJAXAction
 		$categoryName = trim(SpoonFilter::getPostValue('value', null, '', 'string'));
 
 		// validate
-		if($id === 0) $this->output(self::BAD_REQUEST, null, 'no id provided');
+		if($id === 0) $this->output(self::BAD_REQUEST, null, '	no id provided');
 		if($categoryName === '') $this->output(self::BAD_REQUEST, null, BL::err('NameIsRequired'));
 
 		// build array
 		$item['id'] = $id;
-		$item['name'] = SpoonFilter::htmlspecialchars($categoryName);
+		$item['title'] = SpoonFilter::htmlspecialchars($categoryName);
 		$item['language'] = BL::getWorkingLanguage();
-		$item['url'] = BackendFeedmuncherModel::getURLForCategory($item['name']);
+		$item['url'] = BackendFeedmuncherModel::getURLForCategory($item['title']);
 
 		// update
 		BackendFeedmuncherModel::updateCategory($item);
 
 		// output
-		$this->output(self::OK, $item, vsprintf(BL::msg('EditedCategory'), array($item['name'])));
+		$this->output(self::OK, $item, vsprintf(BL::msg('EditedCategory'), array($item['title'])));
 	}
 }
 

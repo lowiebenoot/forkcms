@@ -289,6 +289,9 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 				// update the item
 				$item['revision_id'] = BackendFeedmuncherModel::updateArticle($item);
 
+				// publish the article in blog if the target is blog, and it is changed from hidden to not hidden
+				if($item['target'] == 'blog' && $item['hidden'] == 'N') BackendFeedmuncherModel::publishArticles(array((int) $item['id']));
+
 				// recalculate comment count so the new revision has the correct count
 				BackendFeedmuncherModel::reCalculateCommentCount(array($this->id));
 

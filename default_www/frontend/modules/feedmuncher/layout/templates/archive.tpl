@@ -1,11 +1,20 @@
 {*
 	variables that are available:
-	- {$feedmuncherCategory}: contains data about the category
-	- {$feedmuncherArticles}: contains an array with all posts, each element contains data about the post
+	- {$archive}: contains an array with some dates
+	- {$items}: contains an array with all items, each element contains data about the itme
 *}
 
-{option:feedmuncherArticles}
-	<div id="feedmuncherArchive" class="mod">
+{option:!items}
+	<section id="feedmuncherArchive" class="mod">
+		<div class="inner">
+			<div class="bd content">
+				<p>{$msgFeedmuncherNoItems}</p>
+			</div>
+		</div>
+	</section>
+{/option:!items}
+{option:items}
+	<section id="feedmuncherArchive" class="mod">
 		<div class="inner">
 			<div class="bd content">
 				<table class="datagrid" width="100%">
@@ -17,23 +26,23 @@
 						</tr>
 					</thead>
 					<tbody>
-						{iteration:feedmuncherArticles}
+						{iteration:items}
 							<tr>
-								<td class="date">{$feedmuncherArticles.publish_on|date:{$dateFormatShort}:{$LANGUAGE}}</td>
-								<td class="title"><a href="{$feedmuncherArticles.full_url}" title="{$feedmuncherArticles.title}">{$feedmuncherArticles.title}</a></td>
+								<td class="date">{$items.publish_on|date:{$dateFormatShort}:{$LANGUAGE}}</td>
+								<td class="title"><a href="{$items.full_url}" title="{$items.title}">{$items.title}</a></td>
 								<td class="comments">
-									{option:!feedmuncherArticles.comments}<a href="{$feedmuncherArticles.full_url}#{$actComment}">{$msgFeedmuncherNoComments|ucfirst}</a>{/option:!feedmuncherArticles.comments}
-									{option:feedmuncherArticles.comments}
-										{option:feedmuncherArticles.comments_multiple}<a href="{$feedmuncherArticles.full_url}#{$actComments}">{$msgFeedmuncherNumberOfComments|sprintf:{$feedmuncherArticles.comments_count}}</a>{/option:feedmuncherArticles.comments_multiple}
-										{option:!feedmuncherArticles.comments_multiple}<a href="{$feedmuncherArticles.full_url}#{$actComments}">{$msgFeedmuncherOneComment}</a>{/option:!feedmuncherArticles.comments_multiple}
-									{/option:feedmuncherArticles.comments}
+									{option:!items.comments}<a href="{$items.full_url}#{$actComment}">{$msgFeedmuncherNoComments|ucfirst}</a>{/option:!items.comments}
+									{option:items.comments}
+										{option:items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherNumberOfComments|sprintf:{$items.comments_count}}</a>{/option:items.comments_multiple}
+										{option:!items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherOneComment}</a>{/option:!items.comments_multiple}
+									{/option:items.comments}
 								</td>
 							</tr>
-						{/iteration:feedmuncherArticles}
+						{/iteration:items}
 					</tbody>
 				</table>
 			</div>
 		</div>
-	</div>
+	</section>
 	{include:{$FRONTEND_CORE_PATH}/layout/templates/pagination.tpl}
-{/option:feedmuncherArticles}
+{/option:items}

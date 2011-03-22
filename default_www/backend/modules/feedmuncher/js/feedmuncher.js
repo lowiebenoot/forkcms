@@ -76,13 +76,13 @@ jsBackend.feedmuncher.category =
 	// init, something like a constructor
 	init: function()
 	{
-		if($('.datagrid td.name').length > 0 && jsBackend.current.action == 'categories')
+		if($('.datagrid td.title').length > 0 && jsBackend.current.action == 'categories')
 		{
 			// buil ajax-url
 			var url = '/backend/ajax.php?module='+ jsBackend.current.module +'&action=edit_category&language='+ jsBackend.current.language;
 
 			// bind
-			$('.datagrid td.name').inlineTextEdit({ saveUrl: url, tooltip: '{$msgClickToEdit}' });
+			$('.datagrid td.title').inlineTextEdit({ saveUrl: url, tooltip: '{$msgClickToEdit}' });
 		}
 	},
 
