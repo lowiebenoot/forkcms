@@ -1,12 +1,12 @@
 <?php
 
 /**
- * This is the configuration-object for the banners module
+ * This is the configuration-object for the blog module
  *
  * @package		backend
  * @subpackage	banners
  *
- * @author		Lowie Benoot <lowiebenoot@netlash.com>
+ * @author		Davy Hellemans <davy@netlash.com>
  * @since		2.0
  */
 final class BackendBannersConfig extends BackendBaseConfig

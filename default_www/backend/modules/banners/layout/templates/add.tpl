@@ -4,7 +4,7 @@
 {form:add}
 	<div class="box">
 		<div class="heading">
-			<h3>{$lblBanners|ucfirst}: {$lblBannersAddBanner}</h3>
+			<h3>{$lblBanners|ucfirst}: {$lblAddBanner}</h3>
 		</div>
 		<div class="options horizontal">
 			<p>
@@ -20,8 +20,8 @@
 				{$ddmSize} {$ddmSizeError}
 			</p>
 			<p>
-				<label for="image">{$lblImage|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$fileImage} {$fileImageError}
+				<label for="file">{$lblFile|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+				{$fileFile} {$fileFileError}
 			</p>
 			<p>
 				<label for="startDate">{$lblStartDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
@@ -36,7 +36,7 @@
 
 	<div class="fullwidthOptions">
 		<div class="buttonHolderRight">
-			<input id="addButton" class="inputButton button mainButton" type="submit" name="addCategory" value="{$lblAddCategory|ucfirst}" />
+			<input id="addButton" class="inputButton button mainButton" type="submit" name="addCategory" value="{$lblAddBanner|ucfirst}" />
 		</div>
 	</div>
 {/form:add}

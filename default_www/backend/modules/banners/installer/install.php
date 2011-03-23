@@ -42,9 +42,6 @@ class BlogInstall extends ModuleInstaller
 
 		// general settings
 
-		// make module searchable
-		$this->makeSearchable('blog');
-
 		// module rights
 		$this->setModuleRights(1, 'banners');
 
@@ -61,6 +58,17 @@ class BlogInstall extends ModuleInstaller
 		// add extra's
 
 		// insert locale (nl)
+
+		// insert locale (en)
+		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'AddBanner', 'add banner');
+		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'Groups', 'groups');
+		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'NumClicks', 'clicks');
+		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'NumViews', 'views');
+		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'Size', 'size');
+		$this->insertLocale('en', 'backend', 'core', 'lbl', 'Banners', 'banners');
+
+		// errUrlIsRequired
+		// errUrlIsInvalid
 	}
 
 }

@@ -49,7 +49,7 @@ class BackendBannersAdd extends BackendBaseActionAdd
 		$this->frm->addText('name');
 		$this->frm->addText('url');
 		$this->frm->addDropdown('size', BackendBannersModel::getStandards());
-		$this->frm->addFile('image');
+		$this->frm->addImage('file');
 		$this->frm->addDate('start_date');
 		$this->frm->addTime('start_time', null, 'inputText time');
 		$this->frm->addDate('end_date');
@@ -71,11 +71,67 @@ class BackendBannersAdd extends BackendBaseActionAdd
 			$this->frm->cleanupFields();
 
 			// validate fields
+			$this->frm->getField('name')->isFilled(BL::err('TitleIsRequired'));
+			if($this->frm->getField('url')->isFilled(BL::err('UrlIsRequired'))) $this->frm->getField('url')->isURL(BL::err('UrlIsInvalid'));;
+			$this->frm->getField('start_date')->isValid(BL::err('StartDateIsInvalid'));
+			$this->frm->getField('start_time')->isValid(BL::err('StartTimeIsInvalid'));
+			$this->frm->getField('end_date')->isValid(BL::err('EndDateIsInvalid'));
+			$this->frm->getField('end_time')->isValid(BL::err('EndTimeIsInvalid'));
+
+			// start date before end date?
+			$date_from = BackendModel::getUTCTimestamp($this->frm->getField('start_date'), $this->frm->getField('start_time'));
+			$date_till = BackendModel::getUTCTimestamp($this->frm->getField('end_date'), $this->frm->getField('end_time'));
+			if($date_from > $date_till) $this->frm->getField('end_time')->addError(BL::err('EndDateMustBeAfterBeginDate'));
+
+			// is the file filled in?
+			if($this->frm->getField('file')->isFilled(BL::err('FileIsRequired')))
+			{
+				// correct extension?
+				if($this->frm->getField('file')->isAllowedExtension(array('jpg', 'jpeg', 'gif', 'png', 'swf'), BL::getError('JPGGIFPNGAndSWFOnly')))
+				{
+					// correct mimetype?
+					$this->frm->getField('file')->isAllowedMimeType(array('image/gif', 'image/jpg', 'image/jpeg', 'image/png', 'application/x-shockwave-flash'), BL::getError('JPGGIFPNGAndSWFOnly'));
+				}
+			}
 
 			// no errors?
 			if($this->frm->isCorrect())
 			{
+				// get the extension of the file
+				$extension = $this->frm->getField('file')->getExtension();
+
 				// build item
+				$item['name'] = $this->frm->getField('name')->getValue();
+				$item['standard_id'] = (int) $this->frm->getField('size')->getValue();
+				$item['url'] = $this->frm->getField('url')->getValue();
+				$item['file'] = SpoonFilter::urlise($this->frm->getField('file')->getFilename(false)) . '.'. $extension;
+				$item['date_from'] = BackendModel::getUTCDate(null, $date_from);
+				$item['date_till'] = BackendModel::getUTCDate(null, $date_till);
+
+				// insert in db
+				$bannerId = BackendBannersModel::insertBanner($item);
+
+				// get the banner standard
+				$standard = BackendBannersModel::getStandard($item['standard_id']);
+
+				// create directory for the original file
+				SpoonDirectory::create(FRONTEND_FILES_PATH .'/banners/'. $bannerId .'/original/');
+
+				// is the upload file an image?
+				if($extension != 'swf')
+				{
+					// create folder for resized image
+					SpoonDirectory::create(FRONTEND_FILES_PATH .'/banners/'. $bannerId .'/resized/');
+
+					// create resized image
+					$this->frm->getField('file')->createThumbnail(FRONTEND_FILES_PATH .'/banners/'. $bannerId .'/resized/'. $item['file'], (int) $standard['width'], (int) $standard['height'], true, false, 100);
+				}
+
+				// save original file
+				$this->frm->getField('file')->moveFile(FRONTEND_FILES_PATH .'/banners/'. $bannerId .'/original/'. $item['file']);
+
+				// everything is saved, so redirect to the overview
+				$this->redirect(BackendModel::createURLForAction('index') .'&report=added&var='. urlencode($item['name']) .'&highlight=id-'. $bannerId);
 			}
 		}
 	}
