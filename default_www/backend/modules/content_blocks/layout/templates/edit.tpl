@@ -1,11 +1,11 @@
 {include:{$BACKEND_CORE_PATH}/layout/templates/head.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_start_module.tpl}
 
-{form:edit}
-	<div class="pageTitle">
-		<h2>{$lblContentBlocks|ucfirst}: {$msgEditContentBlock|sprintf:{$title}}</h2>
-	</div>
+<div class="pageTitle">
+	<h2>{$lblContentBlocks|ucfirst}: {$msgEditContentBlock|sprintf:{$title}}</h2>
+</div>
 
+{form:edit}
 	<div class="tabs">
 		<ul>
 			<li><a href="#tabContent">{$lblContent|ucfirst}</a></li>
@@ -18,7 +18,7 @@
 					<label for="title">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 					{$txtTitle} {$txtTitleError}
 				</p>
-				<p>
+				<p style="position: relative;">
 					<label for="text">{$lblContent|ucfirst}</label>
 					{$txtText} {$txtTextError}
 				</p>
