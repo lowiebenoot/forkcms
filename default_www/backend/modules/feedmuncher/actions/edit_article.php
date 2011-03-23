@@ -61,7 +61,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 		}
 
 		// no item found, throw an exception, because somebody is fucking with our URL
-		else $this->redirect(BackendModel::createURLForAction('index') . '&error=non-existing');
+		else $this->redirect(BackendModel::createURLForAction('articles') . '&error=non-existing');
 	}
 
 

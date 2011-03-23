@@ -117,7 +117,7 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 				$feedID = BackendFeedmuncherModel::insert($item);
 
 				// return to the feeds overview
-				$this->redirect(BackendModel::createURLForAction('index') . '&report=added&var=' . urlencode($item['name']) . '&highlight=row-' . $feedID);
+				$this->redirect(BackendModel::createURLForAction('index') . '&report=addedfeed&var=' . urlencode($item['name']) . '&highlight=row-' . $feedID);
 			}
 		}
 	}

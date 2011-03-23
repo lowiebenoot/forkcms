@@ -180,7 +180,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 				BackendFeedmuncherModel::update($this->id, $item);
 
 				// return to the feeds overview
-				$this->redirect(BackendModel::createURLForAction('index') . '&report=edited&var=' . urlencode($item['name']) . '&highlight=row-' . $this->id);
+				$this->redirect(BackendModel::createURLForAction('index') . '&report=editedfeed&var=' . urlencode($item['name']) . '&highlight=row-' . $this->id);
 			}
 		}
 	}

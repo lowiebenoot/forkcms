@@ -4,7 +4,7 @@
 {form:addFeed}
 	<div class="box">
 		<div class="heading">
-			<h3>{$lblFeeds|ucfirst}: {$lblEditFeed}</h3>
+			<h3>{$lblFeeds|ucfirst}: {$msgEditFeed|sprintf:{$item.title}}</h3>
 		</div>
 		<div class="options horizontal">
 			<p>
@@ -49,13 +49,13 @@
 			<span>{$lblDelete|ucfirst}</span>
 		</a>
 		<div class="buttonHolderRight">
-			<input id="editButton" class="inputButton button mainButton" type="submit" name="editFeed" value="{$lblEditFeed|ucfirst}" />
+			<input id="editButton" class="inputButton button mainButton" type="submit" name="editFeed" value="{$lblSave|ucfirst}" />
 		</div>
 	</div>
 
 	<div id="confirmDelete" title="{$lblDelete|ucfirst}?" style="display: none;">
 		<p>
-			{$msgConfirmDelete|sprintf:{$item.name}}
+			{$msgConfirmDeleteFeed|sprintf:{$item.name}}
 		</p>
 	</div>
 {/form:addFeed}

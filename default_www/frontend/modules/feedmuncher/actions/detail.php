@@ -214,7 +214,7 @@ class FrontendFeedmuncherDetail extends FrontendBaseBlock
 		$this->header->setMetaKeywords($this->record['meta_keywords'], ($this->record['meta_keywords_overwrite'] == 'Y'));
 
 		// assign article
-		$this->tpl->assign('feedmuncherArticle', $this->record);
+		$this->tpl->assign('item', $this->record);
 
 		// assign article tags
 		$this->tpl->assign('feedmuncherArticleTags', $this->record['tags']);

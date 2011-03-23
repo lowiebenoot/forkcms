@@ -6,7 +6,7 @@
  * @package		installer
  * @subpackage	feedmuncher
  *
- * @author		Lowie Benoot <lowiebenoot@netlash.com>
+ * @author		Lowie Benoot <lowie@netlash.com>
  * @since		2.1
  */
 class FeedmuncherInstall extends ModuleInstaller
@@ -16,12 +16,17 @@ class FeedmuncherInstall extends ModuleInstaller
 	 *
 	 * @return	int
 	 * @param	string $language	The language to use.
-	 * @param	string $name		The name of the category.
+	 * @param	string $title		The title of the category.
 	 * @param	string $url			The URL for the category.
 	 */
-	private function addCategory($language, $name, $url)
+	private function addCategory($language, $title, $url)
 	{
-		return (int) $this->getDB()->insert('feedmuncher_categories', array('language' => (string) $language, 'name' => (string) $name, 'url' => (string) $url));
+		// build array
+		$item['meta_id'] = $this->insertMeta($title, $title, $title, $url);
+		$item['language'] = (string) $language;
+		$item['title'] = (string) $title;
+
+		return (int) $this->getDB()->insert('feedmuncher_categories', $item);
 	}
 
 
@@ -149,16 +154,20 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'PostInBlog', 'publiceer de artikelen in de blog module');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'PostInFeedmuncher', 'publiceer de artikelen in de feedmuncher module');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'Added', 'Het artikel "%1$s" werd toegevoegd.');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'AddedFeed', 'De feed "%1$s" werd toegevoegd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'CommentOnWithURL', 'Reactie op: <a href="%1$s">%2$s</a>');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'ConfirmDelete', 'Ben je zeker dat je het artikel "%1$s" wil verwijderen?');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'ConfirmDeleteFeed', 'Ben je zeker dat je de feed "%1$s" wil verwijderen?');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'Deleted', 'De geselecteerde artikels werden verwijderd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeletedArticles', 'De artikels werden verwijderd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeletedSpam', 'Alle spamberichten werden verwijderd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeleteAllSpam', 'Alle spam verwijderen:');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'EditArticle', 'bewerk artikel "%1$s"');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'EditCommentOn', 'bewerk reactie op "%1$s"');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'EditFeed', 'bewerk feed "%1$s"');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'Edited', 'Het artikel "%1$s" werd opgeslagen.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'EditedComment', 'De reactie werd opgeslagen.');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'EditedFeed', 'De feed "%1$s" werd opgeslagen.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'FollowAllCommentsInRSS', 'Volg alle reacties in een RSS feed: <a href="%1$s">%1$s</a>.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'HelpMeta', 'Toon de meta informatie van deze feedmuncherpost in de RSS feed (categorie, tags, ...)');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'HelpPingServices', 'Laat verschillende feedmuncherservices weten wanneer je een nieuw bericht plaatst.');
@@ -203,16 +212,20 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'PostInBlog', 'publish the articles in the blog module');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'PostInFeedmuncher', 'publish the articles in the feedmuncher module');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'Added', 'The article "%1$s" was added.');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'Added', 'The feed "%1$s" was added.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'CommentOnWithURL', 'Comment on: <a href="%1$s">%2$s</a>');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'ConfirmDelete', 'Are your sure you want to delete the article "%1$s"?');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'ConfirmDeleteFeed', 'Are your sure you want to delete the feed "%1$s"?');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'Deleted', 'The selected articles were deleted.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeletedArticles', 'The articles were deleted.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeletedSpam', 'All spam-comments were deleted.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeleteAllSpam', 'Delete all spam:');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'EditArticle', 'edit article "%1$s"');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'EditCommentOn', 'edit comment on "%1$s"');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'EditFeed', 'edit feed "%1$s"');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'Edited', 'The article "%1$s" was saved.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'EditedComment', 'The comment was saved.');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'EditedFeed', 'The feed "%1$s" was saved.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'FollowAllCommentsInRSS', 'Follow all comments in a RSS feed: <a href="%1$s">%1$s</a>.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'HelpMeta', 'Show the meta information for this feedmuncherpost in the RSS feed (category, tags, ...)');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'HelpPingServices', 'Let various feedmuncherservices know when you\'ve posted a new article.');
