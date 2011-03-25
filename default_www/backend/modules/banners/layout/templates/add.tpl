@@ -21,15 +21,21 @@
 			</p>
 			<p>
 				<label for="file">{$lblFile|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$fileFile} {$fileFileError}
+				{$fileFile}
+				{option:!fileFileError}<span class="helpTxt">{$errJPGGIFPNGAndSWFOnly}</span>{/option:!fileFileError}
+				{$fileFileError}
 			</p>
 			<p>
 				<label for="startDate">{$lblStartDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$txtStartDate} {$txtStartDateError} <label for="startTime" class="nofloat">{$lblAt}<abbr title="{$lblRequiredField}">*</abbr></label> {$txtStartTime} {$txtStartTimeError}
+				{$txtStartDate} <label for="startTime" class="nofloat">{$lblAt}<abbr title="{$lblRequiredField}">*</abbr></label> {$txtStartTime}
+				{$txtStartDateError}
+				{$txtStartTimeError}
 			</p>
 			<p>
 				<label for="endDate">{$lblEndDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$txtEndDate} {$txtEndDateError} <label for="endTime" class="nofloat">{$lblAt}<abbr title="{$lblRequiredField}">*</abbr></label> {$txtEndTime} {$txtEndTimeError}
+				{$txtEndDate} <label for="endTime" class="nofloat">{$lblAt}<abbr title="{$lblRequiredField}">*</abbr></label> {$txtEndTime}
+				{$txtEndDateError}
+				{$txtEndTimeError}
 			</p>
 		</div>
 	</div>

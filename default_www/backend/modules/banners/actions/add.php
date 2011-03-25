@@ -70,18 +70,27 @@ class BackendBannersAdd extends BackendBaseActionAdd
 			// cleanup the submitted fields, ignore fields that were added by hackers
 			$this->frm->cleanupFields();
 
+			// an array that is used to check if everything is ok with the dates
+			$datesOK = array();
+
 			// validate fields
 			$this->frm->getField('name')->isFilled(BL::err('TitleIsRequired'));
-			if($this->frm->getField('url')->isFilled(BL::err('UrlIsRequired'))) $this->frm->getField('url')->isURL(BL::err('UrlIsInvalid'));;
-			$this->frm->getField('start_date')->isValid(BL::err('StartDateIsInvalid'));
-			$this->frm->getField('start_time')->isValid(BL::err('StartTimeIsInvalid'));
-			$this->frm->getField('end_date')->isValid(BL::err('EndDateIsInvalid'));
-			$this->frm->getField('end_time')->isValid(BL::err('EndTimeIsInvalid'));
+			if($this->frm->getField('url')->isFilled(BL::err('UrlIsRequired'))) $this->frm->getField('url')->isURL(BL::err('InvalidURL'));;
+
+			// validate the dates and times
+			$datesOK[] = $this->frm->getField('start_date')->isFilled() ? $this->frm->getField('start_date')->isValid(BL::err('StartDateIsInvalid')) : $this->frm->getField('start_date')->isFilled(BL::err('StartDateIsRequired'));
+			$datesOK[] = $this->frm->getField('end_date')->isFilled(BL::err('EndDateIsRequired'));
+			$datesOK[] = $this->frm->getField('start_time')->isFilled() ? $this->frm->getField('start_time')->isValid(BL::err('StartTimeIsInvalid')) : $this->frm->getField('start_time')->isFilled(BL::err('StartTimeIsRequired'));
+			$datesOK[] = $this->frm->getField('end_date')->isValid(BL::err('EndDateIsInvalid'));
+			$datesOK[] = $this->frm->getField('end_time')->isFilled() ? $this->frm->getField('end_time')->isValid(BL::err('EndTimeIsInvalid')) : $this->frm->getField('end_time')->isFilled(BL::err('EndTimeIsRequired'));
 
 			// start date before end date?
-			$date_from = BackendModel::getUTCTimestamp($this->frm->getField('start_date'), $this->frm->getField('start_time'));
-			$date_till = BackendModel::getUTCTimestamp($this->frm->getField('end_date'), $this->frm->getField('end_time'));
-			if($date_from > $date_till) $this->frm->getField('end_time')->addError(BL::err('EndDateMustBeAfterBeginDate'));
+			if(!in_array(false, $datesOK))
+			{
+				$date_from = BackendModel::getUTCTimestamp($this->frm->getField('start_date'), $this->frm->getField('start_time'));
+				$date_till = BackendModel::getUTCTimestamp($this->frm->getField('end_date'), $this->frm->getField('end_time'));
+				if($date_from > $date_till) $this->frm->getField('end_time')->addError(BL::err('EndDateMustBeAfterBeginDate'));
+			}
 
 			// is the file filled in?
 			if($this->frm->getField('file')->isFilled(BL::err('FileIsRequired')))
@@ -104,7 +113,7 @@ class BackendBannersAdd extends BackendBaseActionAdd
 				$item['name'] = $this->frm->getField('name')->getValue();
 				$item['standard_id'] = (int) $this->frm->getField('size')->getValue();
 				$item['url'] = $this->frm->getField('url')->getValue();
-				$item['file'] = SpoonFilter::urlise($this->frm->getField('file')->getFilename(false)) . '.'. $extension;
+				$item['file'] = SpoonFilter::urlise($this->frm->getField('file')->getFilename(false)) . '.' . $extension;
 				$item['date_from'] = BackendModel::getUTCDate(null, $date_from);
 				$item['date_till'] = BackendModel::getUTCDate(null, $date_till);
 
@@ -115,23 +124,23 @@ class BackendBannersAdd extends BackendBaseActionAdd
 				$standard = BackendBannersModel::getStandard($item['standard_id']);
 
 				// create directory for the original file
-				SpoonDirectory::create(FRONTEND_FILES_PATH .'/banners/'. $bannerId .'/original/');
+				SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/' . $bannerId . '/original/');
 
 				// is the upload file an image?
 				if($extension != 'swf')
 				{
 					// create folder for resized image
-					SpoonDirectory::create(FRONTEND_FILES_PATH .'/banners/'. $bannerId .'/resized/');
+					SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/' . $bannerId . '/resized/');
 
 					// create resized image
-					$this->frm->getField('file')->createThumbnail(FRONTEND_FILES_PATH .'/banners/'. $bannerId .'/resized/'. $item['file'], (int) $standard['width'], (int) $standard['height'], true, false, 100);
+					$this->frm->getField('file')->createThumbnail(FRONTEND_FILES_PATH . '/banners/' . $bannerId . '/resized/' . $item['file'], (int) $standard['width'], (int) $standard['height'], true, false, 100);
 				}
 
 				// save original file
-				$this->frm->getField('file')->moveFile(FRONTEND_FILES_PATH .'/banners/'. $bannerId .'/original/'. $item['file']);
+				$this->frm->getField('file')->moveFile(FRONTEND_FILES_PATH . '/banners/' . $bannerId . '/original/' . $item['file']);
 
 				// everything is saved, so redirect to the overview
-				$this->redirect(BackendModel::createURLForAction('index') .'&report=added&var='. urlencode($item['name']) .'&highlight=id-'. $bannerId);
+				$this->redirect(BackendModel::createURLForAction('index') . '&report=addedBanner&var=' . urlencode($item['name']) . '&highlight=id-' . $bannerId);
 			}
 		}
 	}

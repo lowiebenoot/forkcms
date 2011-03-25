@@ -1,4 +1,3 @@
-
 CREATE  TABLE IF NOT EXISTS `banners_standards` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(255) NOT NULL ,
@@ -37,3 +36,6 @@ CREATE  TABLE IF NOT EXISTS `banners_groups_members` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
+INSERT INTO `banners_standards` (`id`, `name`, `width`, `height`) VALUES 
+(NULL, 'Leaderboard', '728', '90'), 
+(NULL, 'Rectangle', '180', '150');

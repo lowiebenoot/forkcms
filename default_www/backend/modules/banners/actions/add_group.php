@@ -127,6 +127,9 @@ class BackendBannersAddGroup extends BackendBaseActionAdd
 
 				// put the selected banners in the groups
 				BackendBannersModel::insertBannersInGroup($groupId, $banners, $item['standard_id']);
+
+				// everything is saved, so redirect to the overview
+				$this->redirect(BackendModel::createURLForAction('groups') . '&report=addedGroup&var=' . urlencode($item['name']) . '&highlight=row-' . $groupId);
 			}
 		}
 	}

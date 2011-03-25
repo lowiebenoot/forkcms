@@ -6,7 +6,7 @@
  * @package		backend
  * @subpackage	banners
  *
- * @author		Tijs Verkoyen <tijs@netlash.com>
+ * @author		Lowie Benoot <lowie@netlash.com>
  * @since		2.1
  */
 class BackendBannersEditGroup extends BackendBaseActionEdit
@@ -88,7 +88,7 @@ class BackendBannersEditGroup extends BackendBaseActionEdit
 		$this->dgBanners->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[date_till]'), 'date_till', true);
 
 		// add checkboxes
-		$this->dgBanners->setMassActionCheckboxes('checkbox', '[id]');
+		$this->dgBanners->setMassActionCheckboxes('checkbox', '[id]', null, BackendBannersModel::getGroupMembers($this->id));
 
 		// add standard_id to each column
 		$this->dgBanners->setRowAttributes(array('data-standard' => '[standard_id]'));
@@ -116,6 +116,9 @@ class BackendBannersEditGroup extends BackendBaseActionEdit
 
 		// parse the name of the standard
 		$this->tpl->assign('groupSize', $standard['name'] . ' - ' . $standard['width'] . 'x' . $standard['height']);
+
+		// parse item
+		$this->tpl->assign('item', $this->record);
 	}
 
 
@@ -126,7 +129,45 @@ class BackendBannersEditGroup extends BackendBaseActionEdit
 	 */
 	private function validateForm()
 	{
+		// is the form submitted?
+		if($this->frm->isSubmitted())
+		{
+			// get the selected banners.
+			// this is done before cleaning up the fields, because the mass action checkboxes aren't added to the form
+			$banners = SpoonFilter::getPostValue('id', null, null, 'array');
 
+			// cleanup the submitted fields, ignore fields that were added by hackers
+			$this->frm->cleanupFields();
+
+			// validate fields
+			$this->frm->getField('name')->isFilled(BL::err('TitleIsRequired'));
+
+			// no banners selected?
+			if(empty($banners))
+			{
+				// add form error
+				$this->frm->addError('no banners selected');
+
+				// assign form error in tpl
+				$this->tpl->assign('formErrors', BL::err('SelectAtLeastOneBanner'));
+			}
+
+			// no errors?
+			if($this->frm->isCorrect())
+			{
+				// build item
+				$item['name'] = $this->frm->getField('name')->getValue();
+
+				// update group in db
+				BackendBannersModel::updateGroup($this->id, $item);
+
+				// put the selected banners in the groups
+				BackendBannersModel::setGroupMembers($this->id, $banners, $this->record['standard_id']);
+
+				// everything is saved, so redirect to the overview
+				$this->redirect(BackendModel::createURLForAction('groups') . '&report=editedGroup&var=' . urlencode($item['name']) . '&highlight=row-' . $this->id);
+			}
+		}
 	}
 }
 

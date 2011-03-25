@@ -132,7 +132,7 @@ $navigation = array(
 			),
 			array(
 				'url' => 'banners/index',
-				'label' => 'Banners	',
+				'label' => 'Banners',
 				'children' => array(
 					array(
 						'url' => 'banners/index',

@@ -4,7 +4,7 @@
 {form:edit}
 	<div class="box">
 		<div class="heading">
-			<h3>{$lblBanners|ucfirst}: {$lblBannersEditGroup}</h3>
+			<h3>{$lblBanners|ucfirst}: {$lblEditGroup}</h3>
 		</div>
 		<div class="options horizontal">
 			<p>
@@ -29,9 +29,19 @@
 	</div>
 
 	<div class="fullwidthOptions">
+		<a href="{$var|geturl:'delete_group'}&amp;id={$item.id}" data-message-id="confirmDelete" class="askConfirmation button linkButton icon iconDelete">
+				<span>{$lblDelete|ucfirst}</span>
+		</a>
+
 		<div class="buttonHolderRight">
 			<input id="editButton" class="inputButton button mainButton" type="submit" name="editGroup" value="{$lblSave|ucfirst}" />
 		</div>
+	</div>
+
+	<div id="confirmDelete" title="{$lblDelete|ucfirst}?" style="display: none;">
+		<p>
+			{$msgConfirmDeleteGroup|sprintf:{$item.name}}
+		</p>
 	</div>
 {/form:edit}
 

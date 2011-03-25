@@ -62,10 +62,10 @@ class BackendBannersIndex extends BackendBaseActionIndex
 		$this->dgBanners->setColumnFunction(array('BackendDatagridFunctions', 'getLongDate'), array('[date_till]'), 'date_till', true);
 
 		// set colum URLs
-		$this->dgBanners->setColumnURL('name', BackendModel::createURLForAction('edit') .'&amp;id=[id]');
+		$this->dgBanners->setColumnURL('name', BackendModel::createURLForAction('edit') . '&amp;id=[id]');
 
 		// add edit column
-		$this->dgBanners->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit') .'&amp;id=[id]', BL::lbl('Edit'));
+		$this->dgBanners->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit') . '&amp;id=[id]', BL::lbl('Edit'));
 	}
 
 

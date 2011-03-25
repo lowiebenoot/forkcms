@@ -4,7 +4,7 @@
 {form:add}
 	<div class="box">
 		<div class="heading">
-			<h3>{$lblBanners|ucfirst}: {$lblBannersAddGroup}</h3>
+			<h3>{$lblBanners|ucfirst}: {$lblAddGroup}</h3>
 		</div>
 		<div class="options horizontal">
 			<p>

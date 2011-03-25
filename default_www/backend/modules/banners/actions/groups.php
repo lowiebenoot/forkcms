@@ -43,10 +43,10 @@ class BackendBannersGroups extends BackendBaseActionIndex
 	/**
 	 * returns a string that represents the label for the standars (example: skyscraper - 160x600)
 	 *
-	 * @param	string $name	the name of the standard
-	 * @param	int $width		the width of the standard
-	 * @param	int $height		the height of the standard
 	 * @return	string
+	 * @param	string $name	the name of the standard.
+	 * @param	int $width		the width of the standard.
+	 * @param	int $height		the height of the standard.
 	 */
 	public static function getStandardLabel($name, $width, $height)
 	{
@@ -65,20 +65,20 @@ class BackendBannersGroups extends BackendBaseActionIndex
 		$this->dgGroups = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS_GROUPS);
 
 		// change the banner standard name value (include the width and height)
-		$this->dgGroups->setColumnFunction(array(__CLASS__, 'getStandardLabel'), array('[standard_name]', '[width]', '[height]'), 'standard_name', true);
+		$this->dgGroups->setColumnFunction(array(__CLASS__, 'getStandardLabel'), array('[size]', '[width]', '[height]'), 'size', true);
 
 		// hide columns
 		$this->dgGroups->setColumnsHidden(array('standard_id', 'height', 'width'));
 
 		// set sorting columns
-		$this->dgGroups->setSortingColumns(array('name', 'standard_name'), 'id');
+		$this->dgGroups->setSortingColumns(array('name', 'size'), 'id');
 		$this->dgGroups->setSortParameter('DESC');
 
 		// set colum URLs
-		$this->dgGroups->setColumnURL('name', BackendModel::createURLForAction('edit_group') .'&amp;id=[id]');
+		$this->dgGroups->setColumnURL('name', BackendModel::createURLForAction('edit_group') . '&amp;id=[id]');
 
 		// add edit column
-		$this->dgGroups->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_group') .'&amp;id=[id]', BL::lbl('Edit'));
+		$this->dgGroups->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_group') . '&amp;id=[id]', BL::lbl('Edit'));
 	}
 
 
