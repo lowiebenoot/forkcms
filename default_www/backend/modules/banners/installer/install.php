@@ -54,7 +54,7 @@ class BannersInstall extends ModuleInstaller
 		$this->setActionRights(1, 'banners', 'index');
 
 		// insert locale (nl)
-		$this->insertLocale('nl', 'backend', 'banners', 'err', 'EndDateIsInvalid', 'Ongelidige einddatum.');
+		$this->insertLocale('nl', 'backend', 'banners', 'err', 'EndDateIsInvalid', 'Ongeldige einddatum.');
 		$this->insertLocale('nl', 'backend', 'banners', 'err', 'EndDateIsRequired', 'Kies een einddatum.');
 		$this->insertLocale('nl', 'backend', 'banners', 'err', 'EndDateMustBeAfterBeginDate', 'De einddatum moet na de begindatum liggen.');
 		$this->insertLocale('nl', 'backend', 'banners', 'err', 'EndTimeIsInvalid', 'Ongeldig eindtijdstip.');
@@ -88,6 +88,8 @@ class BannersInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'EditedBanner', 'De banner "%1$s" werd opgeslagen.');
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'EditedGroup', 'De groep "%1$s" werd opgeslagen.');
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'IsOnlyMemberOfAGroup', 'Deze banner zit als enigste in een groep, daardoor kan hij niet verwijderd worden..');
+		$this->insertLocale('en', 'backend', 'banners', 'msg', 'NoBanners', 'Er zijn nog geen banners. <a href="%1$s">Voeg een banner toe</a>.');
+		$this->insertLocale('en', 'backend', 'banners', 'msg', 'NoGroups', 'Er zijn nog geen groepen. <a href="%1$s">Voeg een groep toe</a>.');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Banners', 'banners');
 
 		// insert locale (en)
@@ -125,6 +127,8 @@ class BannersInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'banners', 'msg', 'EditedBanner', 'The banner "%1$s" was saved.');
 		$this->insertLocale('en', 'backend', 'banners', 'msg', 'EditedGroup', 'The group "%1$s" was saved.');
 		$this->insertLocale('en', 'backend', 'banners', 'msg', 'IsOnlyMemberOfAGroup', 'This banner is the last member of a group, so it can\'t be deleted.');
+		$this->insertLocale('en', 'backend', 'banners', 'msg', 'NoBanners', 'There are no banners yet. <a href="%1$s">Add a banner</a>.');
+		$this->insertLocale('en', 'backend', 'banners', 'msg', 'NoGroups', 'There are no groups yet. <a href="%1$s">Add a group</a>.');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'Banners', 'banners');
 	}
 

@@ -16,5 +16,7 @@
 	</div>
 {/option:dgGroups}
 
+{option:!dgGroups}<p>{$msgNoGroups|sprintf:{$var|geturl:'add_group'}}</p>{/option:!dgGroups}
+
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/footer.tpl}

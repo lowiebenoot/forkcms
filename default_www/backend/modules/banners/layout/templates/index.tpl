@@ -16,5 +16,7 @@
 	</div>
 {/option:dgBanners}
 
+{option:!dgBanners}<p>{$msgNoBanners|sprintf:{$var|geturl:'add'}}</p>{/option:!dgBanners}
+
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/footer.tpl}
