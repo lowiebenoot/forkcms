@@ -88,8 +88,8 @@ class BannersInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'EditedBanner', 'De banner "%1$s" werd opgeslagen.');
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'EditedGroup', 'De groep "%1$s" werd opgeslagen.');
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'IsOnlyMemberOfAGroup', 'Deze banner zit als enigste in een groep, daardoor kan hij niet verwijderd worden..');
-		$this->insertLocale('en', 'backend', 'banners', 'msg', 'NoBanners', 'Er zijn nog geen banners. <a href="%1$s">Voeg een banner toe</a>.');
-		$this->insertLocale('en', 'backend', 'banners', 'msg', 'NoGroups', 'Er zijn nog geen groepen. <a href="%1$s">Voeg een groep toe</a>.');
+		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'NoBanners', 'Er zijn nog geen banners. <a href="%1$s">Voeg een banner toe</a>.');
+		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'NoGroups', 'Er zijn nog geen groepen. <a href="%1$s">Voeg een groep toe</a>.');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Banners', 'banners');
 
 		// insert locale (en)
