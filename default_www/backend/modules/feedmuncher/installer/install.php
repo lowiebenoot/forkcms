@@ -190,6 +190,8 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'lbl', 'NotPublished', 'niet gepubliceerd');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'PingFeedmuncherServices', 'ping feedmuncherservices');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Source', 'bron');
+		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'With', 'met');
+		$this->insertLocale('nl', 'frontend', 'core', 'lbl', 'The', 'de');
 		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'Source', 'Bron: <a href="%2$s" title="%1$s">%1$s</a>');
 		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherAllComments', 'Alle reacties op je feedmuncher.');
 		$this->insertLocale('nl', 'frontend', 'core', 'msg', 'FeedmuncherNoComments', 'Reageer als eerste');
@@ -248,6 +250,8 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'lbl', 'NotPublished', 'not published');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'PingFeedmuncherServices', 'ping feedmuncherservices');
 		$this->insertLocale('en', 'backend', 'core', 'lbl', 'Source', 'source');
+		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'With', 'with');
+		$this->insertLocale('en', 'frontend', 'core', 'lbl', 'The', 'the');
 		$this->insertLocale('en', 'frontend', 'core', 'msg', 'Source', 'Source: <a href="%2$s" title="%1$s">%1$s</a>');
 		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherAllComments', 'All comments on your feedmuncher.');
 		$this->insertLocale('en', 'frontend', 'core', 'msg', 'FeedmuncherNoComments', 'Be the first to comment');
