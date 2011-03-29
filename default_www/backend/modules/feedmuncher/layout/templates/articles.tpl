@@ -7,10 +7,10 @@
 
 <div id="tabs" class="tabs">
 	<ul>
-		<li><a href="#tabFeedmuncher">{$lblPublishedInFeedmuncher|ucfirst}</a></li>
-		{option:blogIsInstalled}<li><a href="#tabBlog">{$lblPublishedInBlog|ucfirst}</a></li>{/option:blogIsInstalled}
-		<li><a href="#tabNotPublished">{$lblNotPublished|ucfirst}</a></li>
-		<li><a href="#tabDrafts">{$lblDrafts|ucfirst}</a></li>
+		<li><a href="#tabFeedmuncher">{$lblPublishedInFeedmuncher|ucfirst}  ({$numPublishedInFeedmuncher})</a></li>
+		{option:blogIsInstalled}<li><a href="#tabBlog">{$lblPublishedInBlog|ucfirst} ({$numPublishedInBlog})</a></li>{/option:blogIsInstalled}
+		<li><a href="#tabNotPublished">{$lblNotPublished|ucfirst} ({$numNotPublished})</a></li>
+		<li><a href="#tabDrafts">{$lblDrafts|ucfirst} ({$numDrafts})</a></li>
 	</ul>
 
 

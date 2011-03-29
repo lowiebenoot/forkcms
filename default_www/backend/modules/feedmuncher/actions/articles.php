@@ -239,6 +239,12 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 
 		// assign whether blog is installed or not
 		$this->tpl->assign('blogIsInstalled', $this->blogIsInstalled);
+
+		// assign the number of items of each datagrid in the tabs
+		$this->tpl->assign('numNotPublished', $this->dgNotPublished->getNumResults());
+		$this->tpl->assign('numPublishedInFeedmuncher', $this->dgFeedmuncherPosts->getNumResults());
+		if($this->blogIsInstalled) $this->tpl->assign('numPublishedInBlog', $this->dgBlogPosts->getNumResults());
+		$this->tpl->assign('numDrafts', $this->dgDrafts->getNumResults());
 	}
 }
 
