@@ -129,7 +129,7 @@ class FrontendFeedmuncherCategory extends FrontendBaseBlock
 		$this->tpl->assign('feedmuncherCategory', $this->category);
 
 		// assign articles
-		$this->tpl->assign('feedmuncherArticles', $this->items);
+		$this->tpl->assign('items', $this->items);
 
 		// parse the pagination
 		$this->parsePagination();
