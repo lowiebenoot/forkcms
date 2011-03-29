@@ -160,6 +160,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'ConfirmDeleteFeed', 'Ben je zeker dat je de feed "%1$s" wil verwijderen?');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'Deleted', 'De geselecteerde artikels werden verwijderd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeletedArticles', 'De artikels werden verwijderd.');
+		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeletedFeed', 'De feed "%1$s" werd verwijderd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeletedSpam', 'Alle spamberichten werden verwijderd.');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'DeleteAllSpam', 'Alle spam verwijderen:');
 		$this->insertLocale('nl', 'backend', 'feedmuncher', 'msg', 'EditArticle', 'bewerk artikel "%1$s"');
@@ -220,6 +221,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'ConfirmDeleteFeed', 'Are your sure you want to delete the feed "%1$s"?');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'Deleted', 'The selected articles were deleted.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeletedArticles', 'The articles were deleted.');
+		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeletedFeed', 'The feed "%1$s" was deleted.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeletedSpam', 'All spam-comments were deleted.');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'DeleteAllSpam', 'Delete all spam:');
 		$this->insertLocale('en', 'backend', 'feedmuncher', 'msg', 'EditArticle', 'edit article "%1$s"');

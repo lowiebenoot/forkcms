@@ -34,7 +34,7 @@ class BackendFeedmuncherDelete extends BackendBaseActionDelete
 			BackendFeedmuncherModel::delete($this->id);
 
 			// item was deleted, so redirect
-			$this->redirect(BackendModel::createURLForAction('index') . '&report=deleted&var=' . urlencode($this->record['name']));
+			$this->redirect(BackendModel::createURLForAction('index') . '&report=deletedFeed&var=' . urlencode($this->record['name']));
 		}
 
 		// something went wrong
