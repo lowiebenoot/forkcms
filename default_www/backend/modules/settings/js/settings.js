@@ -30,11 +30,11 @@ jsBackend.settings =
 		if($('input[name=shorten]').length != 0)
 		{
 			// hide or show the dropdownmenus
-			jsBackend.settings.add.changeDropdownMenu();
+			jsBackend.settings.showHideShorteners();
 			
-			$('input[name=target]').click(function()
+			$('input[name=shorten]').change(function()
 			{
-				jsBackend.feedmuncher.add.changeDropdownMenu();
+				jsBackend.settings.showHideShorteners();
 			});
 		}
 	},
@@ -87,6 +87,15 @@ jsBackend.settings =
 			// bind
 			$('#shareableModules .datagridHolder td.serviceMessage').inlineTextEdit( { saveUrl: url, tooltip: '{$msgClickToEdit}' });
 		}
+	},
+	
+	
+	// hide or show the url shortener options
+	showHideShorteners: function()
+	{
+		// show the shortener services or hide them, depending from the shorten radiobutton
+		if($('input[name=shorten]:checked').length != 0) $('div#shorteners').show('slideUp');
+		else $('div#shorteners').hide('slideDown');
 	},
 	
 

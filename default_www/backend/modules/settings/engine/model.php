@@ -39,6 +39,41 @@ class BackendSettingsModel
 
 
 	/**
+	 * Get the shareable modules
+	 *
+	 * @return	array
+	 */
+	public static function getShareableModules()
+	{
+		return (array) BackendModel::getDB()->getRecords('SELECT * FROM share_modules');
+	}
+
+
+	/**
+	 * Get the services for sharing (facebook, twitter, ...)
+	 *
+	 * @return	array
+	 */
+	public static function getShareServices()
+	{
+		return (array) BackendModel::getDB()->getRecords('SELECT i.id AS value, i.name AS label FROM share_services AS i');
+	}
+
+
+	/**
+	 * Get the shortener services
+	 *
+	 * @return	array
+	 */
+	public static function getShorteners()
+	{
+		$shorteners = BackendModel::getModuleSetting('share', 'shorteners');
+
+
+	}
+
+
+	/**
 	 * Fetch the list of modules that require Google Maps API key
 	 *
 	 * @return	array

@@ -21,6 +21,7 @@
 			<li><a href="#tabContent">{$lblContent|ucfirst}</a></li>
 			<li><a href="#tabPermissions">{$lblComments|ucfirst}</a></li>
 			<li><a href="#tabSEO">{$lblSEO|ucfirst}</a></li>
+			<li><a href="#tabShare">{$lblShare|ucfirst}</a></li>
 		</ul>
 
 		<div id="tabContent">
@@ -124,6 +125,10 @@
 
 		<div id="tabSEO">
 			{include:{$BACKEND_CORE_PATH}/layout/templates/seo.tpl}
+		</div>
+
+		<div id="tabShare">
+			{include:{$BACKEND_CORE_PATH}/layout/templates/share.tpl}
 		</div>
 	</div>
 

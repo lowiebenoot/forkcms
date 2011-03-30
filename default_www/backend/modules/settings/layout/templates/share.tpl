@@ -30,7 +30,6 @@
 			<div class="datagridHolder">
 				<table border="0" cellspacing="0" cellpadding="0" class="datagrid">
 					<tr>
-						<th style="width: 30%;"><span>{$lblEnableSharing}</span></th>
 						<th><span>{$lblModule|ucfirst}</span></th>
 						<th>
 							<span>
@@ -46,9 +45,8 @@
 					</tr>
 					{iteration:modules}
 						<tr class="{cycle:odd:even}">
-							<td><span class="checkboxHolder">{$modules.chk}</span></td>
-							<td><label for="{$modules.id}">{$modules.label}</label></td>
-							<td class="serviceMessage">{$modules.message}</td>
+							<td><label for="{$modules.id}">{$modules.module}</label></td>
+							<td class="serviceMessage" data-id="{$modules.id}">{$modules.message}</td>
 						</tr>
 					{/iteration:modules}
 				</table>
@@ -62,17 +60,11 @@
 			<h3>{$lblURLShortener|ucfirst}</h3>
 		</div>
 		<div class="options">
-			<p>{$msgShortenURLs}</p>
-			<ul class="inputList">
-				{iteration:shorten}
-				<li>
-					{$shorten.rbtShorten}
-					<label for="{$shorten.id}">{$shorten.label}</label>
-				</li>
-				{/iteration:shorten}
-			</ul>
-			<div id="shortener">
-				<p>{$msgShortener}</p>
+			<p>
+				<label for="shorten">{$chkShorten} {$msgShortenURLs}</label>
+			</p>
+			<div id="shorteners">
+				<p>{$msgShorteners}</p>
 				<ul class="inputList">
 					{iteration:shortener}
 					<li>

@@ -548,3 +548,30 @@ CREATE TABLE IF NOT EXISTS `groups_rights_modules` (
  PRIMARY KEY (`id`),
  KEY `idx_group_id` (`group_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+
+CREATE  TABLE IF NOT EXISTS `share_settings` (
+  `id` INT(11) NOT NULL auto_increment ,
+  `module` VARCHAR(255) NOT NULL ,
+  `other_id` INT(11) NOT NULL ,
+  `service_id` INT(11) NOT NULL ,
+  `message` VARCHAR(255) NOT NULL ,
+  `num_clicks` INT(11) NOT NULL ,
+  `active` ENUM('Y','N') NOT NULL ,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+
+CREATE  TABLE IF NOT EXISTS `share_services` (
+  `id` INT(11) NOT NULL auto_increment ,
+  `name` VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+
+CREATE  TABLE IF NOT EXISTS `share_modules` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `module` VARCHAR(255) NOT NULL ,
+  `mesage` VARCHAR(255) NOT NULL ,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;

@@ -72,6 +72,9 @@ class BackendBlogAdd extends BackendBaseActionAdd
 
 		// meta
 		$this->meta = new BackendMeta($this->frm, null, 'title', true);
+
+		// share
+		$this->share = new BackendShare($this->frm);
 	}
 
 
@@ -120,6 +123,9 @@ class BackendBlogAdd extends BackendBaseActionAdd
 			// validate meta
 			$this->meta->validate();
 
+			// validate share
+			$this->share->validate();
+
 			// no errors?
 			if($this->frm->isCorrect())
 			{
@@ -145,6 +151,9 @@ class BackendBlogAdd extends BackendBaseActionAdd
 
 				// save the tags
 				BackendTagsModel::saveTags($item['revision_id'], $this->frm->getField('tags')->getValue(), $this->URL->getModule());
+
+				// save share
+				$this->share->save($item['id'], $this->URL->getModule());
 
 				// active
 				if($item['status'] == 'active')

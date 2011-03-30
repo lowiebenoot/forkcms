@@ -189,6 +189,9 @@ class BackendBlogEdit extends BackendBaseActionEdit
 
 		// meta object
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
+
+		// share object
+		$this->share = new BackendShare($this->frm, $this->record['id'], $this->URL->getModule());
 	}
 
 
@@ -309,6 +312,9 @@ class BackendBlogEdit extends BackendBaseActionEdit
 
 				// save the tags
 				BackendTagsModel::saveTags($item['revision_id'], $this->frm->getField('tags')->getValue(), $this->URL->getModule());
+
+				// save share settings
+				$this->share->save($this->record['id'], $this->URL->getModule(), true);
 
 				// active
 				if($item['status'] == 'active')
