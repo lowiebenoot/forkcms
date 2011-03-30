@@ -23,6 +23,20 @@ jsBackend.settings =
 		
 		if($('#testEmailConnection').length > 0) $('#testEmailConnection').bind('click', jsBackend.settings.testEmailConnection);
 		
+		// service message inline edit
+		jsBackend.settings.serviceMessageInlineEdit();
+		
+		// url shortener on/off
+		if($('input[name=shorten]').length != 0)
+		{
+			// hide or show the dropdownmenus
+			jsBackend.settings.add.changeDropdownMenu();
+			
+			$('input[name=target]').click(function()
+			{
+				jsBackend.feedmuncher.add.changeDropdownMenu();
+			});
+		}
 	},
 
 	
@@ -59,6 +73,20 @@ jsBackend.settings =
 				$('#testEmailConnectionError').show();
 			}
 		});		
+	},
+	
+	
+	serviceMessageInlineEdit: function()
+	{
+		if($('#shareableModules .datagridHolder td.serviceMessage').length > 0)
+		{
+			// buil ajax-url
+			var url = '/backend/ajax.php?module=settings&action=save_service_message&language='+ jsBackend.current.language;
+
+			
+			// bind
+			$('#shareableModules .datagridHolder td.serviceMessage').inlineTextEdit( { saveUrl: url, tooltip: '{$msgClickToEdit}' });
+		}
 	},
 	
 
