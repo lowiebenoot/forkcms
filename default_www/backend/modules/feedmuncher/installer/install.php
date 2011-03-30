@@ -41,7 +41,7 @@ class FeedmuncherInstall extends ModuleInstaller
 		$this->importSQL(dirname(__FILE__) . '/data/install.sql');
 
 		// add 'feedmuncher' as a module
-		$this->addModule('feedmuncher', 'The feemuncher module.');
+		$this->addModule('feedmuncher', 'The feedmuncher module.');
 
 		// general settings
 		$this->setSetting('feedmuncher', 'allow_comments', true);
