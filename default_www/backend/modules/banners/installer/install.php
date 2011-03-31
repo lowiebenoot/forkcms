@@ -110,7 +110,7 @@ class BannersInstall extends ModuleInstaller
 		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'AddGroup', 'add group');
 		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'CurrentFile', 'current file');
 		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'DateFrom', 'start date');
-		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'DateTill', 'star date');
+		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'DateTill', 'end date');
 		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'EditBanner', 'edit banner');
 		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'EditGroup', 'edit group');
 		$this->insertLocale('en', 'backend', 'banners', 'lbl', 'Groups', 'groups');
