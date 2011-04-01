@@ -80,6 +80,10 @@ class FrontendBlogIndex extends FrontendBaseBlock
 
 		// get articles
 		$this->items = FrontendBlogModel::getAll($this->pagination['limit'], $this->pagination['offset']);
+
+		// get share options
+		FrontendShare::getShareOptionsForItems('blog', $this->items);
+		//Spoon::dump($this->items);
 	}
 
 

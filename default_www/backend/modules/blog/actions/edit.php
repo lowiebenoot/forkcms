@@ -191,7 +191,7 @@ class BackendBlogEdit extends BackendBaseActionEdit
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
 
 		// share object
-		$this->share = new BackendShare($this->frm, $this->record['id'], $this->URL->getModule());
+		$this->share = new BackendShare($this->frm,$this->URL->getModule(), $this->record['id']);
 	}
 
 

@@ -34,7 +34,7 @@
 
 								{* Tags*}
 								{option:items.tags}
-									{$lblWith} {$lblThe} {$lblTags} 
+									{$lblWith} {$lblThe} {$lblTags}
 									{iteration:items.tags}
 										<a href="{$items.tags.full_url}" rel="tag" title="{$items.tags.name}">{$items.tags.name}</a>{option:!items.tags.last}, {/option:!items.tags.last}{option:items.tags.last}.{/option:items.tags.last}
 									{/iteration:items.tags}
@@ -53,6 +53,10 @@
 					<div class="bd content">
 						{option:!items.introduction}{$items.text}{/option:!items.introduction}
 						{option:items.introduction}{$items.introduction}{/option:items.introduction}
+					</div>
+
+					<div class="bd ft">
+						{$items.share}
 					</div>
 				</div>
 			</article>

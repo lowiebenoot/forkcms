@@ -74,7 +74,7 @@ class BackendBlogAdd extends BackendBaseActionAdd
 		$this->meta = new BackendMeta($this->frm, null, 'title', true);
 
 		// share
-		$this->share = new BackendShare($this->frm);
+		$this->share = new BackendShare($this->frm, $this->URL->getModule());
 	}
 
 
@@ -153,7 +153,7 @@ class BackendBlogAdd extends BackendBaseActionAdd
 				BackendTagsModel::saveTags($item['revision_id'], $this->frm->getField('tags')->getValue(), $this->URL->getModule());
 
 				// save share
-				$this->share->save($item['id'], $this->URL->getModule());
+				$this->share->save($item['id']);
 
 				// active
 				if($item['status'] == 'active')

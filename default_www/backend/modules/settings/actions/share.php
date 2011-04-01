@@ -50,29 +50,29 @@ class BackendSettingsShare extends BackendBaseActionIndex
 	 */
 	private function loadForm()
 	{
-		// get the services
-		$services = BackendSettingsModel::getShareServices();
-
-		// get the services that should be checked (from settings)
-		$checked = BackendModel::getModuleSetting('share', 'services');
-
 		// get shareable modules
 		$this->modules = BackendSettingsModel::getShareableModules();
-
-		// does the url's need to be shortened?
-		$shortenURLs = BackendModel::getModuleSetting('share', 'shorten_urls');
-
-		// get url shorteners
-		$shorteners = BackendModel::getModuleSetting('share', 'shorteners');
 
 		// create form
 		$this->frm = new BackendForm('share');
 
-		// add checkbox for shorten iption
-		$this->frm->addCheckbox('shorten', $shortenURLs);
+		// add multicheckbox for share services
+		$this->frm->addMultiCheckbox('services', BackendSettingsModel::getShareServices(), BackendModel::getModuleSetting('share', 'services'));
+
+		// add checkbox for shorten option
+		$this->frm->addCheckbox('shorten', BackendModel::getModuleSetting('share', 'shorten_urls'));
+
+		// get shorteners from settings
+		$aShorteners = BackendModel::getModuleSetting('share', 'shorteners');
+
+		// redefine the shorteners so it can be used for a radiobutton field
+		$shorteners = array();
+
+		// loop shorteners and add to the redefined array
+		foreach($aShorteners as $shortener) $shorteners[] = array('value' => $shortener['id'], 'label' => $shortener['name']);
 
 		// add radiobutton for shortener services
-		$this->frm->addRadiobutton('shortener', array(array('value' => 1, 'label' => 'bit.ly'), array('value' => 2, 'label' => 'tinyURL'), array('value' => 3, 'label' => 't.co')), 1);
+		$this->frm->addRadiobutton('shortener', $shorteners, BackendModel::getModuleSetting('share', 'shortener'));
 	}
 
 
@@ -104,7 +104,27 @@ class BackendSettingsShare extends BackendBaseActionIndex
 			// no errors ?
 			if($this->frm->isCorrect())
 			{
+				//  get the checked services
+				$checkedServices = $this->frm->getField('services')->getChecked();
 
+				// save it in the settings
+				BackendModel::setModuleSetting('share', 'services', $checkedServices);
+
+				// should the urls be shortened?
+				$shortenURLs = $this->frm->getField('shorten')->getValue();
+
+				// save as setting
+				BackendModel::setModuleSetting('share', 'shorten_urls', $shortenURLs);
+
+				// if urls should be shortened, which shortener should be used?
+				if($shortenURLs)
+				{
+					// get the selected shortener
+					$shortener = $this->frm->getField('shortener')->getValue();
+
+					// save as setting
+					BackendModel::setModuleSetting('share', 'shortener', $shortener);
+				}
 			}
 		}
 	}

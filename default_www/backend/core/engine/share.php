@@ -47,16 +47,20 @@ class BackendShare
 	 * Default constructor
 	 *
 	 * @return	void
-	 * @param	BackendForm $form					An instance of Backendform, the elements will be parsed in here.
-	 * @param	int[optional] $shareId				The shareId to load.
+	 * @param	BackendForm $form			An instance of Backendform, the elements will be parsed in here.
+	 * @param	string $module				The module.
+	 * @param	int[optional] $shareId		The shareId to load.
 	 */
-	public function __construct(BackendForm $form, $otherId = null, $module = null)
+	public function __construct(BackendForm $form, $module, $otherId = null)
 	{
 		// set form instance
 		$this->frm = $form;
 
+		// set module
+		$this->module = $module;
+
 		// load existing share settings
-		if($otherId != null && $module != null)
+		if($otherId != null)
 		{
 			// redefine
 			$this->otherId = (int) $otherId;
@@ -68,8 +72,6 @@ class BackendShare
 																	WHERE s.other_id = ? AND s.module = ?',
 																	array($this->otherId, $this->module));
 		}
-
-		// @TODO: load existing general settings
 
 		// load the form
 		$this->loadForm();
@@ -95,16 +97,20 @@ class BackendShare
 																								WHERE i.module = ? AND i.other_id = ?',
 																								array($this->module, $this->otherId));
 
-		// @TODO: get the services that should be checked from the general settings
-		else $checked = array();
+		// get the settings from the general settings page
+		else $checked = BackendModel::getModuleSetting('share', 'services');
 
 		// add multi checkbox
 		$this->frm->addMultiCheckbox('services', $services, $checked);
 
 		// get the message if data is not empty, if empty, get it from the general settings
 		if(!empty($this->data))  $message = $this->data[0]['message'];
-		// @TODO: else get from general settings
-		else $message = null; // get from general settings
+
+		// get default message for this module
+		else $message = (string) $db->getVar('SELECT i.message
+												FROM share_modules as i
+												WHERE i.module = ?',
+												$this->module);
 
 		// add textfield for the message
 		$this->frm->addText('shareMessage', $message);
@@ -116,14 +122,12 @@ class BackendShare
 	 *
 	 * @return	int
 	 * @param	int $otherId				The id of the item to share.
-	 * @param	string $module				The module wherin the item is located.
 	 * @param	bool[optional] $update		Should we update the record or insert a new one.
 	 */
-	public function save($otherId, $module, $update = false)
+	public function save($otherId, $update = false)
 	{
 		// redefine
 		$otherId = (int) $otherId;
-		$module = (string) $module;
 		$update = (bool) $update;
 
 		// build share item
@@ -139,7 +143,7 @@ class BackendShare
 			$currentSettingsIdsAndServices = (array) $db->getPairs('SELECT i.id, i.service_id
 																	FROM share_settings AS i
 																	WHERE i.other_id = ? AND i.module = ?',
-																	array($otherId, $module));
+																	array($otherId, $this->module));
 
 			// define an array for the current services
 			$currentServices = array();
@@ -151,14 +155,14 @@ class BackendShare
 			$servicesToDelete = array_diff($currentServices, $services);
 
 			// delete the settings
-			if(!empty($servicesToDelete)) $db->delete('share_settings', 'service_id IN (' . implode(',', $servicesToDelete) . ') AND other_id = ? AND module= ?', array($otherId, $module));
+			if(!empty($servicesToDelete)) $db->delete('share_settings', 'service_id IN (' . implode(',', $servicesToDelete) . ') AND other_id = ? AND module= ?', array($otherId, $this->module));
 		}
 
 		// loop services
 		foreach($services as $service)
 		{
 			// build and insert a share setting for each service
-			$item['module'] = $module;
+			$item['module'] = $this->module;
 			$item['other_id'] = $otherId;
 			$item['service_id'] = (int) $service;
 			$item['message'] = $message;
