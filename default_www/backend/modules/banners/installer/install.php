@@ -12,20 +12,6 @@
 class BannersInstall extends ModuleInstaller
 {
 	/**
-	 * Add the default category for a language
-	 *
-	 * @return	int
-	 * @param	string $language	The language to use.
-	 * @param	string $name		The name of the category.
-	 * @param	string $url			The URL for the category.
-	 */
-	private function addCategory($language, $name, $url)
-	{
-		return (int) $this->getDB()->insert('blog_categories', array('language' => (string) $language, 'name' => (string) $name, 'url' => (string) $url));
-	}
-
-
-	/**
 	 * Install the module
 	 *
 	 * @return	void
@@ -52,6 +38,25 @@ class BannersInstall extends ModuleInstaller
 		$this->setActionRights(1, 'banners', 'edit_group');
 		$this->setActionRights(1, 'banners', 'groups');
 		$this->setActionRights(1, 'banners', 'index');
+
+		// insert extra for the tracker page
+		$extraId = $this->insertExtra('banners', 'block', 'tracker', 'tracker', null, true, 9000);
+
+		// loop languages
+		foreach($this->getLanguages() as $language)
+		{
+			// insert page
+			$this->insertPage(array('title' => 'BannerTracker',
+									'language' => $language),
+									null,
+									array('extra_id' => $extraId));
+		}
+
+		// create directory for the original files
+		if(!SpoonDirectory::exists(FRONTEND_FILES_PATH . '/banners/original/')) SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/original/');
+
+		// create folder for resized images
+		if(!SpoonDirectory::exists(FRONTEND_FILES_PATH . '/banners/resized/')) SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/resized/');
 
 		// insert locale (nl)
 		$this->insertLocale('nl', 'backend', 'banners', 'err', 'EndDateIsInvalid', 'Ongeldige einddatum.');
@@ -87,7 +92,7 @@ class BannersInstall extends ModuleInstaller
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'DeletedGroup', 'De groep "%1$s" werd verwijderd.');
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'EditedBanner', 'De banner "%1$s" werd opgeslagen.');
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'EditedGroup', 'De groep "%1$s" werd opgeslagen.');
-		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'IsOnlyMemberOfAGroup', 'Deze banner zit als enigste in een groep, daardoor kan hij niet verwijderd worden..');
+		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'IsOnlyMemberOfAGroup', 'Deze banner zit als enige in een groep, daardoor kan hij niet verwijderd worden.');
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'NoBanners', 'Er zijn nog geen banners. <a href="%1$s">Voeg een banner toe</a>.');
 		$this->insertLocale('nl', 'backend', 'banners', 'msg', 'NoGroups', 'Er zijn nog geen groepen. <a href="%1$s">Voeg een groep toe</a>.');
 		$this->insertLocale('nl', 'backend', 'core', 'lbl', 'Banners', 'banners');

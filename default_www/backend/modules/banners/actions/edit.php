@@ -99,7 +99,7 @@ class BackendBannersEdit extends BackendBaseActionEdit
 		$standard = BackendBannersModel::getStandard($this->record['standard_id']);
 
 		// parse the name of the standard
-		$this->tpl->assign('groupSize', $standard['name'] . ' - ' . $standard['width'] . 'x' . $standard['height']);
+		$this->tpl->assign('standard', $standard);
 
 		// parse record
 		$this->tpl->assign('item', $this->record);
@@ -171,22 +171,19 @@ class BackendBannersEdit extends BackendBaseActionEdit
 				// file is filled?
 				if($this->frm->getField('file')->isFilled())
 				{
-					// delete the old directories and files
-					SpoonDirectory::delete(FRONTEND_FILES_PATH . '/banners/' . $this->id . '/resized/');
-					SpoonFile::delete(FRONTEND_FILES_PATH . '/banners/' . $this->id . '/original/' . $this->record['file']);
+					// delete the old files
+					if(SpoonFile::exists(FRONTEND_FILES_PATH . '/banners/resized/' . $this->id . '_' . $this->record['file'])) SpoonFile::delete(FRONTEND_FILES_PATH . '/banners/resized/' . $this->id . '_' . $this->record['file']);
+					SpoonFile::delete(FRONTEND_FILES_PATH . '/banners/original/' . $this->id . '_' . $this->record['file']);
 
 					// is the upload file an image?
 					if($this->frm->getField('file')->getExtension() != 'swf')
 					{
-						// create folder for resized image
-						SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/' . $this->id . '/resized/');
-
 						// create resized image
-						$this->frm->getField('file')->createThumbnail(FRONTEND_FILES_PATH . '/banners/' . $this->id . '/resized/' . $item['file'], (int) $standard['width'], (int) $standard['height'], true, false, 100);
+						$this->frm->getField('file')->createThumbnail(FRONTEND_FILES_PATH . '/banners/resized/' . $this->id . '_' . $item['file'], (int) $standard['width'], (int) $standard['height'], true, false, 100);
 					}
 
 					// save original file
-					$this->frm->getField('file')->moveFile(FRONTEND_FILES_PATH . '/banners/' . $this->id . '/original/' . $item['file']);
+					$this->frm->getField('file')->moveFile(FRONTEND_FILES_PATH . '/banners/original/' . $this->id . '_' . $item['file']);
 				}
 
 				// everything is saved, so redirect to the overview

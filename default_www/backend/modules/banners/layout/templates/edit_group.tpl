@@ -13,7 +13,7 @@
 			</p>
 			<p>
 				<label>{$lblSize|ucfirst}</label>
-				<span>{$groupSize}</span>
+				<span>{$standard.name} - {$standard.width}x{$standard.height}</span>
 			</p>
 
 			{option:dgBanners}

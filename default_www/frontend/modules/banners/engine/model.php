@@ -12,6 +12,21 @@
 class FrontendBannersModel
 {
 	/**
+	 * Checks if a banner exists
+	 *
+	 * @return	bool
+	 * @param	int $id		The id of the banner to check for existence.
+	 */
+	public static function exists($id)
+	{
+		return (bool) BackendModel::getDB()->getVar('SELECT COUNT(id)
+													FROM banners AS i
+													WHERE i.id = ?',
+													(int) $id);
+	}
+
+
+	/**
 	 * Get an item
 	 *
 	 * @return	array
@@ -53,9 +68,9 @@ class FrontendBannersModel
 	{
 		// increase num clicks
 		FrontendModel::getDB(true)->execute('UPDATE banners AS b
-						SET b.num_clicks = b.num_clicks+1
-						WHERE b.id = ?',
-						(int) $id);
+											SET b.num_clicks = b.num_clicks+1
+											WHERE b.id = ?',
+											(int) $id);
 	}
 }
 

@@ -26,14 +26,14 @@
 				{$fileFileError}
 			</p>
 			<p>
-				<label for="startDate">{$lblStartDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$txtStartDate} <label for="startTime" class="nofloat">{$lblAt}<abbr title="{$lblRequiredField}">*</abbr></label> {$txtStartTime}
+				<label for="startDate">{$lblStartDate|ucfirst}</label>
+				{$txtStartDate} <label for="startTime" class="nofloat">{$lblAt}</label> {$txtStartTime}
 				{$txtStartDateError}
 				{$txtStartTimeError}
 			</p>
 			<p>
-				<label for="endDate">{$lblEndDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$txtEndDate} <label for="endTime" class="nofloat">{$lblAt}<abbr title="{$lblRequiredField}">*</abbr></label> {$txtEndTime}
+				<label for="endDate">{$lblEndDate|ucfirst}</label>
+				{$txtEndDate} <label for="endTime" class="nofloat">{$lblAt}</label> {$txtEndTime}
 				{$txtEndDateError}
 				{$txtEndTimeError}
 			</p>

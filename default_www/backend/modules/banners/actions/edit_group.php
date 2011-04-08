@@ -115,7 +115,7 @@ class BackendBannersEditGroup extends BackendBaseActionEdit
 		$standard = BackendBannersModel::getStandard($this->record['standard_id']);
 
 		// parse the name of the standard
-		$this->tpl->assign('groupSize', $standard['name'] . ' - ' . $standard['width'] . 'x' . $standard['height']);
+		$this->tpl->assign('standard', $standard);
 
 		// parse item
 		$this->tpl->assign('item', $this->record);

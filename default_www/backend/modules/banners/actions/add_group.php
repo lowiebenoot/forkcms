@@ -47,7 +47,7 @@ class BackendBannersAddGroup extends BackendBaseActionAdd
 
 		// create elements
 		$this->frm->addText('name');
-		$this->frm->addDropdown('size', BackendBannersModel::getStandards());
+		$this->frm->addDropdown('size', BackendBannersModel::getStandards(false));
 
 		// load datagrid
 		$this->dgBanners = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS);

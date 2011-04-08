@@ -2,6 +2,11 @@
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_start_module.tpl}
 
 {form:edit}
+	{option:isOnlyMemberOfAGroup}
+		<div class="generalMessage infoMessage content">
+			<span>{$msgIsOnlyMemberOfAGroup}</span>
+		</div>
+	{/option:isOnlyMemberOfAGroup}
 	<div class="box">
 		<div class="heading">
 			<h3>{$lblBanners|ucfirst}: {$lblEditBanner}</h3>
@@ -17,12 +22,12 @@
 			</p>
 			<p>
 				<label>{$lblSize|ucfirst}</label>
-				<span>{$groupSize}</span>
+				<span>{$standard.name} - {$standard.width}x{$standard.height}</span>
 			</p>
 			<p>
 				<label for="file">{$lblFile|ucfirst}</label>
 				{$fileFile}
-				<span> - <a href="/frontend/files/banners/{$item.id}/{option:isSWF}original{/option:isSWF}{option:!isSWF}resized{/option:!isSWF}/{$item.file}" title="{$lblCurrentFile}">{$lblCurrentFile}</a></span>
+				<span> - <a href="/frontend/files/banners/{option:isSWF}original{/option:isSWF}{option:!isSWF}resized{/option:!isSWF}/{$item.id}_{$item.file}" title="{$lblCurrentFile}">{$lblCurrentFile}</a></span>
 				{option:!fileFileError}<span class="helpTxt">{$errJPGGIFPNGAndSWFOnly}</span>{/option:!fileFileError}
 				{$fileFileError}
 			</p>
@@ -54,9 +59,6 @@
 				<span>{$lblDelete|ucfirst}</span>
 			</a>
 		{/option:!isOnlyMemberOfAGroup}
-		{option:isOnlyMemberOfAGroup}
-			<span>{$msgIsOnlyMemberOfAGroup}</span>
-		{/option:isOnlyMemberOfAGroup}
 
 		<div class="buttonHolderRight">
 			<input id="editButton" class="inputButton button mainButton" type="submit" name="editBanner" value="{$lblSave|ucfirst}" />

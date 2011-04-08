@@ -50,10 +50,10 @@ class BackendBannersAdd extends BackendBaseActionAdd
 		$this->frm->addText('url');
 		$this->frm->addDropdown('size', BackendBannersModel::getStandards());
 		$this->frm->addImage('file');
-		$this->frm->addDate('start_date');
-		$this->frm->addTime('start_time', null, 'inputText time');
-		$this->frm->addDate('end_date');
-		$this->frm->addTime('end_time', null, 'inputText time');
+		$this->frm->addDate('start_date', '');
+		$this->frm->addTime('start_time', '', 'inputText time');
+		$this->frm->addDate('end_date', '');
+		$this->frm->addTime('end_time', '', 'inputText time');
 	}
 
 
@@ -123,21 +123,15 @@ class BackendBannersAdd extends BackendBaseActionAdd
 				// get the banner standard
 				$standard = BackendBannersModel::getStandard($item['standard_id']);
 
-				// create directory for the original file
-				SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/' . $bannerId . '/original/');
-
 				// is the upload file an image?
 				if($extension != 'swf')
 				{
-					// create folder for resized image
-					SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/' . $bannerId . '/resized/');
-
 					// create resized image
-					$this->frm->getField('file')->createThumbnail(FRONTEND_FILES_PATH . '/banners/' . $bannerId . '/resized/' . $item['file'], (int) $standard['width'], (int) $standard['height'], true, false, 100);
+					$this->frm->getField('file')->createThumbnail(FRONTEND_FILES_PATH . '/banners/resized/' . $bannerId . '_' . $item['file'], (int) $standard['width'], (int) $standard['height'], true, false, 100);
 				}
 
 				// save original file
-				$this->frm->getField('file')->moveFile(FRONTEND_FILES_PATH . '/banners/' . $bannerId . '/original/' . $item['file']);
+				$this->frm->getField('file')->moveFile(FRONTEND_FILES_PATH . '/banners/original/' . $bannerId . '_' . $item['file']);
 
 				// everything is saved, so redirect to the overview
 				$this->redirect(BackendModel::createURLForAction('index') . '&report=addedBanner&var=' . urlencode($item['name']) . '&highlight=id-' . $bannerId);

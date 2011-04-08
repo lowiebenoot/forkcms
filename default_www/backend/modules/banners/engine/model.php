@@ -206,12 +206,26 @@ class BackendBannersModel
 	 * Returns the banner standards (sizes)
 	 *
 	 * @return	array
+	 * @param	bool $getEmpty		Should we also get the empty sizes? (no banners with that size)
 	 */
-	public static function getStandards()
+	public static function getStandards($getEmpty = true)
 	{
-		// return the group ID
-		$aStandards = (array) BackendModel::getDB()->getRecords('SELECT i.id, i.name, i.width, i.height
-																FROM banners_standards AS i');
+		// get empty?
+		if($getEmpty)
+		{
+			// get standards
+			$aStandards = (array) BackendModel::getDB()->getRecords('SELECT i.id, i.name, i.width, i.height
+																	FROM banners_standards AS i');
+		}
+
+		// don't get the empty standards
+		else
+		{
+			// get standards, but not the empty ones
+			$aStandards = (array) BackendModel::getDB()->getRecords('SELECT i.id, i.name, i.width, i.height
+																	FROM banners_standards AS i
+																	INNER JOIN banners AS b ON i.id = b.standard_id');
+		}
 
 		// make new array
 		$standards = array();
