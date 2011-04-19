@@ -40,12 +40,12 @@ class FrontendFeedmuncherWidgetCategories extends FrontendBaseWidget
 		// get categories
 		$categories = FrontendFeedmuncherModel::getAllCategories();
 
-		// build link
-		$link = FrontendNavigation::getURLForBlock('feedmuncher', 'category');
-
 		// any categories?
 		if(!empty($categories))
 		{
+			// build link
+			$link = FrontendNavigation::getURLForBlock('feedmuncher', 'category');
+
 			// loop and reset url
 			foreach($categories as &$row) $row['url'] = $link . '/' . $row['url'];
 		}
