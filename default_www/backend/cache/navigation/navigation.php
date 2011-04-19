@@ -166,28 +166,6 @@ $navigation = array(
 					),
 				)
 			),
-			array(
-				'url' => 'banners/index',
-				'label' => 'Banners	',
-				'children' => array(
-					array(
-						'url' => 'banners/index',
-						'label' => 'Banners',
-						'selected_for' => array(
-							'banners/add',
-							'banners/edit'
-						)
-					),
-					array(
-						'url' => 'banners/groups',
-						'label' => 'Groups',
-						'selected_for' => array(
-							'banners/add_group',
-							'banners/edit_group'
-						)
-					)
-				)
-			)
 		)
 	),
 	array(
