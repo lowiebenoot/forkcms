@@ -71,7 +71,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgBlogPosts->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgBlogPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article') . '&amp;id=[id]');
+		$this->dgBlogPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article', 'blog') . '&amp;id=[id]');
 		$this->dgBlogPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') . '&amp;id=[feed_id]');
 
 		// set column functions
