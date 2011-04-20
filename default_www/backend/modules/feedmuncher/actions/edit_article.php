@@ -6,11 +6,8 @@
  * @package		backend
  * @subpackage	feedmuncher
  *
- * @author		Dave Lens <dave@netlash.com>
- * @author		Davy Hellemans <davy@netlash.com>
- * @author		Matthias Mullie <matthias@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
- * @since		2.0
+ * @since		2.1
  */
 class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 {
@@ -285,6 +282,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 				$item['feed_id'] = $this->record['feed_id'];
 				$item['edited_on'] = BackendModel::getUTCDate();
 				$item['target'] = $this->record['target'];
+				$item['original_url'] = $this->record['original_url'];
 
 				// update the item
 				$item['revision_id'] = BackendFeedmuncherModel::updateArticle($item);
@@ -301,11 +299,14 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 				// active
 				if($item['status'] == 'active')
 				{
-					// edit search index
-					if(method_exists('BackendSearchModel', 'editIndex')) BackendSearchModel::editIndex('feedmuncher', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
+					if($item['target'] == 'feedmuncher')
+					{
+						// add search index
+						if(is_callable(array('BackendSearchModel', 'editIndex'))) BackendSearchModel::editIndex('feedmuncher', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
 
-					// ping
-					if(BackendModel::getModuleSetting($this->URL->getModule(), 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock($this->URL->getModule(), 'detail') . '/' . $this->meta->getURL());
+						// ping
+						if(BackendModel::getModuleSetting($this->URL->getModule(), 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('feedmuncher', 'detail') . '/' . $this->meta->getURL());
+					}
 
 					// everything is saved, so redirect to the overview
 					$this->redirect(BackendModel::createURLForAction('articles') . '&report=edited&var=' . urlencode($item['title']) . '&id=' . $this->id . '&highlight=row-' . $item['revision_id']);

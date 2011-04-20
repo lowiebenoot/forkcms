@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale>
+  <backend>
+    <feedmuncher>
+      <item type="error" name="FeedWasDeletedBefore">
+        <translation language="nl"><![CDATA[Een feed met deze URL werd vroeger verwijderd. <a href="%1$s">Activeer deze feed</a>.]]></translation>
+        <translation language="en"><![CDATA[A feed with this URL was deleted. <a href="%1$s">Restore this feed</a>.]]></translation>
+      </item>
+      <item type="error" name="RSSDescription">
+        <translation language="nl"><![CDATA[feedmuncher RSS beschrijving is nog niet geconfigureerd. <a href="%1$s">Configureer</a>]]></translation>
+        <translation language="en"><![CDATA[Feedmuncher RSS description is not yet provided. <a href="%1$s">Configure</a>]]></translation>
+      </item>
+      <item type="error" name="UrlIsInvalid">
+        <translation language="nl"><![CDATA[Feed URL is ongeldig.]]></translation>
+        <translation language="en"><![CDATA[Feed URL is invalid.]]></translation>
+      </item>
+      <item type="error" name="UrlIsRequired">
+        <translation language="nl"><![CDATA[Gelieve een feed URL in te geven.]]></translation>
+        <translation language="en"><![CDATA[Please provide a feed URL.]]></translation>
+      </item>
+      <item type="error" name="WebsiteIsInvalid">
+        <translation language="nl"><![CDATA[Website is ongeldig.]]></translation>
+        <translation language="en"><![CDATA[Website is invalid.]]></translation>
+      </item>
+      <item type="error" name="WebsiteIsRequired">
+        <translation language="nl"><![CDATA[Gelieve een website in te geven.]]></translation>
+        <translation language="en"><![CDATA[Please provide a website.]]></translation>
+      </item>
+      <item type="label" name="Add">
+        <translation language="nl"><![CDATA[artikel toevoegen]]></translation>
+        <translation language="en"><![CDATA[add article]]></translation>
+      </item>
+      <item type="label" name="Feed">
+        <translation language="nl"><![CDATA[feed]]></translation>
+        <translation language="en"><![CDATA[feed]]></translation>
+      </item>
+      <item type="label" name="Feeds">
+        <translation language="nl"><![CDATA[feeds]]></translation>
+        <translation language="en"><![CDATA[feeds]]></translation>
+      </item>
+      <item type="label" name="FeedURL">
+        <translation language="nl"><![CDATA[feed URL]]></translation>
+        <translation language="en"><![CDATA[feed URL]]></translation>
+      </item>
+      <item type="label" name="LinkToOriginal">
+        <translation language="nl"><![CDATA[link naar het originele artikel]]></translation>
+        <translation language="en"><![CDATA[link to the original article]]></translation>
+      </item>
+      <item type="label" name="NotPublished">
+        <translation language="nl"><![CDATA[niet gepubliceerd]]></translation>
+        <translation language="en"><![CDATA[not published]]></translation>
+      </item>
+      <item type="label" name="PostInBlog">
+        <translation language="nl"><![CDATA[publiceer de artikelen in de blog module]]></translation>
+        <translation language="en"><![CDATA[publish the articles in the blog module]]></translation>
+      </item>
+      <item type="label" name="PostInFeedmuncher">
+        <translation language="nl"><![CDATA[publiceer de artikelen in de feedmuncher module]]></translation>
+        <translation language="en"><![CDATA[publish the articles in the feedmuncher module]]></translation>
+      </item>
+      <item type="label" name="PublishedInFeedmuncher">
+        <translation language="nl"><![CDATA[gepubliceerd in feedmuncher]]></translation>
+        <translation language="en"><![CDATA[published in feedmuncher]]></translation>
+      </item>
+      <item type="label" name="PublishedInBlog">
+        <translation language="nl"><![CDATA[gepubliceerd in blog]]></translation>
+        <translation language="en"><![CDATA[published in blog]]></translation>
+      </item>
+      <item type="message" name="Added">
+        <translation language="nl"><![CDATA[Het artikel "%1$s" werd toegevoegd.]]></translation>
+        <translation language="en"><![CDATA[The article "%1$s" was added.]]></translation>
+        <translation language="en"><![CDATA[The feed "%1$s" was added.]]></translation>
+      </item>
+      <item type="message" name="AddedFeed">
+        <translation language="nl"><![CDATA[De feed "%1$s" werd toegevoegd.]]></translation>
+      </item>
+      <item type="message" name="CommentOnWithURL">
+        <translation language="nl"><![CDATA[Reactie op: <a href="%1$s">%2$s</a>]]></translation>
+        <translation language="en"><![CDATA[Comment on: <a href="%1$s">%2$s</a>]]></translation>
+      </item>
+      <item type="message" name="ConfirmDelete">
+        <translation language="nl"><![CDATA[Ben je zeker dat je het artikel "%1$s" wil verwijderen?]]></translation>
+        <translation language="en"><![CDATA[Are your sure you want to delete the article "%1$s"?]]></translation>
+      </item>
+      <item type="message" name="ConfirmDeleteFeed">
+        <translation language="nl"><![CDATA[Ben je zeker dat je de feed "%1$s" wil verwijderen?]]></translation>
+        <translation language="en"><![CDATA[Are your sure you want to delete the feed "%1$s"?]]></translation>
+      </item>
+      <item type="message" name="Deleted">
+        <translation language="nl"><![CDATA[De geselecteerde artikels werden verwijderd.]]></translation>
+        <translation language="en"><![CDATA[The selected articles were deleted.]]></translation>
+      </item>
+      <item type="message" name="DeletedArticles">
+        <translation language="nl"><![CDATA[De artikels werden verwijderd.]]></translation>
+        <translation language="en"><![CDATA[The articles were deleted.]]></translation>
+      </item>
+      <item type="message" name="DeletedFeed">
+        <translation language="nl"><![CDATA[De feed "%1$s" werd verwijderd.]]></translation>
+        <translation language="en"><![CDATA[The feed "%1$s" was deleted.]]></translation>
+      </item>
+      <item type="message" name="DeletedSpam">
+        <translation language="nl"><![CDATA[Alle spamberichten werden verwijderd.]]></translation>
+        <translation language="en"><![CDATA[All spam-comments were deleted.]]></translation>
+      </item>
+      <item type="message" name="DeleteAllSpam">
+        <translation language="nl"><![CDATA[Alle spam verwijderen:]]></translation>
+        <translation language="en"><![CDATA[Delete all spam:]]></translation>
+      </item>
+      <item type="message" name="EditArticle">
+        <translation language="nl"><![CDATA[bewerk artikel "%1$s"]]></translation>
+        <translation language="en"><![CDATA[edit article "%1$s"]]></translation>
+      </item>
+      <item type="message" name="EditCommentOn">
+        <translation language="nl"><![CDATA[bewerk reactie op "%1$s"]]></translation>
+        <translation language="en"><![CDATA[edit comment on "%1$s"]]></translation>
+      </item>
+      <item type="message" name="EditFeed">
+        <translation language="nl"><![CDATA[bewerk feed "%1$s"]]></translation>
+        <translation language="en"><![CDATA[edit feed "%1$s"]]></translation>
+      </item>
+      <item type="message" name="Edited">
+        <translation language="nl"><![CDATA[Het artikel "%1$s" werd opgeslagen.]]></translation>
+        <translation language="en"><![CDATA[The article "%1$s" was saved.]]></translation>
+      </item>
+      <item type="message" name="EditedComment">
+        <translation language="nl"><![CDATA[De reactie werd opgeslagen.]]></translation>
+        <translation language="en"><![CDATA[The comment was saved.]]></translation>
+      </item>
+      <item type="message" name="EditedFeed">
+        <translation language="nl"><![CDATA[De feed "%1$s" werd opgeslagen.]]></translation>
+        <translation language="en"><![CDATA[The feed "%1$s" was saved.]]></translation>
+      </item>
+      <item type="message" name="FollowAllCommentsInRSS">
+        <translation language="nl"><![CDATA[Volg alle reacties in een RSS feed: <a href="%1$s">%1$s</a>.]]></translation>
+        <translation language="en"><![CDATA[Follow all comments in a RSS feed: <a href="%1$s">%1$s</a>.]]></translation>
+      </item>
+      <item type="message" name="HelpMeta">
+        <translation language="nl"><![CDATA[Toon de meta informatie van deze feedmuncherpost in de RSS feed (categorie, tags, ...)]]></translation>
+        <translation language="en"><![CDATA[Show the meta information for this feedmuncherpost in the RSS feed (category, tags, ...)]]></translation>
+      </item>
+      <item type="message" name="HelpPingServices">
+        <translation language="nl"><![CDATA[Laat verschillende feedmuncherservices weten wanneer je een nieuw bericht plaatst.]]></translation>
+        <translation language="en"><![CDATA[Let various feedmuncherservices know when you've posted a new article.]]></translation>
+      </item>
+      <item type="message" name="HelpSummary">
+        <translation language="nl"><![CDATA[Maak voor lange artikels een inleiding of samenvatting. Die kan getoond worden op de homepage of het artikeloverzicht.]]></translation>
+        <translation language="en"><![CDATA[Write an introduction or summary for long articles. It will be shown on the homepage or the article overview.]]></translation>
+      </item>
+      <item type="message" name="HelpSpamFilter">
+        <translation language="nl"><![CDATA[Schakel de ingebouwde spam-filter (Akismet) in om spam-berichten in reacties te vermijden.]]></translation>
+        <translation language="en"><![CDATA[Enable the built-in spamfilter (Akismet) to help avoid spam comments.]]></translation>
+      </item>
+      <item type="message" name="MakeDefaultCategory">
+        <translation language="nl"><![CDATA[Maak van deze categorie de standaardcategorie (de huidige standaardcategorie is %1$s).]]></translation>
+        <translation language="en"><![CDATA[Make default category (current default category is: %1$s).]]></translation>
+      </item>
+      <item type="message" name="NoFeeds">
+        <translation language="nl"><![CDATA[Er zijn nog geen feeds. <a href="%1$s">Voeg een feed toe.</a>.]]></translation>
+        <translation language="en"><![CDATA[There are no feeds yet. <a href="%1$s">Add a feed</a>.]]></translation>
+      </item>
+      <item type="message" name="NoItems">
+        <translation language="nl"><![CDATA[Er zijn nog geen artikels. <a href="%1$s">Voeg een feed toe.</a>.]]></translation>
+        <translation language="en"><![CDATA[There are no articles yet. <a href="%1$s">Add a feed</a>.]]></translation>
+      </item>
+      <item type="message" name="NotifyByEmailOnNewComment">
+        <translation language="nl"><![CDATA[Verwittig via email als er een nieuwe reactie is.]]></translation>
+        <translation language="en"><![CDATA[Notify by email when there is a new comment.]]></translation>
+      </item>
+      <item type="message" name="NotifyByEmailOnNewCommentToModerate">
+        <translation language="nl"><![CDATA[Verwittig via email als er een nieuwe reactie te modereren is.]]></translation>
+        <translation language="en"><![CDATA[Notify by email when there is a new comment to moderate.]]></translation>
+      </item>
+      <item type="message" name="NumItemsInRecentArticlesFull">
+        <translation language="nl"><![CDATA[Aantal items in recente artikels (volledig) widget]]></translation>
+        <translation language="en"><![CDATA[Number of articles in the recent articles (full) widget]]></translation>
+      </item>
+      <item type="message" name="NumItemsInRecentArticlesList">
+        <translation language="nl"><![CDATA[Aantal items in recente artikels (lijst) widget]]></translation>
+        <translation language="en"><![CDATA[Number of articles in the recent articles (list) widget]]></translation>
+      </item>
+      <item type="message" name="PublishedArticles">
+        <translation language="nl"><![CDATA[De artikels werden gepubliceerd.]]></translation>
+        <translation language="en"><![CDATA[The articles were published.]]></translation>
+      </item>
+      <item type="message" name="Restored">
+        <translation language="nl"><![CDATA[De feed "%1$s" werd terug geactiveerd.]]></translation>
+        <translation language="en"><![CDATA[The feed "%1$s" is restored.]]></translation>
+      </item>
+    </feedmuncher>
+    <core>
+      <item type="label" name="AddFeed">
+        <translation language="nl"><![CDATA[artikel toevoegen]]></translation>
+        <translation language="en"><![CDATA[add feed]]></translation>
+      </item>
+      <item type="label" name="AutoPublish">
+        <translation language="nl"><![CDATA[publiceer artikelen automatisch]]></translation>
+        <translation language="en"><![CDATA[publish articles automatically]]></translation>
+      </item>
+      <item type="label" name="Feedmuncher">
+        <translation language="nl"><![CDATA[feedmuncher]]></translation>
+        <translation language="en"><![CDATA[feedmuncher]]></translation>
+      </item>
+      <item type="label" name="Feeds">
+        <translation language="nl"><![CDATA[feeds]]></translation>
+        <translation language="en"><![CDATA[feeds]]></translation>
+      </item>
+      <item type="label" name="PingFeedmuncherServices">
+        <translation language="nl"><![CDATA[ping feedmuncherservices]]></translation>
+        <translation language="en"><![CDATA[ping feedmuncherservices]]></translation>
+      </item>
+      <item type="label" name="Source">
+        <translation language="nl"><![CDATA[bron]]></translation>
+        <translation language="en"><![CDATA[source]]></translation>
+      </item>
+    </core>
+  </backend>
+  <frontend>
+    <core>
+   	 <item type="label" name="Feedmuncher">
+        <translation language="nl"><![CDATA[feedmuncher]]></translation>
+        <translation language="en"><![CDATA[feedmuncher]]></translation>
+      </item>
+      <item type="label" name="With">
+        <translation language="nl"><![CDATA[met]]></translation>
+        <translation language="en"><![CDATA[with]]></translation>
+      </item>
+      <item type="label" name="The">
+        <translation language="nl"><![CDATA[de]]></translation>
+        <translation language="en"><![CDATA[the]]></translation>
+      </item>
+      <item type="message" name="Source">
+        <translation language="nl"><![CDATA[Bron: <a href="%2$s" title="%1$s">%1$s</a>]]></translation>
+        <translation language="en"><![CDATA[Source: <a href="%2$s" title="%1$s">%1$s</a>]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherAllComments">
+        <translation language="nl"><![CDATA[Alle reacties op je feedmuncher.]]></translation>
+        <translation language="en"><![CDATA[All comments on your feedmuncher.]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherNoComments">
+        <translation language="nl"><![CDATA[Reageer als eerste]]></translation>
+        <translation language="en"><![CDATA[Be the first to comment]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherNumberOfComments">
+        <translation language="nl"><![CDATA[Al %1$s reacties]]></translation>
+        <translation language="en"><![CDATA[%1$s comments]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherOneComment">
+        <translation language="nl"><![CDATA[Al 1 reactie]]></translation>
+        <translation language="en"><![CDATA[1 comment already]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherCommentIsAdded">
+        <translation language="nl"><![CDATA[Je reactie werd toegevoegd.]]></translation>
+        <translation language="en"><![CDATA[Your comment was added.]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherCommentInModeration">
+        <translation language="nl"><![CDATA[Je reactie wacht op goedkeuring.]]></translation>
+        <translation language="en"><![CDATA[Your comment is awaiting moderation.]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherCommentIsSpam">
+        <translation language="nl"><![CDATA[Je reactie werd gemarkeerd als spam.]]></translation>
+        <translation language="en"><![CDATA[Your comment was marked as spam.]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherEmailNotificationsNewComment">
+        <translation language="nl"><![CDATA[%1$s reageerde op <a href="%2$s">%3$s</a>.]]></translation>
+        <translation language="en"><![CDATA[%1$s commented on <a href="%2$s">%3$s</a>.]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherEmailNotificationsNewCommentToModerate">
+        <translation language="nl"><![CDATA[%1$s reageerde op <a href="%2$s">%3$s</a>. <a href="%4$s">Modereer</a> deze reactie om ze zichtbaar te maken op de website.]]></translation>
+        <translation language="en"><![CDATA[%1$s commented on <a href="%2$s">%3$s</a>. <a href="%4$s">Moderate</a> the comment to publish it.]]></translation>
+      </item>
+      <item type="message" name="FeedmuncherNoItems">
+        <translation language="nl"><![CDATA[Er zijn nog geen artikelen.]]></translation>
+        <translation language="en"><![CDATA[There are no articles yet.]]></translation>
+      </item>
+    </core>
+  </frontend>
+</locale>

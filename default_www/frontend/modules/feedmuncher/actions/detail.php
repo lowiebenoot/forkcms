@@ -6,11 +6,8 @@
  * @package		frontend
  * @subpackage	feedmuncher
  *
- * @author		Tijs Verkoyen <tijs@netlash.com>
- * @author		Davy Hellemans <davy@netlash.com>
- * @author		Dieter Vanden Eynde <dieter@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
- * @since		2.0
+ * @since		2.1
  */
 class FrontendFeedmuncherDetail extends FrontendBaseBlock
 {
@@ -111,6 +108,9 @@ class FrontendFeedmuncherDetail extends FrontendBaseBlock
 
 		// anything found?
 		if(empty($this->record)) $this->redirect(FrontendNavigation::getURL(404));
+
+		// shoul it be redirected to the original article, but somehow the user ended up here? Redirect to original article.
+		if(FrontendModel::getModuleSetting('feedmuncher', 'link_to_original', false)) $this->redirect($this->record['original_url']);
 
 		// overwrite URLs
 		$this->record['category_full_url'] = FrontendNavigation::getURLForBlock('feedmuncher', 'category') . '/' . $this->record['category_url'];
@@ -223,8 +223,8 @@ class FrontendFeedmuncherDetail extends FrontendBaseBlock
 		$commentCount = count($this->comments);
 
 		// assign the comments
-		$this->tpl->assign('feedmuncherCommentsCount', $commentCount);
-		$this->tpl->assign('feedmuncherComments', $this->comments);
+		$this->tpl->assign('commentsCount', $commentCount);
+		$this->tpl->assign('comments', $this->comments);
 
 		// options
 		if($commentCount > 1) $this->tpl->assign('feedmuncherCommentsMultiple', true);
@@ -238,10 +238,10 @@ class FrontendFeedmuncherDetail extends FrontendBaseBlock
 		if($this->URL->getParameter('comment', 'string') == 'true') $this->tpl->assign('commentIsAdded', true);
 
 		// assign settings
-		$this->tpl->assign('feedmuncherSettings', $this->settings);
+		$this->tpl->assign('settings', $this->settings);
 
 		// assign navigation
-		$this->tpl->assign('feedmuncherNavigation', FrontendFeedmuncherModel::getNavigation($this->record['id']));
+		$this->tpl->assign('navigation', FrontendFeedmuncherModel::getNavigation($this->record['id']));
 	}
 
 

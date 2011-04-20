@@ -10,7 +10,7 @@
 			<article class="mod article">
 				<div class="inner">
 					<header class="hd">
-						<h3><a href="{$items.full_url}" title="{$items.title}">{$items.title}</a></h3>
+						<h3><a href="{option:!items.link_to_original}{$items.full_url}{/option:!items.link_to_original}{option:items.link_to_original}{$items.original_url}{/option:items.link_to_original}" title="{$items.title}">{$items.title}</a></h3>
 						<ul>
 							<li>
 								{* Written by *}
@@ -30,14 +30,16 @@
 									{/iteration:items.tags}
 								{/option:items.tags}
 							</li>
-							<li>
-								{* Comments *}
-								{option:!items.comments}<a href="{$items.full_url}#{$actComment}">{$msgFeedmuncherNoComments|ucfirst}</a>{/option:!items.comments}
-								{option:items.comments}
-									{option:items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherNumberOfComments|sprintf:{$items.comments_count}}</a>{/option:items.comments_multiple}
-									{option:!items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherOneComment}</a>{/option:!items.comments_multiple}
-								{/option:items.comments}
-							</li>
+							{option:!items.link_to_original}
+								<li>
+									{* Comments *}
+									{option:!items.comments}<a href="{$items.full_url}#{$actComment}">{$msgFeedmuncherNoComments|ucfirst}</a>{/option:!items.comments}
+									{option:items.comments}
+										{option:items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherNumberOfComments|sprintf:{$items.comments_count}}</a>{/option:items.comments_multiple}
+										{option:!items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherOneComment}</a>{/option:!items.comments_multiple}
+									{/option:items.comments}
+								</li>
+							{/option:!items.link_to_original}
 						</ul>
 					</header>
 					<div class="bd content">
@@ -47,6 +49,6 @@
 				</div>
 			</article>
 		{/iteration:items}
-	</div>
-	{include:{$FRONTEND_CORE_PATH}/layout/templates/pagination.tpl}
+	</section>
+	{include:core/layout/templates/pagination.tpl}
 {/option:items}

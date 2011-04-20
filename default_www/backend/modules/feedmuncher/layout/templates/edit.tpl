@@ -4,7 +4,7 @@
 {form:addFeed}
 	<div class="box">
 		<div class="heading">
-			<h3>{$lblFeeds|ucfirst}: {$msgEditFeed|sprintf:{$item.title}}</h3>
+			<h3>{$lblFeeds|ucfirst}: {$msgEditFeed|sprintf:{$item.name}}</h3>
 		</div>
 		<div class="options horizontal">
 			<p>
@@ -12,7 +12,7 @@
 				{$txtName} {$txtNameError}
 			</p>
 			<p>
-				<label for="url">{$lblFeedmuncherFeedURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+				<label for="url">{$lblFeedURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtUrl} {$txtUrlError}
 			</p>
 			<p>
@@ -39,6 +39,7 @@
 			<p>
 				<ul class="inputList">
 					<li>{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label></li>
+					<li>{$chkLinkToOriginal} <label for="linkToOriginal">{$lblLinkToOriginal|ucfirst}</label></li>
 				</ul>
 			</p>
 		</div>

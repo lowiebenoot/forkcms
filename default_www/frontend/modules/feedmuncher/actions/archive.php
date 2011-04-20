@@ -6,9 +6,8 @@
  * @package		frontend
  * @subpackage	feedmuncher
  *
- * @author		Tijs Verkoyen <tijs@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
- * @since		2.0
+ * @since		2.1
  */
 class FrontendFeedmuncherArchive extends FrontendBaseBlock
 {
@@ -154,10 +153,10 @@ class FrontendFeedmuncherArchive extends FrontendBaseBlock
 		if($this->month !== null) $this->header->setPageTitle(SpoonDate::getDate('F', $this->startDate, FRONTEND_LANGUAGE, true));
 
 		// assign category
-		$this->tpl->assign('feedmuncherArchive', array('start_date' => $this->startDate, 'end_date' => $this->endDate, 'year' => $this->year, 'month' => $this->month));
+		$this->tpl->assign('archive', array('start_date' => $this->startDate, 'end_date' => $this->endDate, 'year' => $this->year, 'month' => $this->month));
 
 		// assign items
-		$this->tpl->assign('feedmuncherArticles', $this->items);
+		$this->tpl->assign('items', $this->items);
 
 		// parse the pagination
 		$this->parsePagination();

@@ -39,6 +39,7 @@
 			<p>
 				<ul class="inputList">
 					<li>{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label></li>
+					<li>{$chkLinkToOriginal} <label for="linkToOriginal">{$lblLinkToOriginal|ucfirst}</label></li>
 				</ul>
 			</p>
 		</div>

@@ -6,11 +6,6 @@
  * @package		frontend
  * @subpackage	feedmuncher
  *
- * @author		Davy Hellemans <davy@netlash.com>
- * @author		Dave Lens <dave@netlash.com>
- * @author		Tijs Verkoyen <tijs@sumocoders.be>
- * @author		Annelies Van Extergem <annelies@netlash.com>
- * @author		Matthias Mullie <matthias@netlash.com>
  * @author		Lowie Benoot <lowie@netlash.com>
  * @since		2.0
  */
@@ -24,7 +19,7 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	 */
 	public static function get($URL)
 	{
-		return (array) FrontendModel::getDB()->getRecord('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text,
+		return (array) FrontendModel::getDB()->getRecord('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.original_url,
 															c.title AS category_title, m2.url AS category_url,
 															f.name AS source_name, f.source AS source_url,
 															UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
@@ -38,9 +33,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 															INNER JOIN meta AS m ON i.meta_id = m.id
 															INNER JOIN meta AS m2 ON c.meta_id = m2.id
 															INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-															WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND m.url = ?
+															WHERE i.status = ? AND i.target = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND m.url = ?
 															LIMIT 1',
-															array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $URL));
+															array('active', 'feedmuncher', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $URL));
 	}
 
 
@@ -54,9 +49,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	public static function getAll($limit = 10, $offset = 0)
 	{
 		// get the item
-		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count,
+		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count, i.original_url,
 																c.title AS category_title, m2.url AS category_url,
-																f.name AS source_name, f.source AS source_url,
+																f.name AS source_name, f.source AS source_url, f.link_to_original,
 																UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
 																m.url
 																FROM feedmuncher_posts AS i
@@ -64,10 +59,10 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 																INNER JOIN meta AS m ON i.meta_id = m.id
 																INNER JOIN meta AS m2 ON c.meta_id = m2.id
 																INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-																WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ?
+																WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND i.target = ?
 																ORDER BY i.date DESC, i.id DESC
 																LIMIT ?, ?',
-																array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (int) $offset, (int) $limit), 'revision_id');
+																array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', 'feedmuncher', (int) $offset, (int) $limit), 'revision_id');
 
 		// no results?
 		if(empty($items)) return array();
@@ -86,6 +81,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 			// URLs
 			$items[$key]['full_url'] = $link . '/' . $row['url'];
 			$items[$key]['category_full_url'] = $categoryLink . '/' . $row['category_url'];
+
+			// link to original
+			$items[$key]['link_to_original'] = $row['link_to_original'] == 'Y' ? true: false;
 
 			// comments
 			if($row['comments_count'] > 0) $items[$key]['comments'] = true;
@@ -117,9 +115,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 															FROM feedmuncher_categories AS c
 															INNER JOIN feedmuncher_posts AS i ON c.id = i.category_id AND c.language = i.language
 															INNER JOIN meta AS m ON c.meta_id = m.id
-															WHERE c.language = ? AND i.status = ? AND i.hidden = ? AND i.date <= ?
+															WHERE c.language = ? AND i.status = ? AND i.target = ? AND i.hidden = ? AND i.date <= ?
 															GROUP BY c.id',
-															array(FRONTEND_LANGUAGE, 'active', 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'), 'id');
+															array(FRONTEND_LANGUAGE, 'active', 'feedmuncher', 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'), 'id');
 	}
 
 
@@ -154,8 +152,8 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	{
 		return (int) FrontendModel::getDB()->getVar('SELECT COUNT(i.id) AS count
 														FROM feedmuncher_posts AS i
-														WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ?',
-														array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
+														WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND i.target = ?',
+														array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', 'feedmuncher'));
 	}
 
 
@@ -170,9 +168,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	public static function getAllForCategory($categoryURL, $limit = 10, $offset = 0)
 	{
 		// get the items
-		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count,
+		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count, i.original_url,
 																c.title AS category_title, m2.url AS category_url,
-																f.name AS source_name, f.source AS source_url,
+																f.name AS source_name, f.source AS source_url, f.link_to_original,
 																UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
 																m.url
 																FROM feedmuncher_posts AS i
@@ -180,10 +178,10 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 																INNER JOIN meta AS m ON i.meta_id = m.id
 																INNER JOIN meta AS m2 ON c.meta_id = m2.id
 																INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-																WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND m2.url = ?
+																WHERE i.status = ? AND i.target = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND m2.url = ?
 																ORDER BY i.date DESC
 																LIMIT ?, ?',
-																array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $categoryURL, (int) $offset, (int) $limit), 'revision_id');
+																array('active', 'feedmuncher', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $categoryURL, (int) $offset, (int) $limit), 'revision_id');
 
 		// no results?
 		if(empty($items)) return array();
@@ -206,6 +204,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 			// comments
 			if($row['comments_count'] > 0) $items[$key]['comments'] = true;
 			if($row['comments_count'] > 1) $items[$key]['comments_multiple'] = true;
+
+			// link to original
+			$items[$key]['link_to_original'] = $row['link_to_original'] == 'Y' ? true : false;
 		}
 
 		// get all tags
@@ -231,8 +232,8 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 														FROM feedmuncher_posts AS i
 														INNER JOIN feedmuncher_categories AS c ON i.category_id = c.id
 														INNER JOIN meta AS m ON c.meta_id = m.id
-														WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND m.url = ?',
-														array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $URL));
+														WHERE i.status = ? AND i.target = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND m.url = ?',
+														array('active', 'feedmuncher', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $URL));
 	}
 
 
@@ -254,20 +255,20 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 		$offset = (int) $offset;
 
 		// get the items
-		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count,
+		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count, i.original_url,
 																c.title AS category_title, m2.url AS category_url,
 																UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
-																f.name AS source_name, f.source AS source_url,
+																f.name AS source_name, f.source AS source_url, f.link_to_original,
 																m.url
 																FROM feedmuncher_posts AS i
 																INNER JOIN feedmuncher_categories AS c ON i.category_id = c.id
 																INNER JOIN meta AS m ON i.meta_id = m.id
 																INNER JOIN meta AS m2 ON c.meta_id = m2.id
 																INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-																WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date BETWEEN ? AND ?
+																WHERE i.status = ? AND i.target = ? AND i.language = ? AND i.hidden = ? AND i.date BETWEEN ? AND ?
 																ORDER BY i.date DESC
 																LIMIT ?, ?',
-																array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i', $start), FrontendModel::getUTCDate('Y-m-d H:i', $end), $offset, $limit), 'revision_id');
+																array('active', 'feedmuncher', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i', $start), FrontendModel::getUTCDate('Y-m-d H:i', $end), $offset, $limit), 'revision_id');
 
 		// no results?
 		if(empty($items)) return array();
@@ -288,6 +289,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 			// comments
 			if($row['comments_count'] > 0) $items[$key]['comments'] = true;
 			if($row['comments_count'] > 1) $items[$key]['comments_multiple'] = true;
+
+			// link to original
+			$items[$key]['link_to_original'] = $row['link_to_original'] == 'Y' ? true : false;
 		}
 
 		// get all tags
@@ -318,8 +322,8 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 		return (int) FrontendModel::getDB()->getVar('SELECT COUNT(i.id)
 														FROM feedmuncher_posts AS i
 														INNER JOIN feedmuncher_categories AS c ON i.category_id = c.id
-														WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date BETWEEN ? AND ?',
-														array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i:s', $start), FrontendModel::getUTCDate('Y-m-d H:i:s', $end)));
+														WHERE i.status = ? AND i.target = ?AND i.language = ? AND i.hidden = ? AND i.date BETWEEN ? AND ?',
+														array('active', 'feedmuncher', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i:s', $start), FrontendModel::getUTCDate('Y-m-d H:i:s', $end)));
 
 	}
 
@@ -335,9 +339,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 		$numbers = FrontendModel::getDB()->getPairs('SELECT DATE_FORMAT(i.date, "%Y%m") AS month, COUNT(i.id)
 														FROM feedmuncher_posts AS i
 														INNER JOIN meta AS m ON i.meta_id = m.id
-														WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ?
+														WHERE i.status = ? AND i.target = ? AND i.language = ? AND i.hidden = ? AND i.date <= ?
 														GROUP BY month',
-														array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
+														array('active', 'feedmuncher', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00'));
 
 		// init vars
 		$stats = array();
@@ -429,7 +433,7 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	 */
 	public static function getDraft($URL, $draft)
 	{
-		return (array) FrontendModel::getDB()->getRecord('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text,
+		return (array) FrontendModel::getDB()->getRecord('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.original_url,
 															c.title AS category_title, m2.url AS category_url,
 															f.name AS source_name, f.source AS source_url,
 															UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
@@ -458,12 +462,12 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	public static function getForTags(array $ids)
 	{
 		// fetch items
-		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.title, m.url
+		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.title, m.url, i.original_url
 																FROM feedmuncher_posts AS i
 																INNER JOIN meta AS m ON m.id = i.meta_id
-																WHERE i.status = ? AND i.hidden = ? AND i.revision_id IN (' . implode(',', $ids) . ')
+																WHERE i.status = ? i.target = ? AND i.hidden = ? AND i.revision_id IN (' . implode(',', $ids) . ')
 																ORDER BY i.date DESC',
-																array('active', 'N'));
+																array('active', 'feedmuncher', 'N'));
 
 		// has items
 		if(!empty($items))
@@ -471,8 +475,11 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 			// init var
 			$link = FrontendNavigation::getURLForBlock('feedmuncher', 'detail');
 
+			// should the articles link to the original article?
+			$linkToOriginal = FrontendModel::getModuleSetting('feedmuncher', 'link_to_original');
+
 			// reset url
-			foreach($items as &$row) $row['full_url'] = $link . '/' . $row['url'];
+			foreach($items as &$row) $row['full_url'] = $linkToOriginal ? $row['original_url'] : $link . '/' . $row['url'];
 		}
 
 		// return
@@ -527,19 +534,19 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 		$navigation['previous'] = $db->getRecord('SELECT i.id, i.title, m.url
 													FROM feedmuncher_posts AS i
 													INNER JOIN meta AS m ON i.meta_id = m.id
-													WHERE i.id != ? AND i.status = ? AND i.hidden = ? AND i.language = ? AND i.date <= ?
+													WHERE i.id != ? AND i.status = ? AND i.target = ? AND i.hidden = ? AND i.language = ? AND i.date <= ?
 													ORDER BY i.date DESC
 													LIMIT 1',
-													array($id, 'active', 'N', FRONTEND_LANGUAGE, $date));
+													array($id, 'active', 'feedmuncher', 'N', FRONTEND_LANGUAGE, $date));
 
 		// get next post
 		$navigation['next'] = $db->getRecord('SELECT i.id, i.title, m.url
 												FROM feedmuncher_posts AS i
 												INNER JOIN meta AS m ON i.meta_id = m.id
-												WHERE i.id != ? AND i.status = ? AND i.hidden = ? AND i.language = ? AND i.date > ?
+												WHERE i.id != ? AND i.status = ? AND i.target = ? AND i.hidden = ? AND i.language = ? AND i.date > ?
 												ORDER BY i.date ASC
 												LIMIT 1',
-												array($id, 'active', 'N', FRONTEND_LANGUAGE, $date));
+												array($id, 'active', 'feedmuncher', 'N', FRONTEND_LANGUAGE, $date));
 
 		// return
 		return $navigation;
@@ -567,10 +574,11 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 																FROM feedmuncher_comments AS c
 																INNER JOIN feedmuncher_posts AS i ON c.post_id = i.id AND c.language = i.language
 																INNER JOIN meta AS m ON i.meta_id = m.id
-																WHERE c.status = ? AND i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ?
+																INNER JOIN feedmuncher_feeds AS f ON f.id = i.feed_id
+																WHERE c.status = ? AND i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND f.link_to_original = ?
 																ORDER BY c.created_on DESC
 																LIMIT ?',
-																array('published', 'active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', $limit));
+																array('published', 'active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', 'N', $limit));
 
 		// validate
 		if(empty($comments)) return $return;
@@ -618,10 +626,10 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.title, m.url
 																FROM feedmuncher_posts AS i
 																INNER JOIN meta AS m ON i.meta_id = m.id
-																WHERE i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND i.id IN(' . implode(',', $relatedIDs) . ')
+																WHERE i.status = ? AND i.target = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND i.id IN(' . implode(',', $relatedIDs) . ')
 																ORDER BY i.date DESC, i.id DESC
 																LIMIT ?',
-																array('active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', $limit), 'id');
+																array('active', 'feedmuncher', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', $limit), 'id');
 
 		// loop items
 		foreach($items as &$row)
@@ -643,7 +651,7 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	 */
 	public static function getRevision($URL, $revision)
 	{
-		return (array) FrontendModel::getDB()->getRecord('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text,
+		return (array) FrontendModel::getDB()->getRecord('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.original_url,
 															c.title AS category_title, m2.url AS category_url,
 															f.name AS source_name, f.source AS source_url,
 															UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
@@ -799,16 +807,18 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	public static function search(array $ids)
 	{
 		// get items
-		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.title, i.introduction, i.text, m.url
+		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.title, i.introduction, i.text, m.url, i.original_url, f.link_to_original
 																FROM feedmuncher_posts AS i
 																INNER JOIN meta AS m ON i.meta_id = m.id
+																INNER JOIN feedmuncher_feeds AS f ON f.id = i.feed_id
 																WHERE i.status = ? AND i.hidden = ? AND i.language = ? AND i.date <= ? AND i.id IN (' . implode(',', $ids) . ')',
 																array('active', 'N', FRONTEND_LANGUAGE, date('Y-m-d H:i') . ':00'), 'id');
+
 
 		// prepare items for search
 		foreach($items as &$item)
 		{
-			$item['full_url'] = FrontendNavigation::getURLForBlock('feedmuncher', 'detail') . '/' . $item['url'];
+			$item['full_url'] = $item['link_to_original'] == 'Y' ? $item['original_url'] : FrontendNavigation::getURLForBlock('feedmuncher', 'detail') . '/' . $item['url'];
 		}
 
 		// return

@@ -6,10 +6,8 @@
  * @package		backend
  * @subpackage	feedmuncher
  *
- * @author		Tijs Verkoyen <tijs@netlash.com>
- * @author		Davy Hellemans <davy@netlash.com>
- * @author		Lowie Benoot <lowie@netlash.com>
- * @since		2.0
+ * @author		Lowie Benoot <lowiebenoot@netlash.com>
+ * @since		2.1
  */
 class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 {

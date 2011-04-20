@@ -6,9 +6,8 @@
  * @package		frontend
  * @subpackage	feedmuncher
  *
- * @author		Tijs Verkoyen <tijs@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
- * @since		2.0
+ * @since		2.1
  */
 class FrontendFeedmuncherWidgetRecentArticlesList extends FrontendBaseWidget
 {
@@ -46,6 +45,9 @@ class FrontendFeedmuncherWidgetRecentArticlesList extends FrontendBaseWidget
 
 		// assign comments
 		$this->tpl->assign('widgetFeedmuncherRecentArticlesList', FrontendFeedmuncherModel::getAll(FrontendModel::getModuleSetting('feedmuncher', 'recent_articles_list_num_items', 5)));
+
+		// should the articles link to the original article?
+		$this->tpl->assign('linkToOriginal', FrontendModel::getModuleSetting('feedmuncher', 'link_to_original', false));
 	}
 }
 

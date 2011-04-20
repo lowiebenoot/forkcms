@@ -9,6 +9,7 @@ CREATE  TABLE IF NOT EXISTS `feedmuncher_feeds` (
   `deleted` ENUM('Y','N') NOT NULL DEFAULT 'N' ,
   `category_id` INT(11) NOT NULL ,
   `target` ENUM('feedmuncher','blog') NOT NULL DEFAULT 'feedmuncher' ,
+  `link_to_original` ENUM('Y','N') NOT NULL DEFAULT 'N' ,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
@@ -42,6 +43,7 @@ CREATE  TABLE IF NOT EXISTS `feedmuncher_posts` (
   `status` enum('active','archived','draft') NOT NULL DEFAULT 'active',
   `target` ENUM('feedmuncher','blog') NOT NULL DEFAULT 'feedmuncher' ,
   `blog_post_id` INT(11) DEFAULT NULL ,
+  `original_url` TEXT,
   PRIMARY KEY (`revision_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 

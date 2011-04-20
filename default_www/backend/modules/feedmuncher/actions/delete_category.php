@@ -6,9 +6,8 @@
  * @package		backend
  * @subpackage	feedmuncher
  *
- * @author		Davy Hellemans <davy@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
- * @since		2.0
+ * @since		2.1
  */
 class BackendFeedmuncherDeleteCategory extends BackendBaseActionDelete
 {

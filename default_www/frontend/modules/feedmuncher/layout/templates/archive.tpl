@@ -29,13 +29,15 @@
 						{iteration:items}
 							<tr>
 								<td class="date">{$items.publish_on|date:{$dateFormatShort}:{$LANGUAGE}}</td>
-								<td class="title"><a href="{$items.full_url}" title="{$items.title}">{$items.title}</a></td>
+								<td class="title"><a href="{option:!items.link_to_original}{$items.full_url}{/option:!items.link_to_original}{option:items.link_to_original}{$items.original_url}{/option:items.link_to_original}" title="{$items.title}">{$items.title}</a></td>
 								<td class="comments">
-									{option:!items.comments}<a href="{$items.full_url}#{$actComment}">{$msgFeedmuncherNoComments|ucfirst}</a>{/option:!items.comments}
-									{option:items.comments}
-										{option:items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherNumberOfComments|sprintf:{$items.comments_count}}</a>{/option:items.comments_multiple}
-										{option:!items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherOneComment}</a>{/option:!items.comments_multiple}
-									{/option:items.comments}
+									{option:!items.link_to_original}
+										{option:!items.comments}<a href="{$items.full_url}#{$actComment}">{$msgFeedmuncherNoComments|ucfirst}</a>{/option:!items.comments}
+										{option:items.comments}
+											{option:items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherNumberOfComments|sprintf:{$items.comments_count}}</a>{/option:items.comments_multiple}
+											{option:!items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherOneComment}</a>{/option:!items.comments_multiple}
+										{/option:items.comments}
+									{/option:!items.link_to_original}
 								</td>
 							</tr>
 						{/iteration:items}
@@ -44,5 +46,5 @@
 			</div>
 		</div>
 	</section>
-	{include:{$FRONTEND_CORE_PATH}/layout/templates/pagination.tpl}
+	{include:core/layout/templates/pagination.tpl}
 {/option:items}

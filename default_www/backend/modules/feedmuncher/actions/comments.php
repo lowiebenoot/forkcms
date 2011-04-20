@@ -6,9 +6,8 @@
  * @package		backend
  * @subpackage	feedmuncher
  *
- * @author		Davy Hellemans <davy@netlash.com>
- * @author		Tijs Verkoyen <tijs@sumocoders.be>
- * @since		2.0
+ * @author		Lowie Benoot <lowiebenoot@netlash.com>
+ * @since		2.1
  */
 class BackendFeedmuncherComments extends BackendBaseActionIndex
 {

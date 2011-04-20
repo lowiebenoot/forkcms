@@ -6,8 +6,8 @@
  * @package		frontend
  * @subpackage	feedmuncher
  *
- * @author		Tijs Verkoyen <tijs@netlash.com>
- * @since		2.0
+ * @author		Lowie Benoot <lowiebenoot@netlash.com>
+ * @since		2.1
  */
 final class FrontendFeedmuncherConfig extends FrontendBaseConfig
 {

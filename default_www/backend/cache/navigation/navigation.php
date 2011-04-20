@@ -332,6 +332,10 @@ $navigation = array(
 					array(
 						'url' => 'location/settings',
 						'label' => 'Location'
+					),
+					array(
+						'url' => 'feedmuncher/settings',
+						'label' => 'Feedmuncher'
 					)
 				)
 			)

@@ -6,9 +6,8 @@
  * @package		backend
  * @subpackage	feedmuncher
  *
- * @author		Tijs Verkoyen <tijs@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
- * @since		2.0
+ * @since		2.1
  */
 class BackendFeedmuncherEditComment extends BackendBaseActionEdit
 {

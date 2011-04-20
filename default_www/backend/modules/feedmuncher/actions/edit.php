@@ -72,7 +72,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 		// create form
 		$this->frm = new BackendForm('addFeed');
 
-		// get current category
+		// publishing in feedmuncher?
 		if($this->record['target'] == 'feedmuncher')
 		{
 			// get current category
@@ -82,6 +82,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 			$blogCategory = BackendModel::getModuleSetting('blog', 'default_category_' . BL::getWorkingLanguage());
 		}
 
+		// publishing in blog
 		else
 		{
 			// get current category
@@ -112,6 +113,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 		$this->frm->addDropdown('category', BackendFeedmuncherModel::getCategories(), $feedmuncherCategory);
 		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), $this->record['author_user_id']);
 		$this->frm->addCheckbox('auto_publish', ($this->record['auto_publish'] == 'Y' ? true : false));
+		$this->frm->addCheckbox('link_to_original', ($this->record['link_to_original'] == 'Y' ? true : false));
 	}
 
 
@@ -169,6 +171,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 				$item['source'] = $this->frm->getField('website')->getValue();
 				$item['author_user_id'] = (int) $this->frm->getField('author')->getValue();
 				$item['auto_publish'] = $this->frm->getField('auto_publish')->isChecked() == true ? 'Y' : 'N';
+				$item['link_to_original'] = $this->frm->getField('link_to_original')->isChecked() == true ? 'Y' : 'N';
 				$item['language'] = BL::getWorkingLanguage();
 				if(!BackendFeedmuncherModel::feedHasArticles($this->id))
 				{

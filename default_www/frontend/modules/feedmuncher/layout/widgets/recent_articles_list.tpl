@@ -12,13 +12,13 @@
 			<div class="bd content">
 				<ul>
 					{iteration:widgetFeedmuncherRecentArticlesList}
-						<li><a href="{$widgetFeedmuncherRecentArticlesList.full_url}" title="{$widgetFeedmuncherRecentArticlesList.title}">{$widgetFeedmuncherRecentArticlesList.title}</a></li>
+						<li><a href="{option:!widgetFeedmuncherRecentArticlesList.link_to_original}{$widgetFeedmuncherRecentArticlesList.full_url}{/option:!widgetFeedmuncherRecentArticlesList.link_to_original}{option:widgetFeedmuncherRecentArticlesList.link_to_original}{$widgetFeedmuncherRecentArticlesList.original_url}{/option:widgetFeedmuncherRecentArticlesList.link_to_original}" title="{$widgetFeedmuncherRecentArticlesList.title}">{$widgetFeedmuncherRecentArticlesList.title}</a></li>
 					{/iteration:widgetFeedmuncherRecentArticlesList}
 				</ul>
 			</div>
 			<footer class="ft">
 				<p>
-					<a href="{$var|geturlforblock:'feedmuncher'}">{$lblFeedmuncherArchive|ucfirst}</a>
+					<a href="{$var|geturlforblock:'feedmuncher'}">{$lblArchive|ucfirst}</a>
 					<a id="RSSfeed" href="{$var|geturlforblock:'feedmuncher':'rss'}">{$lblSubscribeToTheRSSFeed|ucfirst}</a>
 				</p>
 			</footer>

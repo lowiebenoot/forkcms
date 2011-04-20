@@ -6,12 +6,8 @@
  * @package		backend
  * @subpackage	feedmuncher
  *
- * @author		Davy Hellemans <davy@netlash.com>
- * @author		Dave Lens <dave@netlash.com>
- * @author		Tijs Verkoyen <tijs@sumocoders.com>
- * @author		Matthias Mullie <matthias@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
- * @since		2.0
+ * @since		2.1
  */
 class BackendFeedmuncherArticles extends BackendBaseActionIndex
 {
@@ -71,7 +67,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$this->dgBlogPosts->setSortParameter('desc');
 
 		// set colum URLs
-		$this->dgBlogPosts->setColumnURL('title', BackendModel::createURLForAction('edit_article', 'blog') . '&amp;id=[id]');
+		$this->dgBlogPosts->setColumnURL('title', BackendModel::createURLForAction('edit', 'blog') . '&amp;id=[id]');
 		$this->dgBlogPosts->setColumnURL('feed', BackendModel::createURLForAction('edit') . '&amp;id=[feed_id]');
 
 		// set column functions

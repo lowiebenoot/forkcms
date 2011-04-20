@@ -64,6 +64,7 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 		}
 		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), BackendAuthentication::getUser()->getUserId());
 		$this->frm->addCheckbox('auto_publish', BackendModel::getModuleSetting('feedmuncher', 'auto_publish'));
+		$this->frm->addCheckbox('link_to_original');
 
 		// assign whether blog is installed or not
 		$this->tpl->assign('blogIsInstalled', $this->blogIsInstalled);
@@ -93,7 +94,14 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 				if($this->frm->getField('url')->isURL(BL::err('UrlIsInvalid')))
 				{
 					// is there already a feed with that url (and same language)
-					if(BackendFeedmuncherModel::existsByURL($this->frm->getField('url')->getValue())) $this->frm->getField('url')->addError(BL::getError('FeedAlreadyExists'));
+					if(BackendFeedmuncherModel::existsByURL($this->frm->getField('url')->getValue()))
+					{
+						// is it deleted before?
+						if(BackendFeedmuncherModel::feedDeletedBefore($this->frm->getField('url')->getValue())) $this->frm->getField('url')->addError(sprintf(BL::err('FeedWasDeletedBefore'), BackendModel::createURLForAction('undo_delete', null, null, array('url' => $this->frm->getField('url')->getValue()))));
+
+						// not deleted before
+						else $this->frm->getField('url')->addError(BL::getError('FeedAlreadyExists'));
+					}
 				}
 			}
 
@@ -111,13 +119,14 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 				$item['target'] = ($this->blogIsInstalled) ? $this->frm->getField('target')->getValue() : 'feedmuncher';
 				$item['category_id'] = $item['target'] == 'feedmuncher' ? (int) $this->frm->getField('category')->getValue() : (int) $this->frm->getField('category_blog')->getValue();
 				$item['auto_publish'] = $this->frm->getField('auto_publish')->isChecked() == true ? 'Y' : 'N';
+				$item['link_to_original'] = $this->frm->getField('link_to_original')->isChecked() == true ? 'Y' : 'N';
 				$item['language'] = BL::getWorkingLanguage();
 
 				// insert in DB
-				$feedID = BackendFeedmuncherModel::insert($item);
+				$feedId = BackendFeedmuncherModel::insert($item);
 
 				// return to the feeds overview
-				$this->redirect(BackendModel::createURLForAction('index') . '&report=addedfeed&var=' . urlencode($item['name']) . '&highlight=row-' . $feedID);
+				$this->redirect(BackendModel::createURLForAction('index') . '&report=addedfeed&var=' . urlencode($item['name']) . '&highlight=row-' . $feedId);
 			}
 		}
 	}

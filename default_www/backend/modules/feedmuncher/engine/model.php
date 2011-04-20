@@ -7,7 +7,7 @@
  * @subpackage	feedmuncher
  *
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
- * @since		2.0
+ * @since		2.1
  */
 class BackendFeedmuncherModel
 {
@@ -105,7 +105,7 @@ class BackendFeedmuncherModel
 		$ids = (array) $ids;
 
 		// delete feed in db (mark as deleted)
-		$db = BackendModel::getDB(true)->update('feedmuncher_feeds', array('deleted' => 'Y') , 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
+		BackendModel::getDB(true)->update('feedmuncher_feeds', array('deleted' => 'Y') , 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
 	}
 
 
@@ -122,6 +122,16 @@ class BackendFeedmuncherModel
 
 		// delete feed in db (mark as deleted)
 		BackendModel::getDB(true)->update('feedmuncher_posts', array('deleted' => 'Y') , 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
+
+		// loop artilces
+		foreach($ids as $id)
+		{
+			// get article
+			$article = self::getArticle($id);
+
+			// delete search indexes
+			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($article, $id);
+		}
 
 		// invalidate the cache for feedmuncher
 		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
@@ -160,7 +170,7 @@ class BackendFeedmuncherModel
 	 * Deletes one or more comments
 	 *
 	 * @return	void
-	 * @param	array $ids						The id(s) of the comment(s) to delete.
+	 * @param	array $ids		The id(s) of the comment(s) to delete.
 	 */
 	public static function deleteComments($ids)
 	{
@@ -286,6 +296,25 @@ class BackendFeedmuncherModel
 														FROM feedmuncher_comments AS i
 														WHERE i.id = ? AND i.language = ?',
 														array((int) $id, BL::getWorkingLanguage()));
+	}
+
+
+	/**
+	 * Was a feed deleted before?
+	 *
+	 * @return	bool
+	 * @param	string $url		The url of the feed to check.
+	 */
+	public static function feedDeletedBefore($url)
+	{
+		// redefine
+		$url = (string) $url;
+
+		// no user to ignore
+		return (bool) BackendModel::getDB()->getVar('SELECT COUNT(i.id)
+														FROM feedmuncher_feeds AS i
+														WHERE i.url = ? AND i.deleted = ?',
+														array($url, 'Y'));
 	}
 
 
@@ -436,7 +465,7 @@ class BackendFeedmuncherModel
 	 * Get all data for a given id
 	 *
 	 * @return	array
-	 * @param	int $id							The id of the category to fetch.
+	 * @param	int $id		The id of the category to fetch.
 	 */
 	public static function getCategoryFromBlog($id)
 	{
@@ -451,7 +480,7 @@ class BackendFeedmuncherModel
 	 * Get all data for a given id
 	 *
 	 * @return	array
-	 * @param	int $id							The Id of the comment to fetch?
+	 * @param	int $id		The Id of the comment to fetch?
 	 */
 	public static function getComment($id)
 	{
@@ -470,7 +499,7 @@ class BackendFeedmuncherModel
 	 * Get multiple comments at once
 	 *
 	 * @return	array
-	 * @param	array $ids						The id(s) of the comment(s).
+	 * @param	array $ids		The id(s) of the comment(s).
 	 */
 	public static function getComments(array $ids)
 	{
@@ -499,8 +528,8 @@ class BackendFeedmuncherModel
 	 * Get the latest comments for a given type
 	 *
 	 * @return	array
-	 * @param	string $status					The status for the comments to retrieve.
-	 * @param	int[optional] $limit			The maximum number of items to retrieve.
+	 * @param	string $status				The status for the comments to retrieve.
+	 * @param	int[optional] $limit		The maximum number of items to retrieve.
 	 */
 	public static function getLatestComments($status, $limit = 10)
 	{
@@ -539,14 +568,26 @@ class BackendFeedmuncherModel
 
 
 	/**
+	 * Get a meta by id
+	 *
+	 * @return	array
+	 * @param	int $id		The id of the meta object.
+	 */
+	public static function getMetaByid($id)
+	{
+		return (int) BackendModel::getDB()->getVar('SELECT * FROM meta AS m WHERE m.id = ?', (int) $id);
+	}
+
+
+	/**
 	 * Get all the dates from the publicated articles from a feed
 	 *
 	 * @return	array
-	 * @param	int $feedID		The id of the feed.
+	 * @param	int $id		The id of the feed.
 	 */
-	public static function getPublishedDates($feedID)
+	public static function getPublishedDates($id)
 	{
-		return (array) BackendModel::getDB()->getColumn('SELECT date FROM feedmuncher_posts WHERE feed_id = ?', (int) $feedID);
+		return (array) BackendModel::getDB()->getColumn('SELECT date FROM feedmuncher_posts WHERE feed_id = ?', (int) $id);
 	}
 
 
@@ -554,8 +595,8 @@ class BackendFeedmuncherModel
 	 * Get all data for a given revision
 	 *
 	 * @return	array
-	 * @param	int $id							The id of the feedmuncherpost.
-	 * @param	int $revisionId					The revision to get.
+	 * @param	int $id					The id of the feedmuncherpost.
+	 * @param	int $revisionId			The revision to get.
 	 */
 	public static function getRevision($id, $revisionId)
 	{
@@ -572,9 +613,9 @@ class BackendFeedmuncherModel
 	 *
 	 * @return	string
 	 * @param	string $URL					The URL to base on.
-	 * @param	int[optional] $itemId		The id of the articepost to ignore.
+	 * @param	int[optional] $id		The id of the articepost to ignore.
 	 */
-	public static function getURL($URL, $itemId = null)
+	public static function getURL($URL, $id = null)
 	{
 		// redefine URL
 		$URL = SpoonFilter::urlise((string) $URL);
@@ -583,7 +624,7 @@ class BackendFeedmuncherModel
 		$db = BackendModel::getDB();
 
 		// new item
-		if($itemId === null)
+		if($id === null)
 		{
 			// get number of categories with this URL
 			$number = (int) $db->getVar('SELECT COUNT(i.id)
@@ -611,7 +652,7 @@ class BackendFeedmuncherModel
 											FROM feedmuncher_posts AS i
 											INNER JOIN meta AS m ON i.meta_id = m.id
 											WHERE i.language = ? AND m.url = ? AND i.id != ?',
-											array(BL::getWorkingLanguage(), $URL, $itemId));
+											array(BL::getWorkingLanguage(), $URL, $id));
 
 			// already exists
 			if($number != 0)
@@ -620,7 +661,7 @@ class BackendFeedmuncherModel
 				$URL = BackendModel::addNumber($URL);
 
 				// try again
-				return self::getURL($URL, $itemId);
+				return self::getURL($URL, $id);
 			}
 		}
 
@@ -633,10 +674,10 @@ class BackendFeedmuncherModel
 	 * Retrieve the unique URL for a category
 	 *
 	 * @return	string
-	 * @param	string $URL						The string wheron the URL will be based.
-	 * @param	int[optional] $categoryId		The id of the category to ignore.
+	 * @param	string $URL				The string wheron the URL will be based.
+	 * @param	int[optional] $id		The id of the category to ignore.
 	 */
-	public static function getURLForCategory($URL, $categoryId = null)
+	public static function getURLForCategory($URL, $id = null)
 	{
 		// redefine URL
 		$URL = SpoonFilter::urlise((string) $URL);
@@ -645,7 +686,7 @@ class BackendFeedmuncherModel
 		$db = BackendModel::getDB();
 
 		// new category
-		if($categoryId === null)
+		if($id === null)
 		{
 			// get number of categories with this URL
 			$number = (int) $db->getVar('SELECT COUNT(i.id)
@@ -673,7 +714,7 @@ class BackendFeedmuncherModel
 											FROM feedmuncher_categories AS i
 											INNER JOIN meta AS m ON i.meta_id = m.id
 											WHERE i.language = ? AND m.url = ? AND i.id != ?',
-											array(BL::getWorkingLanguage(), $URL, $categoryId));
+											array(BL::getWorkingLanguage(), $URL, $id));
 
 			// already exists
 			if($number != 0)
@@ -682,7 +723,7 @@ class BackendFeedmuncherModel
 				$URL = BackendModel::addNumber($URL);
 
 				// try again
-				return self::getURLForCategory($URL, $categoryId);
+				return self::getURLForCategory($URL, $id);
 			}
 		}
 
@@ -721,8 +762,8 @@ class BackendFeedmuncherModel
 	 * Inserts a new category into the database
 	 *
 	 * @return	int
-	 * @param	array $item				The data for the category to insert.
-	 * @param	array[optional] $meta	The metadata for the category to insert.
+	 * @param	array $item					The data for the category to insert.
+	 * @param	array[optional] $meta		The metadata for the category to insert.
 	 */
 	public static function insertCategory(array $item, $meta = null)
 	{
@@ -747,35 +788,16 @@ class BackendFeedmuncherModel
 	 * Inserts a meta
 	 *
 	 * @return	int
-	 * @param	string $title	The title for the meta.
+	 * @param	string $title				The title for the meta.
+	 * @param	string[optional] $url		The url for the meta.
 	 */
-	public static function insertMeta($title)
+	public static function insertMeta($title, $url = null)
 	{
 		// build the meta item
 		$item['keywords'] = $title;
 		$item['description'] = $title;
 		$item['title'] = $title;
-		$item['url'] = self::getURL(SpoonFilter::urlise($title));
-
-		// insert in db and return id
-		return (int) BackendModel::getDB(true)->insert('meta', $item);
-	}
-
-
-	/**
-	 * Inserts a meta for a blogpost
-	 *
-	 * @return	int
-	 * @param	string $title	The title for the meta.
-	 * @param	string $url		The url for the meta.
-	 */
-	public static function insertMetaForBlog($title, $url)
-	{
-		// build the meta item
-		$item['keywords'] = $title;
-		$item['description'] = $title;
-		$item['title'] = $title;
-		$item['url'] = $url;
+		$item['url'] = $url == null ? self::getURL(SpoonFilter::urlise($title)) : $url;
 
 		// insert in db and return id
 		return (int) BackendModel::getDB(true)->insert('meta', $item);
@@ -800,11 +822,15 @@ class BackendFeedmuncherModel
 	 * @return	void
 	 * @param	array $ids		The id of of the articles to publish.
 	 */
-	public static function publishArticles($ids)
+	public static function publishArticles(array $ids)
 	{
+		// require the blog model
+		require_once PATH_WWW . '/backend/modules/blog/engine/model.php';
+
+		// loop  the id's
 		foreach($ids as $id)
 		{
-			// set published (not hidden)
+			// set published (= not hidden)
 			if(self::publishArticle($id) != 0)
 			{
 				// get the article
@@ -813,24 +839,37 @@ class BackendFeedmuncherModel
 				// should the article be posted in the blog module?
 				if($record['target'] == 'blog')
 				{
-					// require the blog model
-					require_once PATH_WWW . '/backend/modules/blog/engine/model.php';
-
 					// create item to insert in the blog posts
 					$item = $record;
 					$item['id'] = BackendBlogModel::getMaximumId() + 1;
 					$item['hidden'] = 'N';
 					$item['publish_on'] = $record['date'];
-					$item['meta_id'] = BackendFeedmuncherModel::insertMetaForBlog($record['title'], BackendBlogModel::getURL($record['title']));
+					$item['meta_id'] = self::insertMeta($record['title'], BackendBlogModel::getURL($record['title']));
 
-					// unset the keys that we don't need forr blog
-					unset($item['revision_id'], $item['date'], $item['target'], $item['feed_id'], $item['deleted'], $item['target'], $item['blog_post_id'], $item['url']);
+					// unset the keys that we don't need for blog
+					unset($item['revision_id'], $item['date'], $item['target'], $item['feed_id'], $item['deleted'], $item['target'], $item['blog_post_id'], $item['url'], $item['original_url']);
+
+					// add search index
+					if(is_callable(array('BackendSearchModel', 'editIndex'))) BackendSearchModel::editIndex('blog', $item['id'], array('title' => $record['title'], 'text' => $record['text']));
+
+					// ping
+					if(BackendModel::getModuleSetting('blog', 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('blog', 'detail') . '/' . $record['url']);
 
 					// insert in db
 					BackendBlogModel::insert($item);
 
 					// save the blog post id in the feedmuncher post
-					BackendFeedmuncherModel::setBlogPostsId($id, $item['id']);
+					self::setBlogPostsId($id, $item['id']);
+				}
+
+				// posting in feedmuncher
+				else
+				{
+					// add search index
+					if(is_callable(array('BackendSearchModel', 'editIndex'))) BackendSearchModel::editIndex('feedmuncher', $record['id'], array('title' => $record['title'], 'text' => $record['text']));
+
+					// ping
+					if(BackendModel::getModuleSetting('blog', 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('blog', 'detail') . '/' . $record['url']);
 				}
 			}
 		}
@@ -889,6 +928,40 @@ class BackendFeedmuncherModel
 	public static function setBlogPostsId($id, $blogPostId)
 	{
 		return BackendModel::getDB(true)->update('feedmuncher_posts', array('blog_post_id' => $blogPostId), 'id = ?', (int) $id);
+	}
+
+
+	/**
+	 * Restores a user
+	 *
+	 * @return	bool
+	 * @param	string $url		The url of the feed to restore.
+	 */
+	public static function undoDelete($url)
+	{
+		// redefine
+		$url = (string) $url;
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// get id
+		$id = $db->getVar('SELECT id
+							FROM feedmuncher_feeds AS i
+							WHERE i.url = ? AND i.deleted = ?',
+							array($url, 'Y'));
+
+		// no valid users
+		if($id === null) return false;
+
+		else
+		{
+			// restore
+			$db->update('feedmuncher_feeds', array('deleted' => 'N'), 'id = ?', (int) $id);
+
+			// return
+			return $id;
+		}
 	}
 
 
@@ -993,8 +1066,8 @@ class BackendFeedmuncherModel
 	 * Updates one or more comments' status
 	 *
 	 * @return	void
-	 * @param	array $ids						The id(s) of the comment(s) to change the status for.
-	 * @param	string $status					The new status.
+	 * @param	array $ids			The id(s) of the comment(s) to change the status for.
+	 * @param	string $status		The new status.
 	 */
 	public static function updateCommentStatuses($ids, $status)
 	{

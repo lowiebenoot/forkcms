@@ -13,56 +13,9 @@ jsBackend.feedmuncher =
 	{
 		jsBackend.feedmuncher.controls.init();
 		jsBackend.feedmuncher.category.init();
-		jsBackend.feedmuncher.add.init();
 
 		// do meta
 		if($('#title').length > 0) $('#title').doMeta();
-	},
-
-
-	// end
-	eoo: true
-}
-
-
-jsBackend.feedmuncher.add =
-{
-	// init, something like a constructor
-	init: function()
-	{
-		if($('input[name=target]').length != 0)
-		{
-			// hide or show the dropdownmenus
-			jsBackend.feedmuncher.add.changeDropdownMenu();
-			
-			$('input[name=target]').click(function()
-			{
-				jsBackend.feedmuncher.add.changeDropdownMenu();
-			});
-		}
-	},
-	
-	changeDropdownMenu: function()
-	{
-		// posting in feedmuncher?
-		if($('input[name=target]:checked').val() == 'feedmuncher')
-		{
-			// show the feedmuncher categories
-			$('#category').show();
-			
-			// hide the blog categories
-			$('#categoryBlog').hide();
-		}
-		
-		// posting in blog
-		else
-		{
-			// show the blog categories
-			$('#categoryBlog').show();
-			
-			// hide the feedmuncher categories
-			$('#category').hide();
-		}
 	},
 
 
@@ -102,6 +55,47 @@ jsBackend.feedmuncher.controls =
 			$('form').append('<input type="hidden" name="status" value="draft" />');
 			$('form').submit();
 		});
+		
+		if($('input[name=target]').length != 0)
+		{
+			// hide or show the dropdownmenus and checkbox
+			jsBackend.feedmuncher.controls.changeControls();
+			
+			$('input[name=target]').click(function()
+			{
+				jsBackend.feedmuncher.controls.changeControls();
+			});
+		}
+	},
+	
+	
+	changeControls: function()
+	{
+		// posting in feedmuncher?
+		if($('input[name=target]:checked').val() == 'feedmuncher')
+		{
+			// show the feedmuncher categories
+			$('#category').show();
+			
+			// hide the blog categories
+			$('#categoryBlog').hide();
+			
+			// show the 'link to original' checkbox
+			$('#linkToOriginal').parent().show();
+		}
+		
+		// posting in blog
+		else
+		{
+			// show the blog categories
+			$('#categoryBlog').show();
+			
+			// hide the feedmuncher categories
+			$('#category').hide();
+			
+			// hide the 'link to original' checkbox
+			$('#linkToOriginal').parent().hide();
+		}
 	},
 
 

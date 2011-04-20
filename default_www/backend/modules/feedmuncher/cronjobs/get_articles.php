@@ -106,28 +106,59 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 						$item['created_on'] = BackendModel::getUTCDate();
 						$item['target'] = $feed['target'];
 						$item['status'] = 'active';
+						$item['original_url'] = $feedItem->getLink();
 
 						// insert article in feedmuncher posts
 						BackendFeedmuncherModel::insertArticle($item);
 
-						// posting in blog?
-						if($feed['target'] == 'blog' && $item['hidden'] == 'N')
+						// article not hidden?
+						if($item['hidden'] == 'N')
 						{
-							// require the blog engine
-							require_once BACKEND_MODULES_PATH . '/blog/engine/model.php';
+							// posting in blog?
+							if($feed['target'] == 'blog')
+							{
+								// require the blog engine
+								require_once BACKEND_MODULES_PATH . '/blog/engine/model.php';
 
-							// alter the item for the blog table
-							$item['publish_on'] = $item['date'];
-							$item['meta_id'] = BackendFeedmuncherModel::insertMetaForBlog($item['title'], BackendBlogModel::getURL($item['title']));
-							unset($item['date']);
-							unset($item['target']);
-							unset($item['feed_id']);
+								// alter the item for the blog table
+								$item['publish_on'] = $item['date'];
+								$item['meta_id'] = BackendFeedmuncherModel::insertMeta($item['title'], BackendBlogModel::getURL($item['title']));
+								unset($item['date']);
+								unset($item['target']);
+								unset($item['feed_id']);
+								unset($item['original_url']);
 
-							// insert in blog posts
-							BackendBlogModel::insert($item);
+								// get the meta object
+								$meta = BackendFeedmuncherModel::getMetaByid($item['meta_id']);
 
-							// save the blog post id in the feedmuncher post
-							BackendFeedmuncherModel::setBlogPostsId($item['id'], BackendBlogModel::getMaximumId());
+								// insert in blog posts
+								BackendBlogModel::insert($item);
+
+								// get the blogpost id (not revision id!)
+								$blogPostId = BackendBlogModel::getMaximumId();
+
+								// add search index
+								if(is_callable(array('BackendSearchModel', 'addIndex'))) BackendSearchModel::addIndex('blog', $blogPostId, array('title' => $item['title'], 'text' => $item['text']));
+
+								// ping
+								if(BackendModel::getModuleSetting('blog', 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('blog', 'detail') . '/' . $meta['url']);
+
+								// save the blog post id in the feedmuncher post
+								BackendFeedmuncherModel::setBlogPostsId($item['id'], $blogPostId);
+							}
+
+							// posting in feedmuncher?
+							else
+							{
+								// get the meta object
+								$meta = BackendFeedmuncherModel::getMetaByid($item['meta_id']);
+
+								// add search index
+								if(is_callable(array('BackendSearchModel', 'addIndex'))) BackendSearchModel::addIndex('feedmuncher', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
+
+								// ping
+								if(BackendModel::getModuleSetting('feedmuncher', 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('feedmuncher', 'detail') . '/' . $meta['url']);
+							}
 						}
 					}
 				}

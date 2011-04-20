@@ -6,8 +6,6 @@
  * @package		backend
  * @subpackage	feedmuncher
  *
- * @author		Dave Lens <dave@netlash.com>
- * @author		Davy Hellemans <davy@netlash.com>
  * @author		Lowie Benoot <lowiebenoot@netlash.com>
  * @since		2.1
  */

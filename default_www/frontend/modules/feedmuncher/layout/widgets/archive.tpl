@@ -3,9 +3,9 @@
 	- {$widgetFeedmuncherArchive}:
 *}
 
-{cache:{$LANGUAGE}_blogWidgetArchiveCache}
+{cache:{$LANGUAGE}_feedmuncherWidgetArchiveCache}
 	{option:widgetFeedmuncherArchive}
-		<section id="blogArchiveWidget" class="mod">
+		<section id="feedmuncherArchiveWidget" class="mod">
 			<div class="inner">
 				<header class="hd">
 					<h3>{$lblArchive|ucfirst}</h3>
@@ -38,4 +38,4 @@
 			</div>
 		</section>
 	{/option:widgetFeedmuncherArchive}
-{/cache:{$LANGUAGE}_blogWidgetArchiveCache}
+{/cache:{$LANGUAGE}_feedmuncherWidgetArchiveCache}

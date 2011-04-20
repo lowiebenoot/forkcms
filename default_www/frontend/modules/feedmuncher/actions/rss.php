@@ -6,9 +6,8 @@
  * @package		frontend
  * @subpackage	feedmuncher
  *
- * @author		Tijs Verkoyen <tijs@netlash.com>
- * @author		Davy Hellemans <davy@netlash.com>
- * @since		2.0
+ * @author		Lowie Benoot <lowiebenoot@netlash.com>
+ * @since		2.1
  */
 class FrontendFeedmuncherRSS extends FrontendBaseBlock
 {
