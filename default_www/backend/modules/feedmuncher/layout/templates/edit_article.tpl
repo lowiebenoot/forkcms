@@ -109,6 +109,7 @@
 							<div class="options">
 								<label for="categoryId">{$lblCategory|ucfirst}</label>
 								{$ddmCategoryId} {$ddmCategoryIdError}
+								<input type="hidden" value="{$item.target}" id="target" />
 							</div>
 							<div class="options">
 								<label for="userId">{$lblAuthor|ucfirst}</label>
@@ -173,7 +174,7 @@
 	</div>
 
 	<div class="fullwidthOptions">
-		<a href="{$var|geturl:'delete_article'}&amp;id={$item.id}" data-message-id="confirmDelete" class="askConfirmation button linkButton icon iconDelete">
+		<a href="{$var|geturl:'delete_article'}&amp;id={$item.id}{option:feedmuncherCategoryId}&amp;feedmuncherCategory={$feedmuncherCategoryId}{/option:feedmuncherCategoryId}{option:blogCategoryId}&amp;blogCategory={$blogCategoryId}{/option:blogCategoryId}" data-message-id="confirmDelete" class="askConfirmation button linkButton icon iconDelete">
 			<span>{$lblDelete|ucfirst}</span>
 		</a>
 		<div class="buttonHolderRight">
@@ -186,6 +187,16 @@
 		<p>
 			{$msgConfirmDelete|sprintf:{$item.title}}
 		</p>
+	</div>
+
+	<div id="addCategoryDialog" class="forkForms" title="{$lblAddCategory|ucfirst}" style="display: none;">
+		<div id="templateList">
+			<p>
+				<label for="categoryTitle">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+				<input type="text" name="categoryTitle" id="categoryTitle" class="inputText" maxlength="255" />
+				<span class="formError" id="categoryTitleError" style="display: none;">{$errFieldIsRequired|ucfirst}</span>
+			</p>
+		</div>
 	</div>
 {/form:edit}
 

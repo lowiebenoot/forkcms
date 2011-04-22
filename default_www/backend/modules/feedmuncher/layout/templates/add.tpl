@@ -50,6 +50,16 @@
 			<input id="addButton" class="inputButton button mainButton" type="submit" name="addFeed" value="{$lblAddFeed|ucfirst}" />
 		</div>
 	</div>
+
+	<div id="addCategoryDialog" class="forkForms" title="{$lblAddCategory|ucfirst}" style="display: none;">
+		<div id="templateList">
+			<p>
+				<label for="categoryTitle">{$lblTitle|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+				<input type="text" name="categoryTitle" id="categoryTitle" class="inputText" maxlength="255" />
+				<span class="formError" id="categoryTitleError" style="display: none;">{$errFieldIsRequired|ucfirst}</span>
+			</p>
+		</div>
+	</div>
 {/form:addFeed}
 
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}

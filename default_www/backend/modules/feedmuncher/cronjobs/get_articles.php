@@ -120,7 +120,11 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 								// require the blog engine
 								require_once BACKEND_MODULES_PATH . '/blog/engine/model.php';
 
+								// feedmuncher_post id
+								$feedmuncherPostId = $item['id'];
+
 								// alter the item for the blog table
+								$item['id'] = BackendBlogModel::getMaximumId() + 1;
 								$item['publish_on'] = $item['date'];
 								$item['meta_id'] = BackendFeedmuncherModel::insertMeta($item['title'], BackendBlogModel::getURL($item['title']));
 								unset($item['date']);
@@ -134,17 +138,14 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 								// insert in blog posts
 								BackendBlogModel::insert($item);
 
-								// get the blogpost id (not revision id!)
-								$blogPostId = BackendBlogModel::getMaximumId();
-
 								// add search index
-								if(is_callable(array('BackendSearchModel', 'addIndex'))) BackendSearchModel::addIndex('blog', $blogPostId, array('title' => $item['title'], 'text' => $item['text']));
+								if(is_callable(array('BackendSearchModel', 'addIndex'))) BackendSearchModel::addIndex('blog', $item['id'], array('title' => $item['title'], 'text' => $item['text']));
 
 								// ping
 								if(BackendModel::getModuleSetting('blog', 'ping_services', false)) BackendModel::ping(SITE_URL . BackendModel::getURLForBlock('blog', 'detail') . '/' . $meta['url']);
 
 								// save the blog post id in the feedmuncher post
-								BackendFeedmuncherModel::setBlogPostsId($item['id'], $blogPostId);
+								BackendFeedmuncherModel::setBlogPostsId($feedmuncherPostId, $item['id']);
 							}
 
 							// posting in feedmuncher?

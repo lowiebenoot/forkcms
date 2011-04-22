@@ -216,9 +216,6 @@ class FrontendFeedmuncherDetail extends FrontendBaseBlock
 		// assign article
 		$this->tpl->assign('item', $this->record);
 
-		// assign article tags
-		$this->tpl->assign('feedmuncherArticleTags', $this->record['tags']);
-
 		// count comments
 		$commentCount = count($this->comments);
 
@@ -361,7 +358,6 @@ class FrontendFeedmuncherDetail extends FrontendBaseBlock
 					// set cookies
 					SpoonCookie::set('comment_author', $author, (30 * 24 * 60 * 60), '/', '.' . $this->URL->getDomain());
 					SpoonCookie::set('comment_email', $email, (30 * 24 * 60 * 60), '/', '.' . $this->URL->getDomain());
-
 					SpoonCookie::set('comment_website', $website, (30 * 24 * 60 * 60), '/', '.' . $this->URL->getDomain());
 				}
 				catch(Exception $e)

@@ -13,36 +13,51 @@
 		<li><a href="#tabDrafts">{$lblDrafts|ucfirst} ({$numDrafts})</a></li>
 	</ul>
 
+	{form:filter}
+		<div id="tabFeedmuncher">
+			{option:ddmFeedmuncherCategory}
+				<p class="oneLiner">
+					<label for="feedmuncherCategory">{$msgShowOnlyItemsInCategory}</label>
+					&nbsp;{$ddmFeedmuncherCategory} {$ddmFeedmuncherCategoryError}
+				</p>
+			{/option:ddmFeedmuncherCategory}
 
-	<div id="tabFeedmuncher">
-		{option:dgFeedmuncherPosts}
-			<div class="datagridHolder">
-				{$dgFeedmuncherPosts}
-			</div>
-		{/option:dgFeedmuncherPosts}
-
-		{option:!dgFeedmuncherPosts}<p>{$msgNoItems|sprintf:{$var|geturl:'add'}}</p>{/option:!dgFeedmuncherPosts}
-	</div>
-
-	{option:blogIsInstalled}
-		<div id="tabBlog">
-			{option:dgBlogPosts}
+			{option:dgFeedmuncherPosts}
 				<div class="datagridHolder">
-					{$dgBlogPosts}
+					{$dgFeedmuncherPosts}
 				</div>
-			{/option:dgBlogPosts}
+			{/option:dgFeedmuncherPosts}
 
-			{option:!dgBlogPosts}<p>{$msgNoItems|sprintf:{$var|geturl:'add'}}</p>{/option:!dgBlogPosts}
+			{option:!dgFeedmuncherPosts}<p>{$msgNoItems|sprintf:{$var|geturl:'add'}}</p>{/option:!dgFeedmuncherPosts}
 		</div>
-	{/option:blogIsInstalled}
+
+		{option:blogIsInstalled}
+			<div id="tabBlog">
+				{option:ddmBlogCategory}
+					<p class="oneLiner">
+						<label for="blogCategory">{$msgShowOnlyItemsInCategory}</label>
+						&nbsp;{$ddmBlogCategory} {$ddmBlogCategoryError}
+					</p>
+				{/option:ddmBlogCategory}
+
+				{option:dgBlogPosts}
+					<div class="datagridHolder">
+						{$dgBlogPosts}
+					</div>
+				{/option:dgBlogPosts}
+
+				{option:!dgBlogPosts}<p>{$msgNoItems|sprintf:{$var|geturl:'add'}}</p>{/option:!dgBlogPosts}
+			</div>
+		{/option:blogIsInstalled}
+	{/form:filter}
 
 	<div id="tabNotPublished">
 		{option:dgNotPublished}
-			<div class="datagridHolder">
-				<form action="{$var|geturl:'mass_action'}" method="get" class="forkForms submitWithLink" id="massFeedmuncherAction">
+			<form action="{$var|geturl:'mass_action'}" method="get" class="forkForms submitWithLink" id="massFeedmuncherAction">
+				<div class="datagridHolder">
 					{$dgNotPublished}
-				</form>
-			</div>
+				</div>
+			</form>
 		{/option:dgNotPublished}
 		{option:!dgNotPublished}
 			<p>{$msgNoItems|sprintf:{$var|geturl:'add'}}</p>
@@ -59,6 +74,8 @@
 			<p>{$msgCoreNoItems}</p>
 		{/option:!dgDrafts}
 	</div>
+
+</div>
 
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/footer.tpl}

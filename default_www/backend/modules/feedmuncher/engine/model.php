@@ -11,16 +11,21 @@
  */
 class BackendFeedmuncherModel
 {
-	const QRY_DATAGRID_BROWSE_ARTICLES = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.num_comments AS comments, i.hidden, blog_post_id
+	const QRY_DATAGRID_BROWSE_ARTICLES = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.num_comments AS comments, i.hidden, i.blog_post_id
 											FROM feedmuncher_posts AS i
 											INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
 											WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ? AND hidden = ?';
+	const QRY_DATAGRID_BROWSE_ARTICLES_FOR_CATEGORY = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.num_comments AS comments, i.hidden, i.blog_post_id
+											FROM feedmuncher_posts AS i
+											INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
+											WHERE i.category_id = ? AND i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ? AND hidden = ?';
 	const QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.hidden
 														FROM feedmuncher_posts AS i
 														INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
 														WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND hidden = ?';
-	const QRY_DATAGRID_BROWSE_CATEGORIES = 'SELECT i.id, i.title
+	const QRY_DATAGRID_BROWSE_CATEGORIES = 'SELECT i.id, i.title, COUNT(p.id) AS num_items
 											FROM feedmuncher_categories AS i
+											LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND p.status = ? AND p.language = i.language AND p.hidden = ? AND p.deleted = ? AND p.target = ?
 											WHERE i.language = ?';
 	const QRY_DATAGRID_BROWSE_COMMENTS = 'SELECT i.id, UNIX_TIMESTAMP(i.created_on) AS created_on, i.author, i.text,
 											p.id AS post_id, p.title AS post_title, m.url AS post_url
@@ -49,7 +54,7 @@ class BackendFeedmuncherModel
 										WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ?
 										ORDER BY i.date DESC
 										LIMIT ?';
-	const QRY_DATAGRID_BROWSE_REVISIONS = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, UNIX_TIMESTAMP(i.created_on) AS created_on, i.user_id, i.hidden
+	const QRY_DATAGRID_BROWSE_REVISIONS = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, i.user_id, i.hidden
 											FROM feedmuncher_posts AS i
 											WHERE i.status = ? AND i.id = ? AND i.language = ? AND i.target = ?
 											ORDER BY i.date DESC';
@@ -401,48 +406,59 @@ class BackendFeedmuncherModel
 	 * Get all categories
 	 *
 	 * @return	array
+	 * @param	bool[optional] $includeCount	Include the count?
 	 */
-	public static function getCategories()
+	public static function getCategories($includeCount = false)
 	{
-		// get records and return them
-		$categories = (array) BackendModel::getDB()->getPairs('SELECT i.id, i.title
-																FROM feedmuncher_categories AS i
-																WHERE i.language = ?', array(BL::getWorkingLanguage()));
+		// get db
+		$db = BackendModel::getDB();
 
-		// no categories?
-		if(empty($categories))
+		// we should include the count
+		if($includeCount)
 		{
-			// build array
-			$category['language'] = BL::getWorkingLanguage();
-			$category['name'] = 'default';
-			$category['url'] = 'default';
-
-			// insert category
-			$id = self::insertCategory($category);
-
-			// store in settings
-			BackendModel::setModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), $id);
-
-			// recall
-			return self::getCategories();
+			return (array) BackendModel::getDB()->getPairs('SELECT i.id, CONCAT(i.title, " (",  COUNT(p.category_id) ,")") AS title
+															FROM feedmuncher_categories AS i
+															LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND i.language = p.language AND p.status = ? AND p.hidden = ? AND p.target = ? AND p.deleted = ?
+															WHERE i.language = ?
+															GROUP BY i.id',
+															array('active', 'N', 'feedmuncher', 'N', BL::getWorkingLanguage()));
 		}
 
-		// return the categories
-		return $categories;
+		// get records and return them
+		return (array) BackendModel::getDB()->getPairs('SELECT i.id, i.title
+														FROM feedmuncher_categories AS i
+														WHERE i.language = ?',
+														array(BL::getWorkingLanguage()));
 	}
 
 
 	/**
-	 * Get all categories from the blog
+	 * Get all categories
 	 *
 	 * @return	array
+	 * @param	bool[optional] $includeCount	Include the count?
 	 */
-	public static function getCategoriesFromBlog()
+	public static function getCategoriesFromBlog($includeCount = false)
 	{
+		// get db
+		$db = BackendModel::getDB();
+
+		// we should include the count
+		if($includeCount)
+		{
+			return (array) BackendModel::getDB()->getPairs('SELECT i.id, CONCAT(i.title, " (",  COUNT(p.category_id) ,")") AS title
+															FROM blog_categories AS i
+															LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND i.language = p.language AND p.status = ? AND p.hidden = ? AND p.target = ? AND p.deleted = ?
+															WHERE i.language = ?
+															GROUP BY i.id',
+															array('active', 'N', 'blog', 'N', BL::getWorkingLanguage()));
+		}
+
 		// get records and return them
 		return (array) BackendModel::getDB()->getPairs('SELECT i.id, i.title
 														FROM blog_categories AS i
-														WHERE i.language = ?', array(BL::getWorkingLanguage()));
+														WHERE i.language = ?',
+														array(BL::getWorkingLanguage()));
 	}
 
 

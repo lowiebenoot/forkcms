@@ -12,11 +12,27 @@
 class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 {
 	/**
+	 * The id of the blog category where is filtered on
+	 *
+	 * @var	int
+	 */
+	private $blogCategoryId;
+
+
+	/**
 	 * Datagrid for the drafts
 	 *
 	 * @var	BackendDatagrid
 	 */
 	private $dgDrafts;
+
+
+	/**
+	 * The id of the feedmuncher category where is filtered on
+	 *
+	 * @var	int
+	 */
+	private $feedmuncherCategoryId;
 
 
 	/**
@@ -34,6 +50,12 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 		{
 			// call parent, this will probably add some general CSS/JS or other required files
 			parent::execute();
+
+			// set filter category ids
+			$this->blogCategoryId = SpoonFilter::getGetValue('blogCategory', null, null, 'int');
+			if($this->blogCategoryId == 0) $this->categoryId = null;
+			$this->feedmuncherCategoryId = SpoonFilter::getGetValue('feedmuncherCategory', null, null, 'int');
+			if($this->feedmuncherCategoryId == 0) $this->feedmuncherCategoryId = null;
 
 			// get all data for the item we want to edit
 			$this->getData();
@@ -157,6 +179,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 
 		// get categories
 		$categories = $this->record['target'] == 'feedmuncher' ? BackendFeedmuncherModel::getCategories() : BackendFeedmuncherModel::getCategoriesFromBlog();
+		$categories['new_category'] = ucfirst(BL::getLabel('AddCategory'));
 
 		// create elements
 		$this->frm->addText('title', $this->record['title']);
@@ -165,6 +188,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 		$this->frm->addRadiobutton('hidden', $rbtHiddenValues, $this->record['hidden']);
 		$this->frm->addCheckbox('allow_comments', ($this->record['allow_comments'] === 'Y' ? true : false));
 		$this->frm->addDropdown('category_id', $categories, $this->record['category_id']);
+		if(count($categories) > 2) $this->frm->getField('category_id')->setDefaultElement('');
 		$this->frm->addDropdown('user_id', BackendUsersModel::getUsers(), $this->record['user_id']);
 		$this->frm->addText('tags', BackendTagsModel::getTags($this->URL->getModule(), $this->record['revision_id']), null, 'inputText tagBox', 'inputTextError tagBox');
 		$this->frm->addDate('publish_on_date', $this->record['publish_on']);
@@ -231,6 +255,10 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 		// assign revisions-datagrid
 		$this->tpl->assign('revisions', ($this->dgRevisions->getNumResults() != 0) ? $this->dgRevisions->getContent() : false);
 		$this->tpl->assign('drafts', ($this->dgDrafts->getNumResults() != 0) ? $this->dgDrafts->getContent() : false);
+
+		// assign category
+		if($this->feedmuncherCategoryId !== null) $this->tpl->assign('feedmuncherCategoryId', $this->feedmuncherCategoryId);
+		if($this->blogCategoryId !== null) $this->tpl->assign('blogCategoryId', $this->blogCategoryId);
 	}
 
 
@@ -258,6 +286,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 			$this->frm->getField('text')->isFilled(BL::err('FieldIsRequired'));
 			$this->frm->getField('publish_on_date')->isValid(BL::err('DateIsInvalid'));
 			$this->frm->getField('publish_on_time')->isValid(BL::err('TimeIsInvalid'));
+			$this->frm->getField('category_id')->isFilled(BL::err('FieldIsRequired'));
 
 			// validate meta
 			$this->meta->validate();
@@ -309,15 +338,22 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 					}
 
 					// everything is saved, so redirect to the overview
-					$this->redirect(BackendModel::createURLForAction('articles') . '&report=edited&var=' . urlencode($item['title']) . '&id=' . $this->id . '&highlight=row-' . $item['revision_id']);
+					$redirectUrl = BackendModel::createURLForAction('articles') . '&report=edited&var=' . urlencode($item['title']) . '&id=' . $this->id . '&highlight=row-' . $item['revision_id'];
 				}
 
 				// draft
 				elseif($item['status'] == 'draft')
 				{
 					// everything is saved, so redirect to the edit action
-					$this->redirect(BackendModel::createURLForAction('edit_article') . ' &report=saved_as_draft&var=' . urlencode($item['title']) . '&id=' . $item['id'] . '&draft=' . $item['revision_id'] . '&highlight=row-' . $item['revision_id']);
+					$redirectUrl = BackendModel::createURLForAction('edit_article') . ' &report=saved_as_draft&var=' . urlencode($item['title']) . '&id=' . $item['id'] . '&draft=' . $item['revision_id'] . '&highlight=row-' . $item['revision_id'];
 				}
+
+				// append category filters to redirect URL
+				if($this->blogCategoryId != null) $redirectUrl .= '&blogCategory=' . $this->blogCategoryId;
+				if($this->feedmuncherCategoryId != null) $redirectUrl .= '&feedmuncherCategory=' . $this->feedmuncherCategoryId;
+
+				// everything is saved, so redirect to the overview
+				$this->redirect($redirectUrl);
 			}
 		}
 	}

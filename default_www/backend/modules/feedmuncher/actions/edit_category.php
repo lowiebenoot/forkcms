@@ -71,8 +71,6 @@ class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 
 		// create elements
 		$this->frm->addText('title', $this->record['title']);
-		$this->frm->addCheckbox('is_default', (BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null) == $this->id));
-		if((BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null) == $this->id)) $this->frm->getField('is_default')->setAttribute('disabled', 'disabled');
 
 		// meta object
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
@@ -91,18 +89,6 @@ class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 
 		// assign
 		$this->tpl->assign('item', $this->record);
-
-		// get default category id
-		$defaultCategoryId = BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null);
-
-		// get default category
-		$defaultCategory = BackendFeedmuncherModel::getCategory($defaultCategoryId);
-
-		// assign
-		if($defaultCategoryId !== null) $this->tpl->assign('defaultCategory', $defaultCategory);
-
-		// the default category may not be deleted
-		if($defaultCategoryId != $this->id) $this->tpl->assign('deleteAllowed', true);
 	}
 
 
@@ -138,13 +124,6 @@ class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 
 				// upate the item
 				BackendFeedmuncherModel::updateCategory($item);
-
-				// it isn't the default category but it should be.
-				if(BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null) != $item['id'] && $this->frm->getField('is_default')->getChecked())
-				{
-					// store
-					BackendModel::setModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), $item['id']);
-				}
 
 				// everything is saved, so redirect to the overview
 				$this->redirect(BackendModel::createURLForAction('categories') . '&report=edited-category&var=' . urlencode($item['title']) . '&highlight=row-' . $item['id']);

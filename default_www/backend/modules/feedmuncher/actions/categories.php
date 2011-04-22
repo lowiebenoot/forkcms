@@ -40,16 +40,22 @@ class BackendFeedmuncherCategories extends BackendBaseActionIndex
 	private function loadDataGrid()
 	{
 		// create datagrid
-		$this->datagrid = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_CATEGORIES, BL::getWorkingLanguage());
+		$this->datagrid = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_CATEGORIES, array('active', 'N','N', 'feedmuncher', BL::getWorkingLanguage()));
+
+		// set headers
+		$this->datagrid->setHeaderLabels(array('num_items' => ucfirst(BL::lbl('Amount'))));
 
 		// sorting columns
-		$this->datagrid->setSortingColumns(array('title'), 'title');
+		$this->datagrid->setSortingColumns(array('title', 'num_items'), 'title');
+
+		// set column URLs
+		$this->datagrid->setColumnURL('title', BackendModel::createURLForAction('edit_category') . '&amp;id=[id]');
 
 		// add column
 		$this->datagrid->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit_category') . '&amp;id=[id]', BL::lbl('Edit'));
 
-		// row function
-		$this->datagrid->setRowFunction(array('BackendFeedmuncherCategories', 'setDefault'), array('[id]'));
+		// convert the count into a readable and clickable one
+		$this->datagrid->setColumnFunction(array(__CLASS__, 'setClickableCount'), array('[num_items]', BackendModel::createURLForAction('articles') . '&amp;feedmuncherCategory=[id]'), 'num_items', true);
 
 		// disable paging
 		$this->datagrid->setPaging(false);
@@ -71,26 +77,23 @@ class BackendFeedmuncherCategories extends BackendBaseActionIndex
 
 
 	/**
-	 * Set class on row with the default class
+	 * Convert the count in a human readable one.
 	 *
-	 * @return	array
-	 * @param	int $id					The id of the category.
-	 * @param	array $rowAttributes	The current row attributes.
+	 * @return	string
+	 * @param	int $count		The count.
+	 * @param	string $link	The link for the count.
 	 */
-	public static function setDefault($id, $rowAttributes)
+	public static function setClickableCount($count, $link)
 	{
-		// is this the default category?
-		if(BackendModel::getModuleSetting('feedmuncher', 'default_category_' . BL::getWorkingLanguage(), null) == $id)
-		{
-			// class already defined?
-			if(isset($rowAttributes['class'])) $rowAttributes['class'] .= ' isDefault';
+		// redefine
+		$count = (int) $count;
+		$link = (string) $link;
+		$return = '';
 
-			// set class
-			else $rowAttributes['class'] = 'isDefault';
+		if($count > 1) $return = '<a href="' . $link . '">' . $count . ' ' . BL::getLabel('Articles') . '</a>';
+		elseif($count == 1) $return = '<a href="' . $link . '">' . $count . ' ' . BL::getLabel('Article') . '</a>';
 
-			// return
-			return $rowAttributes;
-		}
+		return $return;
 	}
 }
 

@@ -92,30 +92,13 @@ class FeedmuncherInstall extends ModuleInstaller
 		foreach($this->getLanguages() as $language)
 		{
 			// fetch current categoryId
-			$currentCategoryId = $this->getCategory($language);
+			$this->defaultCategoryId = $this->getCategory($language);
 
 			// no category exists
-			if($currentCategoryId == 0)
+			if($this->defaultCategoryId == 0)
 			{
-				// add default category
-				$defaultCategoryId = $this->addCategory($language, 'Default', 'default');
-
-				// insert default category setting
-				$this->setSetting('feedmuncher', 'default_category_' . $language, $defaultCategoryId, true);
-			}
-
-			// category exists
-			else
-			{
-				// current default categoryId
-				$currentDefaultCategoryId = $this->getSetting('feedmuncher', 'default_category_' . $language);
-
-				// does not exist
-				if(!$this->existsCategory($language, $currentDefaultCategoryId))
-				{
-					// insert default category setting
-					$this->setSetting('feedmuncher', 'default_category_' . $language, $currentCategoryId, true);
-				}
+				// add category
+				$this->defaultCategoryId = $this->addCategory($language, 'Default', 'default');
 			}
 
 			// feedburner URL

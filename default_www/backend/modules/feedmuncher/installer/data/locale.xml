@@ -69,10 +69,10 @@
       <item type="message" name="Added">
         <translation language="nl"><![CDATA[Het artikel "%1$s" werd toegevoegd.]]></translation>
         <translation language="en"><![CDATA[The article "%1$s" was added.]]></translation>
-        <translation language="en"><![CDATA[The feed "%1$s" was added.]]></translation>
       </item>
       <item type="message" name="AddedFeed">
         <translation language="nl"><![CDATA[De feed "%1$s" werd toegevoegd.]]></translation>
+        <translation language="en"><![CDATA[The feed "%1$s" was added.]]></translation>
       </item>
       <item type="message" name="CommentOnWithURL">
         <translation language="nl"><![CDATA[Reactie op: <a href="%1$s">%2$s</a>]]></translation>
@@ -185,6 +185,10 @@
       <item type="message" name="Restored">
         <translation language="nl"><![CDATA[De feed "%1$s" werd terug geactiveerd.]]></translation>
         <translation language="en"><![CDATA[The feed "%1$s" is restored.]]></translation>
+      </item>
+      <item type="message" name="ShowOnlyItemsInCategory">
+        <translation language="nl"><![CDATA[Toon enkel berichten in de categorie:]]></translation>
+        <translation language="en"><![CDATA[Show only articles for:]]></translation>
       </item>
     </feedmuncher>
     <core>
