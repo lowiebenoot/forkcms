@@ -345,6 +345,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		$frm->parse($this->tpl);
 	}
 
+
 	/**
 	 * Set category filters
 	 *

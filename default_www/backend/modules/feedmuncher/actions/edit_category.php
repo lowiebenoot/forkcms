@@ -89,6 +89,9 @@ class BackendFeedmuncherEditCategory extends BackendBaseActionEdit
 
 		// assign
 		$this->tpl->assign('item', $this->record);
+
+		// delete allowed?
+		$this->tpl->assign('deleteAllowed', BackendFeedmuncherModel::deleteCategoryAllowed($this->id));
 	}
 
 

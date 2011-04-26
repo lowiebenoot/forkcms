@@ -26,7 +26,8 @@ class BackendFeedmuncherModel
 	const QRY_DATAGRID_BROWSE_CATEGORIES = 'SELECT i.id, i.title, COUNT(p.id) AS num_items
 											FROM feedmuncher_categories AS i
 											LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND p.status = ? AND p.language = i.language AND p.hidden = ? AND p.deleted = ? AND p.target = ?
-											WHERE i.language = ?';
+											WHERE i.language = ?
+											GROUP BY i.id';
 	const QRY_DATAGRID_BROWSE_COMMENTS = 'SELECT i.id, UNIX_TIMESTAMP(i.created_on) AS created_on, i.author, i.text,
 											p.id AS post_id, p.title AS post_title, m.url AS post_url
 											FROM feedmuncher_comments AS i
@@ -109,8 +110,14 @@ class BackendFeedmuncherModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
 		// delete feed in db (mark as deleted)
-		BackendModel::getDB(true)->update('feedmuncher_feeds', array('deleted' => 'Y') , 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
+		BackendModel::getDB(true)->update('feedmuncher_feeds', array('deleted' => 'Y') , 'id IN (' . implode(',', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
 	}
 
 
@@ -125,8 +132,14 @@ class BackendFeedmuncherModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
-		// delete feed in db (mark as deleted)
-		BackendModel::getDB(true)->update('feedmuncher_posts', array('deleted' => 'Y') , 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// delete article in db (mark as deleted)
+		BackendModel::getDB(true)->update('feedmuncher_posts', array('deleted' => 'Y') , 'id IN (' . implode(',', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
 
 		// loop artilces
 		foreach($ids as $id)
@@ -172,6 +185,21 @@ class BackendFeedmuncherModel
 
 
 	/**
+	 * Checks if it is allowed to delete the a category
+	 *
+	 * @return	bool
+	 * @param	int $id		The id of the category.
+	 */
+	public static function deleteCategoryAllowed($id)
+	{
+		return (BackendModel::getDB()->getVar('SELECT COUNT(id)
+												FROM feedmuncher_posts AS i
+												WHERE i.category_id = ? AND i.target = ? AND i.deleted = ? AND i.language = ?',
+												array((int) $id, 'feedmuncher', 'N', BL::getWorkingLanguage())) == 0);
+	}
+
+
+	/**
 	 * Deletes one or more comments
 	 *
 	 * @return	void
@@ -182,16 +210,22 @@ class BackendFeedmuncherModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
 		// get db
 		$db = BackendModel::getDB(true);
 
 		// get feedmuncherpost ids
 		$postIds = (array) $db->getColumn('SELECT i.post_id
 											FROM feedmuncher_comments AS i
-											WHERE i.id IN (' . implode(',', $ids) . ') AND i.language = ?', array(BL::getWorkingLanguage()));
+											WHERE i.id IN (' . implode(',', $idPlaceHolders) . ') AND i.language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
 
 		// update record
-		$db->delete('feedmuncher_comments', 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
+		$db->delete('feedmuncher_comments', 'id IN (' . implode(',', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
 
 		// recalculate the comment count
 		if(!empty($postIds)) self::reCalculateCommentCount($postIds);
@@ -521,7 +555,7 @@ class BackendFeedmuncherModel
 	{
 		return (array) BackendModel::getDB()->getRecords('SELECT *
 															FROM feedmuncher_comments AS i
-															WHERE i.id IN (' . implode(',', $ids) . ')');
+															WHERE i.id IN (' . implode(',', array_fill(0, count($ids), '?')) . ')', $ids);
 	}
 
 
@@ -1011,6 +1045,10 @@ class BackendFeedmuncherModel
 			// get the record of the exact item we're editing
 			$revision = self::getRevision($item['id'], $item['revision_id']);
 
+			// assign values
+			$item['created_on'] = BackendModel::getUTCDate('Y-m-d H:i:s', $revision['created_on']);
+			$item['num_comments'] = $revision['num_comments'];
+
 			// if it used to be a draft that we're now publishing, remove drafts
 			if($revision['status'] == 'draft') BackendModel::getDB(true)->delete('feedmuncher_posts', 'id = ? AND status = ?', array($item['id'], $revision['status']));
 		}
@@ -1032,7 +1070,6 @@ class BackendFeedmuncherModel
 																		 LIMIT ?',
 																		 array($item['id'], $archiveType, BL::getWorkingLanguage(), $rowsToKeep));
 
-		// delete other revisions
 		if(!empty($revisionIdsToKeep)) BackendModel::getDB(true)->delete('feedmuncher_posts', 'id = ? AND status = ? AND revision_id NOT IN (' . implode(', ', $revisionIdsToKeep) . ')', array($item['id'], $archiveType));
 
 		// insert new version
@@ -1090,16 +1127,22 @@ class BackendFeedmuncherModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
 		// get feedmuncherpost ids
 		$postIds = (array) BackendModel::getDB()->getColumn('SELECT i.post_id
 																FROM feedmuncher_comments AS i
-																WHERE i.id IN (' . implode(',', $ids) . ')');
+																WHERE i.id IN (' . implode(', ', $idPlaceHolders) . ')', $ids);
 
 		// update record
 		BackendModel::getDB(true)->execute('UPDATE feedmuncher_comments
 											SET status = ?
-											WHERE id IN (' . implode(',', $ids) . ')',
-											array((string) $status));
+											WHERE id IN (' . implode(', ', $idPlaceHolders) . ')',
+											array_merge(array((string) $status), $ids));
 
 		// recalculate the comment count
 		if(!empty($postIds)) self::reCalculateCommentCount($postIds);

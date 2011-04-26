@@ -98,7 +98,7 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 						$item['meta_id'] = BackendFeedmuncherModel::insertMeta((string) $feedItem->getTitle());
 						$item['language'] = $feed['language'];
 						$item['title'] = $feedItem->getTitle();
-						$item['text'] = ($feed['type'] == 'ATOM') ? $feedItem->getContent() : $feedItem->getDescription();
+						$item['text'] = trim(($feed['type'] == 'ATOM') ? $feedItem->getContent() : $feedItem->getDescription());
 						$item['introduction'] = ($feed['type'] == 'ATOM') ? $feedItem->getSummary() : '<p>' . substr(strip_tags($item['text']), 0, 500) . '...</p>';
 						$item['hidden'] = $feed['auto_publish'] == 'Y' ? 'N' : 'Y';
 						$item['allow_comments'] = BackendModel::getModuleSetting('feedmuncher', 'allow_comments');

@@ -193,7 +193,7 @@
     </feedmuncher>
     <core>
       <item type="label" name="AddFeed">
-        <translation language="nl"><![CDATA[artikel toevoegen]]></translation>
+        <translation language="nl"><![CDATA[feed toevoegen]]></translation>
         <translation language="en"><![CDATA[add feed]]></translation>
       </item>
       <item type="label" name="AutoPublish">
