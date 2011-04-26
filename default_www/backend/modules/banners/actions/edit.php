@@ -74,14 +74,19 @@ class BackendBannersEdit extends BackendBaseActionEdit
 		// create form
 		$this->frm = new BackendForm('edit');
 
+		// show permanently?
+		if($this->record['date_from'] == null || $this->record['date_till'] == null) $showPermanently = true;
+		else $showPermanently = false;
+
 		// create elements
 		$this->frm->addText('name', $this->record['name']);
 		$this->frm->addText('url', $this->record['url']);
 		$this->frm->addImage('file');
-		$this->frm->addDate('start_date', $this->record['date_from']);
-		$this->frm->addTime('start_time', date('H:i', $this->record['date_from']), 'inputText time');
-		$this->frm->addDate('end_date', $this->record['date_till']);
-		$this->frm->addTime('end_time', date('H:i', $this->record['date_till']), 'inputText time');
+		$this->frm->addDate('start_date', $showPermanently ? null : $this->record['date_from']);
+		$this->frm->addTime('start_time', $showPermanently ? null : date('H:i', $this->record['date_from']), 'inputText time');
+		$this->frm->addDate('end_date', $showPermanently ? strtotime("+1 month") : $this->record['date_till']);
+		$this->frm->addTime('end_time', $showPermanently ? null : date('H:i', $this->record['date_till']), 'inputText time');
+		$this->frm->addCheckbox('show_permanently', $showPermanently);
 	}
 
 
@@ -128,18 +133,33 @@ class BackendBannersEdit extends BackendBaseActionEdit
 			// cleanup the submitted fields, ignore fields that were added by hackers
 			$this->frm->cleanupFields();
 
+			// show permanently?
+			$showPermanently = $this->frm->getField('show_permanently')->isChecked();
+
 			// validate fields
 			$this->frm->getField('name')->isFilled(BL::err('TitleIsRequired'));
-			if($this->frm->getField('url')->isFilled(BL::err('UrlIsRequired'))) $this->frm->getField('url')->isURL(BL::err('InvalidURL'));;
-			$this->frm->getField('start_date')->isValid(BL::err('StartDateIsInvalid'));
-			$this->frm->getField('start_time')->isValid(BL::err('StartTimeIsInvalid'));
-			$this->frm->getField('end_date')->isValid(BL::err('EndDateIsInvalid'));
-			$this->frm->getField('end_time')->isValid(BL::err('EndTimeIsInvalid'));
+			if($this->frm->getField('url')->isFilled(BL::err('UrlIsRequired'))) $this->frm->getField('url')->isURL(BL::err('InvalidURL'));
 
-			// start date before end date?
-			$date_from = BackendModel::getUTCTimestamp($this->frm->getField('start_date'), $this->frm->getField('start_time'));
-			$date_till = BackendModel::getUTCTimestamp($this->frm->getField('end_date'), $this->frm->getField('end_time'));
-			if($date_from > $date_till) $this->frm->getField('end_time')->addError(BL::err('EndDateMustBeAfterBeginDate'));
+			// an array that is used to check if everything is ok with the dates
+			$datesOK = array();
+
+			if(!$showPermanently)
+			{
+				// validate the dates and times
+				$datesOK[] = $this->frm->getField('start_date')->isFilled() ? $this->frm->getField('start_date')->isValid(BL::err('StartDateIsInvalid')) : $this->frm->getField('start_date')->isFilled(BL::err('StartDateIsRequired'));
+				$datesOK[] = $this->frm->getField('end_date')->isFilled(BL::err('EndDateIsRequired'));
+				$datesOK[] = $this->frm->getField('start_time')->isFilled() ? $this->frm->getField('start_time')->isValid(BL::err('StartTimeIsInvalid')) : $this->frm->getField('start_time')->isFilled(BL::err('StartTimeIsRequired'));
+				$datesOK[] = $this->frm->getField('end_date')->isValid(BL::err('EndDateIsInvalid'));
+				$datesOK[] = $this->frm->getField('end_time')->isFilled() ? $this->frm->getField('end_time')->isValid(BL::err('EndTimeIsInvalid')) : $this->frm->getField('end_time')->isFilled(BL::err('EndTimeIsRequired'));
+
+				// start date before end date?
+				if(!in_array(false, $datesOK))
+				{
+					$date_from = BackendModel::getUTCTimestamp($this->frm->getField('start_date'), $this->frm->getField('start_time'));
+					$date_till = BackendModel::getUTCTimestamp($this->frm->getField('end_date'), $this->frm->getField('end_time'));
+					if($date_from > $date_till) $this->frm->getField('end_time')->addError(BL::err('EndDateMustBeAfterBeginDate'));
+				}
+			}
 
 			// is the file filled in?
 			if($this->frm->getField('file')->isFilled())
@@ -159,8 +179,8 @@ class BackendBannersEdit extends BackendBaseActionEdit
 				$item['name'] = $this->frm->getField('name')->getValue();
 				$item['url'] = $this->frm->getField('url')->getValue();
 				if($this->frm->getField('file')->isFilled()) $item['file'] = SpoonFilter::urlise($this->frm->getField('file')->getFilename(false)) . '.' . $this->frm->getField('file')->getExtension();
-				$item['date_from'] = BackendModel::getUTCDate(null, $date_from);
-				$item['date_till'] = BackendModel::getUTCDate(null, $date_till);
+				$item['date_from'] = $showPermanently ? null : BackendModel::getUTCDate(null, $date_from);
+				$item['date_till'] = $showPermanently ? null : BackendModel::getUTCDate(null, $date_till);
 
 				// update in db
 				BackendBannersModel::updateBanner($this->id, $item);

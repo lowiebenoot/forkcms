@@ -42,6 +42,27 @@ jsBackend.banners.controls =
 				jsBackend.banners.controls.uncheckChecked();
 			});
 		}
+		
+		if($('#showPermanently').length > 0)
+		{
+			// initial enable/disable 
+			jsBackend.banners.controls.enableOrDisableDates();
+			
+			// input select on change function
+			$('#showPermanently').change(function() 
+			{
+				// filter the datagrid by the selected size
+				jsBackend.banners.controls.enableOrDisableDates();
+			});
+		}
+	},
+	
+	
+	// filter the datagrid by the selected size
+	enableOrDisableDates: function()
+	{
+		if(utils.form.isChecked($('#showPermanently')))$('#startDate, #endDate, #startTime, #endTime').attr('disabled', 'disabled').addClass('disabled');
+		else $('#startDate, #endDate, #startTime, #endTime').attr('disabled', '').removeClass('disabled');
 	},
 	
 	

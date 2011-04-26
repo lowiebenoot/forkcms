@@ -44,7 +44,7 @@ class FrontendBannersModel
 											INNER JOIN banners_groups AS g ON g.id = m.group_id
 											INNER JOIN banners_standards AS s on s.id = g.standard_id
 											WHERE m.group_id = ?
-											AND b.date_till >= NOW()
+											AND b.date_till >= NOW() OR b.date_till IS NULL
 											ORDER BY RAND() LIMIT 1',
 											(int) $id);
 		// add a view for the banner

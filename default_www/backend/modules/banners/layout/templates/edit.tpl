@@ -32,6 +32,11 @@
 				{$fileFileError}
 			</p>
 			<p>
+				<ul class="inputList">
+					<li>{$chkShowPermanently} <label for="showPermanently">{$lblShowPermanently|ucfirst}</label></li>
+				</ul>
+			</p>
+			<p>
 				<label for="startDate">{$lblStartDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtStartDate} {$txtStartDateError} <label for="startTime" class="nofloat">{$lblAt}<abbr title="{$lblRequiredField}">*</abbr></label> {$txtStartTime} {$txtStartTimeError}
 			</p>
