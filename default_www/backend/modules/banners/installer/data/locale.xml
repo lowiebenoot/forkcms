@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<locale>
+  <backend>
+    <banners>
+      <item type="error" name="EndDateIsInvalid">
+        <translation language="nl"><![CDATA[Ongeldige einddatum.]]></translation>
+        <translation language="en"><![CDATA[Invalid end date.]]></translation>
+      </item>
+      <item type="error" name="EndDateIsRequired">
+        <translation language="nl"><![CDATA[Kies een einddatum.]]></translation>
+        <translation language="en"><![CDATA[Provide an end date.]]></translation>
+      </item>
+      <item type="error" name="EndDateMustBeAfterBeginDate">
+        <translation language="nl"><![CDATA[De einddatum moet na de begindatum liggen.]]></translation>
+        <translation language="en"><![CDATA[The end date should be after the begin date.]]></translation>
+      </item>
+      <item type="error" name="EndTimeIsInvalid">
+        <translation language="nl"><![CDATA[Ongeldig eindtijdstip.]]></translation>
+        <translation language="en"><![CDATA[Invalid end time.]]></translation>
+      </item>
+      <item type="error" name="EndTimeIsRequired">
+        <translation language="nl"><![CDATA[Kies een eindtijdstip.]]></translation>
+        <translation language="en"><![CDATA[Provade an end time.]]></translation>
+      </item>
+      <item type="error" name="FileIsRequired">
+        <translation language="nl"><![CDATA[Kies een bestand.]]></translation>
+        <translation language="en"><![CDATA[Provide a file.]]></translation>
+      </item>
+      <item type="error" name="JPGGIFPNGAndSWFOnly">
+        <translation language="nl"><![CDATA[Enkel JPG, GIF, PNG en SWF zijn toegestaan.]]></translation>
+        <translation language="en"><![CDATA[Only JPG, GIF, PNG and SWF are allowed.]]></translation>
+      </item>
+      <item type="error" name="SelectAtLeastOneBanner">
+        <translation language="nl"><![CDATA[Selecteer minstens 1 banner.]]></translation>
+        <translation language="en"><![CDATA[Select at least 1 banner.]]></translation>
+      </item>
+      <item type="error" name="StartDateIsInvalid">
+        <translation language="nl"><![CDATA[Ongeldige startdatum.]]></translation>
+        <translation language="en"><![CDATA[Invalid start date.]]></translation>
+      </item>
+      <item type="error" name="StartDateIsRequired">
+        <translation language="nl"><![CDATA[Kies een startdatum.]]></translation>
+        <translation language="en"><![CDATA[Provide a start date.]]></translation>
+      </item>
+      <item type="error" name="StartTimeIsInvalid">
+        <translation language="nl"><![CDATA[Ongeldig starttijdstip.]]></translation>
+        <translation language="en"><![CDATA[Invalid start time.]]></translation>
+      </item>
+      <item type="error" name="StartTimeIsRequired">
+        <translation language="nl"><![CDATA[Kies een starttijdstip.]]></translation>
+        <translation language="en"><![CDATA[Provide a start time.]]></translation>
+      </item>
+      <item type="error" name="UrlIsRequired">
+        <translation language="nl"><![CDATA[Geef een URL in.]]></translation>
+        <translation language="en"><![CDATA[Provide an URL.]]></translation>
+      </item>
+      <item type="label" name="AddBanner">
+        <translation language="nl"><![CDATA[banner toevoegen]]></translation>
+        <translation language="en"><![CDATA[add banner]]></translation>
+      </item>
+      <item type="label" name="AddGroup">
+        <translation language="nl"><![CDATA[groep toevoegen]]></translation>
+        <translation language="en"><![CDATA[add group]]></translation>
+      </item>
+      <item type="label" name="CurrentFile">
+        <translation language="nl"><![CDATA[huidig bestand]]></translation>
+        <translation language="en"><![CDATA[current file]]></translation>
+      </item>
+      <item type="label" name="DateFrom">
+        <translation language="nl"><![CDATA[begindatum]]></translation>
+        <translation language="en"><![CDATA[start date]]></translation>
+      </item>
+      <item type="label" name="DateTill">
+        <translation language="nl"><![CDATA[einddatum]]></translation>
+        <translation language="en"><![CDATA[end date]]></translation>
+      </item>
+      <item type="label" name="EditBanner">
+        <translation language="nl"><![CDATA[wijzig banner]]></translation>
+        <translation language="en"><![CDATA[edit banner]]></translation>
+      </item>
+      <item type="label" name="EditGroup">
+        <translation language="nl"><![CDATA[wijzig groep]]></translation>
+        <translation language="en"><![CDATA[edit group]]></translation>
+      </item>
+      <item type="label" name="Groups">
+        <translation language="nl"><![CDATA[groepen]]></translation>
+        <translation language="en"><![CDATA[groups]]></translation>
+      </item>
+      <item type="label" name="IsMemberOf">
+        <translation language="nl"><![CDATA[deze banner zit in de volgende groepen]]></translation>
+        <translation language="en"><![CDATA[this banner is member of the following groups]]></translation>
+      </item>
+      <item type="label" name="NumClicks">
+        <translation language="nl"><![CDATA[kliks]]></translation>
+        <translation language="en"><![CDATA[clicks]]></translation>
+      </item>
+      <item type="label" name="NumViews">
+        <translation language="nl"><![CDATA[bekeken]]></translation>
+        <translation language="en"><![CDATA[views]]></translation>
+      </item>
+      <item type="label" name="Size">
+        <translation language="nl"><![CDATA[grootte]]></translation>
+        <translation language="en"><![CDATA[size]]></translation>
+      </item>
+      <item type="message" name="AddedBanner">
+        <translation language="nl"><![CDATA[De banner "%1$s" werd toegevoegd.]]></translation>
+        <translation language="en"><![CDATA[The banner "%1$s" was added.]]></translation>
+      </item>
+      <item type="message" name="AddedGroup">
+        <translation language="nl"><![CDATA[De groep "%1$s" werd toegevoegd.]]></translation>
+        <translation language="en"><![CDATA[The group "%1$s" was added.]]></translation>
+      </item>
+      <item type="message" name="ConfirmDeleteBanner">
+        <translation language="nl"><![CDATA[Ben je zeker dat je de banner "%1$s" wil verwijderen?]]></translation>
+        <translation language="en"><![CDATA[Are you sure you want to delete the banner "%1$s"?]]></translation>
+      </item>
+      <item type="message" name="ConfirmDeleteGroup">
+        <translation language="nl"><![CDATA[Ben je zeker dat je de groep "%1$s" wil verwijderen?]]></translation>
+        <translation language="en"><![CDATA[Are you sure you want to delete the group "%1$s"?]]></translation>
+      </item>
+      <item type="message" name="DeletedBanner">
+        <translation language="nl"><![CDATA[De banner "%1$s" werd verwijderd.]]></translation>
+        <translation language="en"><![CDATA[The banner "%1$s" was deleted.]]></translation>
+      </item>
+      <item type="message" name="DeletedGroup">
+        <translation language="nl"><![CDATA[De groep "%1$s" werd verwijderd.]]></translation>
+        <translation language="en"><![CDATA[The group "%1$s" was deleted.]]></translation>
+      </item>
+      <item type="message" name="EditedBanner">
+        <translation language="nl"><![CDATA[De banner "%1$s" werd opgeslagen.]]></translation>
+        <translation language="en"><![CDATA[The banner "%1$s" was saved.]]></translation>
+      </item>
+      <item type="message" name="EditedGroup">
+        <translation language="nl"><![CDATA[De groep "%1$s" werd opgeslagen.]]></translation>
+        <translation language="en"><![CDATA[The group "%1$s" was saved.]]></translation>
+      </item>
+      <item type="message" name="IsOnlyMemberOfAGroup">
+        <translation language="nl"><![CDATA[Deze banner zit als enige in een groep, daardoor kan hij niet verwijderd worden.]]></translation>
+        <translation language="en"><![CDATA[This banner is the last member of a group, so it can't be deleted.]]></translation>
+      </item>
+      <item type="message" name="NoBanners">
+        <translation language="nl"><![CDATA[Er zijn nog geen banners. <a href="%1$s">Voeg een banner toe</a>.]]></translation>
+        <translation language="en"><![CDATA[There are no banners yet. <a href="%1$s">Add a banner</a>.]]></translation>
+      </item>
+      <item type="message" name="NoGroups">
+        <translation language="nl"><![CDATA[Er zijn nog geen groepen. <a href="%1$s">Voeg een groep toe</a>.]]></translation>
+        <translation language="en"><![CDATA[There are no groups yet. <a href="%1$s">Add a group</a>.]]></translation>
+      </item>
+    </banners>
+    <core>
+      <item type="label" name="Banners">
+        <translation language="nl"><![CDATA[banners]]></translation>
+        <translation language="en"><![CDATA[banners]]></translation>
+      </item>
+    </core>
+  </backend>
+</locale>
