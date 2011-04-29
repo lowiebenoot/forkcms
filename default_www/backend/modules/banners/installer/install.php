@@ -60,13 +60,13 @@ class BannersInstall extends ModuleInstaller
 		}
 
 		// create directory for the original files
-		if(!SpoonDirectory::exists(FRONTEND_FILES_PATH . '/banners/')) SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/');
+		if(!SpoonDirectory::exists(PATH_WWW . '/frontend/files/banners/')) SpoonDirectory::create(PATH_WWW . '/frontend/files/banners/');
 
 		// create directory for the original files
-		if(!SpoonDirectory::exists(FRONTEND_FILES_PATH . '/banners/original/')) SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/original/');
+		if(!SpoonDirectory::exists(PATH_WWW . '/frontend/files/banners/original/')) SpoonDirectory::create(PATH_WWW . '/frontend/files/banners/original/');
 
 		// create folder for resized images
-		if(!SpoonDirectory::exists(FRONTEND_FILES_PATH . '/banners/resized/')) SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/resized/');
+		if(!SpoonDirectory::exists(PATH_WWW . '/frontend/files/banners/resized/')) SpoonDirectory::create(PATH_WWW . '/frontend/files/banners/resized/');
 
 		// import locale
 		$this->importLocale(dirname(__FILE__) . '/data/locale.xml');
