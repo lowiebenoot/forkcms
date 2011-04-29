@@ -13,7 +13,9 @@
 			</p>
 			<p>
 				<label for="url">{$lblURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$txtUrl} {$txtUrlError}
+				{$txtUrl}
+				{$txtUrlError}
+				<span class="helpTxt">{$lblTrackerUrl|ucfirst}: <span>{$trackerUrl}<span id="generatedUrl"></span></span></span>
 			</p>
 			<p>
 				<label for="size">{$lblSize|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
@@ -22,22 +24,22 @@
 			<p>
 				<label for="file">{$lblFile|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$fileFile}
-				{option:!fileFileError}<span class="helpTxt">{$errJPGGIFPNGAndSWFOnly}</span>{/option:!fileFileError}
+				<span class="helpTxt">{$errJPGGIFPNGAndSWFOnly}</span>
 				{$fileFileError}
 			</p>
 			<p>
-				<ul class="inputList">
-					<li>{$chkShowPermanently} <label for="showPermanently">{$lblShowPermanently|ucfirst}</label></li>
+				<ul class="inputList pb0">
+					<li class="">{$chkShowPermanently} <label for="showPermanently">{$lblShowPermanently|ucfirst}</label></li>
 				</ul>
 			</p>
 			<p>
-				<label for="startDate">{$lblStartDate|ucfirst}</label>
+				<label for="startDate">{$lblStartDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtStartDate} <label for="startTime" class="nofloat">{$lblAt}</label> {$txtStartTime}
 				{$txtStartDateError}
 				{$txtStartTimeError}
 			</p>
 			<p>
-				<label for="endDate">{$lblEndDate|ucfirst}</label>
+				<label for="endDate">{$lblEndDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtEndDate} <label for="endTime" class="nofloat">{$lblAt}</label> {$txtEndTime}
 				{$txtEndDateError}
 				{$txtEndTimeError}

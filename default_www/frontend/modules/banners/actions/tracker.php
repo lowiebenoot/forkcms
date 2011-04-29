@@ -21,29 +21,34 @@ class FrontendBannersTracker extends FrontendBaseBlock
 		// call the parent
 		parent::execute();
 
-		// get parameters
-		$this->id = SpoonFilter::getGetValue('id', null, 'int');
-		$this->url = SpoonFilter::getGetValue('url', null, 'string');
-
-		// id given?
-		if($this->id != null)
+		// internal referrer?
+		if(SpoonFilter::isInternalReferrer(array(SITE_DOMAIN)) && isset($_SERVER['HTTP_REFERER']))
 		{
-			if(FrontendBannersModel::exists($this->id))
+			// get parameters
+			$id = SpoonFilter::getGetValue('id', null, null, 'int');
+			$url = urldecode(SpoonFilter::getGetValue('url', null, 'string'));
+			$utmParams = array(
+				'utm_campaign' => urldecode(SpoonFilter::getGetValue('utm_campaign', null, null, 'string')),
+				'utm_medium' => urldecode(SpoonFilter::getGetValue('utm_medium', null, null, 'string')),
+				'utm_source' => urldecode(SpoonFilter::getGetValue('utm_source', null, null, 'string')));
+
+			// id and url given?
+			if($id != 0 && $url != '')
 			{
-				// add a click
-				FrontendBannersModel::increaseNumClicks($this->id);
+				// banner exists?
+				if(FrontendBannersModel::exists($id))
+				{
+					// add a click
+					FrontendBannersModel::increaseNumClicks($id);
 
-				// build the google vars query
-				$params = array();
-				$params['utm_source'] = FrontendModel::getModuleSetting('core', 'site_title_' . FRONTEND_LANGUAGE);
-				$params['utm_medium'] = 'banner';
-				$params['utm_campaign'] = FrontendModel::getModuleSetting('core', 'site_title_' . FRONTEND_LANGUAGE);
-
-				// redirect to url
-				// TODO: wat als er al ? in staat?
-				$this->redirect($this->url . '?utm_medium=banner&utm_source=');
+					// redirect to url
+					$this->redirect($url . (strstr($url, '?') ? '&' : '?') . http_build_query($utmParams));
+				}
 			}
 		}
+
+		// url or id not given or banner doesn't exist or not an internal referrer
+		$this->redirect(FrontendNavigation::getURL(404));
 	}
 }
 

@@ -78,7 +78,7 @@ class BackendBannersEditGroup extends BackendBaseActionEdit
 		$this->frm->addText('name', $this->record['name']);
 
 		// load datagrid
-		$this->dgBanners = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS_BY_STANDARD, (int) $this->record['standard_id']);
+		$this->dgBanners = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS_BY_STANDARD, array((int) $this->record['standard_id'], BL::getWorkingLanguage()));
 
 		// hide column
 		$this->dgBanners->setColumnsHidden(array('standard_id'));

@@ -25,21 +25,26 @@ jsFrontend.banners.controls =
 	// init, something like a constructor
 	init: function()
 	{
-		$('.bannerWidgetURL').click(function()
+		$('a.bannerWidgetURL').each(function()
 		{
-			// get the id of the banner
-			var bannerId = $(this).attr('data-id');
+			// get element
+			$this = $(this);
 			
-			// split url to build the ajax-url
-			var chunks = document.location.pathname.split('/');
+			// get original url
+			var originalUrl = $this.data('url');
+
+			// get tracker url
+			var trackerUrl = $this.attr('href');
+ 			
+			// change url to the original url
+			$this.attr('href', originalUrl);
 			
-			// get language from chuncks
-			var language = chunks[1];
-			
-			// increase the num clicks via ajax
-			$.ajax({
-				url:'/frontend/ajax.php?module=banners&action=increase_clicks&language=' + language,
-				data: {id: bannerId}
+			// add onclick so it redirects to the tracker url
+			$this.click(function()
+			{
+				// redirect
+				window.location.href = trackerUrl;
+				return false;
 			});
 		});
 	},

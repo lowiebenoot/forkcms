@@ -62,7 +62,7 @@ class BackendBannersGroups extends BackendBaseActionIndex
 	private function loadDataGrids()
 	{
 		// create datagrid
-		$this->dgGroups = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS_GROUPS);
+		$this->dgGroups = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS_GROUPS, BL::getWorkingLanguage());
 
 		// change the banner standard name value (include the width and height)
 		$this->dgGroups->setColumnFunction(array(__CLASS__, 'getStandardLabel'), array('[size]', '[width]', '[height]'), 'size', true);

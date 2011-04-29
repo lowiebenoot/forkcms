@@ -27,6 +27,15 @@ jsBackend.banners.controls =
 	// init, something like a constructor
 	init: function()
 	{
+		// change the tracker url 
+		$('span #generatedUrl').html(encodeURIComponent($('#url').val()));
+		
+		// change tracker url on keyup
+		$('#url').keyup(function()
+		{
+			$('span #generatedUrl').html(encodeURIComponent($('#url').val()));
+		});
+
 		if(jsBackend.current.action == 'add_group')
 		{
 			// initial hide/show from rows

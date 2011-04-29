@@ -50,7 +50,7 @@ class BackendBannersAddGroup extends BackendBaseActionAdd
 		$this->frm->addDropdown('size', BackendBannersModel::getStandards(false));
 
 		// load datagrid
-		$this->dgBanners = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS);
+		$this->dgBanners = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS, BL::getWorkingLanguage());
 
 		// hide column
 		$this->dgBanners->setColumnsHidden(array('standard_id'));
@@ -121,6 +121,7 @@ class BackendBannersAddGroup extends BackendBaseActionAdd
 				// build item
 				$item['name'] = $this->frm->getField('name')->getValue();
 				$item['standard_id'] = (int) $this->frm->getField('size')->getValue();
+				$item['language'] = BL::getWorkingLanguage();
 
 				// insert group in db
 				$groupId = BackendBannersModel::insertGroup($item);

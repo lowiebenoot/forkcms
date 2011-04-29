@@ -48,7 +48,7 @@ class BackendBannersIndex extends BackendBaseActionIndex
 	private function loadDataGrids()
 	{
 		// create datagrid
-		$this->dgBanners = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS);
+		$this->dgBanners = new BackendDataGridDB(BackendBannersModel::QRY_DATAGRID_BROWSE_BANNERS, BL::getWorkingLanguage());
 
 		// set sorting columns
 		$this->dgBanners->setSortingColumns(array('name', 'date_from', 'date_till', 'num_clicks', 'num_views'), 'id');

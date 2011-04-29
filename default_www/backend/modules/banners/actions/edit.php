@@ -117,6 +117,10 @@ class BackendBannersEdit extends BackendBaseActionEdit
 
 		// parse the groups where the banner is member of
 		$this->tpl->assign('groups', BackendBannersModel::getGroupsByBanner($this->id));
+
+		// parse tracker url
+		$this->tpl->assign('trackerUrl', SITE_URL . BackendModel::getURLForBlock('banners', 'tracker') . '?url=');
+		$this->tpl->assign('url', urlencode($this->record['url']));
 	}
 
 
@@ -147,14 +151,14 @@ class BackendBannersEdit extends BackendBaseActionEdit
 			{
 				// validate the dates and times
 				$datesOK[] = $this->frm->getField('start_date')->isFilled() ? $this->frm->getField('start_date')->isValid(BL::err('StartDateIsInvalid')) : $this->frm->getField('start_date')->isFilled(BL::err('StartDateIsRequired'));
-				$datesOK[] = $this->frm->getField('end_date')->isFilled(BL::err('EndDateIsRequired'));
+				$datesOK[] = $this->frm->getField('end_date')->isFilled() ? $this->frm->getField('end_date')->isValid(BL::err('EndDateIsInvalid')) : $this->frm->getField('end_date')->isFilled(BL::err('EndDateIsRequired'));
 				$datesOK[] = $this->frm->getField('start_time')->isFilled() ? $this->frm->getField('start_time')->isValid(BL::err('StartTimeIsInvalid')) : $this->frm->getField('start_time')->isFilled(BL::err('StartTimeIsRequired'));
-				$datesOK[] = $this->frm->getField('end_date')->isValid(BL::err('EndDateIsInvalid'));
 				$datesOK[] = $this->frm->getField('end_time')->isFilled() ? $this->frm->getField('end_time')->isValid(BL::err('EndTimeIsInvalid')) : $this->frm->getField('end_time')->isFilled(BL::err('EndTimeIsRequired'));
 
-				// start date before end date?
+				// all dates and times filled in and valid?
 				if(!in_array(false, $datesOK))
 				{
+					// start date before end date?
 					$date_from = BackendModel::getUTCTimestamp($this->frm->getField('start_date'), $this->frm->getField('start_time'));
 					$date_till = BackendModel::getUTCTimestamp($this->frm->getField('end_date'), $this->frm->getField('end_time'));
 					if($date_from > $date_till) $this->frm->getField('end_time')->addError(BL::err('EndDateMustBeAfterBeginDate'));

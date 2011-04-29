@@ -47,16 +47,29 @@ class BannersInstall extends ModuleInstaller
 		{
 			// insert page
 			$this->insertPage(array('title' => 'BannerTracker',
-									'language' => $language),
+									'language' => $language,
+									'type' => 'root',
+									'allow_delete' => 'N',
+									'allow_edit' => 'N',
+									'allow_move' => 'N',
+									'allow_children' => 'N',
+									'no_follow' => 'Y',
+									'parent_id' => 0),
 									null,
 									array('extra_id' => $extraId));
 		}
+
+		// create directory for the original files
+		if(!SpoonDirectory::exists(FRONTEND_FILES_PATH . '/banners/')) SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/');
 
 		// create directory for the original files
 		if(!SpoonDirectory::exists(FRONTEND_FILES_PATH . '/banners/original/')) SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/original/');
 
 		// create folder for resized images
 		if(!SpoonDirectory::exists(FRONTEND_FILES_PATH . '/banners/resized/')) SpoonDirectory::create(FRONTEND_FILES_PATH . '/banners/resized/');
+
+		// import locale
+		$this->importLocale(dirname(__FILE__) . '/data/locale.xml');
 	}
 
 }

@@ -98,9 +98,17 @@
         <translation language="nl"><![CDATA[bekeken]]></translation>
         <translation language="en"><![CDATA[views]]></translation>
       </item>
+      <item type="label" name="ShowPermanently">
+        <translation language="nl"><![CDATA[toon deze banner permanent]]></translation>
+        <translation language="en"><![CDATA[show this banner permanently]]></translation>
+      </item>
       <item type="label" name="Size">
         <translation language="nl"><![CDATA[grootte]]></translation>
         <translation language="en"><![CDATA[size]]></translation>
+      </item>
+      <item type="label" name="TrackerUrl">
+        <translation language="nl"><![CDATA[tracker URL]]></translation>
+        <translation language="en"><![CDATA[tracker URL]]></translation>
       </item>
       <item type="message" name="AddedBanner">
         <translation language="nl"><![CDATA[De banner "%1$s" werd toegevoegd.]]></translation>
@@ -148,9 +156,17 @@
       </item>
     </banners>
     <core>
+      <item type="label" name="BannerExtraLabel">
+        <translation language="nl"><![CDATA[banner: %1$s]]></translation>
+        <translation language="en"><![CDATA[banner: %1$s]]></translation>
+      </item>
       <item type="label" name="Banners">
         <translation language="nl"><![CDATA[banners]]></translation>
         <translation language="en"><![CDATA[banners]]></translation>
+      </item>
+      <item type="label" name="GroupExtraLabel">
+        <translation language="nl"><![CDATA[groep: %1$s]]></translation>
+        <translation language="en"><![CDATA[group: %1$s]]></translation>
       </item>
     </core>
   </backend>

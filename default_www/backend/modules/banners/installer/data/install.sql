@@ -13,6 +13,7 @@ CREATE  TABLE IF NOT EXISTS `banners` (
   `standard_id` INT(11) NOT NULL ,
   `file` VARCHAR(255) NOT NULL ,
   `url` TEXT NOT NULL ,
+ `language` varchar(5) NOT NULL,
   `date_from` DATETIME NULL ,
   `date_till` DATETIME NULL ,
   `num_clicks` INT NOT NULL DEFAULT 0 ,
@@ -25,6 +26,7 @@ CREATE  TABLE IF NOT EXISTS `banners_groups` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(255) NOT NULL ,
   `standard_id` INT(11) NOT NULL ,
+ `language` varchar(5) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 

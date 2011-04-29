@@ -55,6 +55,9 @@ class BackendBannersAdd extends BackendBaseActionAdd
 		$this->frm->addDate('end_date', strtotime("+1 month"));
 		$this->frm->addTime('end_time', null, 'inputText time');
 		$this->frm->addCheckbox('show_permanently');
+
+		// parse tracker url
+		$this->tpl->assign('trackerUrl', SITE_URL . BackendModel::getURLForBlock('banners', 'tracker') . '?url=');
 	}
 
 
@@ -85,14 +88,14 @@ class BackendBannersAdd extends BackendBaseActionAdd
 			{
 				// validate the dates and times
 				$datesOK[] = $this->frm->getField('start_date')->isFilled() ? $this->frm->getField('start_date')->isValid(BL::err('StartDateIsInvalid')) : $this->frm->getField('start_date')->isFilled(BL::err('StartDateIsRequired'));
-				$datesOK[] = $this->frm->getField('end_date')->isFilled(BL::err('EndDateIsRequired'));
+				$datesOK[] = $this->frm->getField('end_date')->isFilled() ? $this->frm->getField('end_date')->isValid(BL::err('EndDateIsInvalid')) : $this->frm->getField('end_date')->isFilled(BL::err('EndDateIsRequired'));
 				$datesOK[] = $this->frm->getField('start_time')->isFilled() ? $this->frm->getField('start_time')->isValid(BL::err('StartTimeIsInvalid')) : $this->frm->getField('start_time')->isFilled(BL::err('StartTimeIsRequired'));
-				$datesOK[] = $this->frm->getField('end_date')->isValid(BL::err('EndDateIsInvalid'));
 				$datesOK[] = $this->frm->getField('end_time')->isFilled() ? $this->frm->getField('end_time')->isValid(BL::err('EndTimeIsInvalid')) : $this->frm->getField('end_time')->isFilled(BL::err('EndTimeIsRequired'));
 
-				// start date before end date?
+				// all dates and times filled in and valid?
 				if(!in_array(false, $datesOK))
 				{
+					// start date before end date?
 					$date_from = BackendModel::getUTCTimestamp($this->frm->getField('start_date'), $this->frm->getField('start_time'));
 					$date_till = BackendModel::getUTCTimestamp($this->frm->getField('end_date'), $this->frm->getField('end_time'));
 					if($date_from > $date_till) $this->frm->getField('end_time')->addError(BL::err('EndDateMustBeAfterBeginDate'));
@@ -113,7 +116,6 @@ class BackendBannersAdd extends BackendBaseActionAdd
 			// no errors?
 			if($this->frm->isCorrect())
 			{
-
 				// get the extension of the file
 				$extension = $this->frm->getField('file')->getExtension();
 
@@ -124,6 +126,7 @@ class BackendBannersAdd extends BackendBaseActionAdd
 				$item['file'] = SpoonFilter::urlise($this->frm->getField('file')->getFilename(false)) . '.' . $extension;
 				$item['date_from'] = $showPermanently ? null : BackendModel::getUTCDate(null, $date_from);
 				$item['date_till'] = $showPermanently ? null : BackendModel::getUTCDate(null, $date_till);
+				$item['language'] = BL::getWorkingLanguage();
 
 				// insert in db
 				$bannerId = BackendBannersModel::insertBanner($item);

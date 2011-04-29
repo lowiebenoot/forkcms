@@ -18,7 +18,9 @@
 			</p>
 			<p>
 				<label for="url">{$lblURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$txtUrl} {$txtUrlError}
+				{$txtUrl}
+				{$txtUrlError}
+				<span class="helpTxt">{$lblTrackerUrl|ucfirst}: <span>{$trackerUrl}<span id="generatedUrl">{$url}</span></span></span>
 			</p>
 			<p>
 				<label>{$lblSize|ucfirst}</label>
@@ -28,12 +30,12 @@
 				<label for="file">{$lblFile|ucfirst}</label>
 				{$fileFile}
 				<span> - <a href="/frontend/files/banners/{option:isSWF}original{/option:isSWF}{option:!isSWF}resized{/option:!isSWF}/{$item.id}_{$item.file}" title="{$lblCurrentFile}">{$lblCurrentFile}</a></span>
-				{option:!fileFileError}<span class="helpTxt">{$errJPGGIFPNGAndSWFOnly}</span>{/option:!fileFileError}
+				<span class="helpTxt">{$errJPGGIFPNGAndSWFOnly}</span>
 				{$fileFileError}
 			</p>
 			<p>
-				<ul class="inputList">
-					<li>{$chkShowPermanently} <label for="showPermanently">{$lblShowPermanently|ucfirst}</label></li>
+				<ul class="inputList pb0">
+					<li class="pb0">{$chkShowPermanently} <label for="showPermanently">{$lblShowPermanently|ucfirst}</label></li>
 				</ul>
 			</p>
 			<p>
@@ -47,7 +49,7 @@
 		</div>
 
 		{option:groups}
-			<div class="content groupmembers">
+			<div class="content pb0">
 					<p>{$lblIsMemberOf|ucfirst}:</p>
 					<ul>
 						{iteration:groups}

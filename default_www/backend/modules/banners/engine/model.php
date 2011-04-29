@@ -11,15 +11,18 @@
  */
 class BackendBannersModel
 {
-	const PAGES_EXTRAS_SEQUENCE = 9011;
+	const PAGES_EXTRAS_SEQUENCE_BANNERS = 9011;
+	const PAGES_EXTRAS_SEQUENCE_GROUPS = 9021;
 	const QRY_DATAGRID_BROWSE_BANNERS = 'SELECT i.id, i.name, UNIX_TIMESTAMP(i.date_from) as date_from, UNIX_TIMESTAMP(i.date_till) as date_till, i.num_clicks, i.num_views, standard_id
-										FROM banners AS i';
+										FROM banners AS i
+										WHERE i.language = ?';
 	const QRY_DATAGRID_BROWSE_BANNERS_BY_STANDARD = 'SELECT i.id, i.name, UNIX_TIMESTAMP(i.date_from) as date_from, UNIX_TIMESTAMP(i.date_till) as date_till, i.num_clicks, i.num_views, standard_id
 										FROM banners AS i
-										WHERE i.standard_id = ?';
+										WHERE i.standard_id = ? AND i.language = ?';
 	const QRY_DATAGRID_BROWSE_BANNERS_GROUPS = 'SELECT i.id, i.name, i.standard_id, bs.name AS size, bs.width, bs.height
 												FROM banners_groups AS i
-												INNER JOIN banners_standards AS bs ON bs.id = i.standard_id';
+												INNER JOIN banners_standards AS bs ON bs.id = i.standard_id
+												WHERE i.language = ?';
 
 	/**
 	 * Deletes one or more items
@@ -32,12 +35,29 @@ class BackendBannersModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
+		// create an array with the page sequences
+		$pageSequences = array();
+
+		// loop ids
+		foreach($ids as &$id)
+		{
+			// cast to integers
+			$id = (int) $id;
+
+			// add to the pagesequences array
+			$extraSequences[] = self::PAGES_EXTRAS_SEQUENCE_BANNERS . $id;
+		}
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
 		// get db
 		$db = BackendModel::getDB(true);
 
 		// delete records
-		$db->delete('banners', 'id IN (' . implode(',', $ids) . ')');
-		$db->delete('banners_groups_members', 'banner_id IN (' . implode(',', $ids) . ')');
+		$db->delete('banners', 'id IN (' . implode(',', $ids) . ')', $ids);
+		$db->delete('banners_groups_members', 'banner_id IN (' . implode(', ', $idPlaceHolders) . ')', $ids);
+		$db->delete('pages_extras', 'module = ? AND type = ? AND sequence IN (' . implode(', ', $idPlaceHolders) . ')', array_merge(array('banners', 'widget'), $extraSequences));
 	}
 
 
@@ -52,13 +72,26 @@ class BackendBannersModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
+		// loop ids
+		foreach($ids as &$id)
+		{
+			// cast to integers
+			$id = (int) $id;
+
+			// add to the pagesequences array
+			$extraSequences[] = self::PAGES_EXTRAS_SEQUENCE_GROUPS . $id;
+		}
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
 		// get db
 		$db = BackendModel::getDB(true);
 
 		// delete records
-		$db->delete('banners_groups', 'id IN (' . implode(',', $ids) . ')');
-		$db->delete('banners_groups_members', 'group_id IN (' . implode(',', $ids) . ')');
-		foreach($ids as $id) $db->delete('pages_extras', 'sequence = ?', (int) (self::PAGES_EXTRAS_SEQUENCE . $id));
+		$db->delete('banners_groups', 'id IN (' . implode(', ', $idPlaceHolders) . ')', $ids);
+		$db->delete('banners_groups_members', 'group_id IN (' . implode(',', $idPlaceHolders) . ')', $ids);
+		$db->delete('pages_extras', 'module = ? AND type = ? AND sequence IN (' . implode(', ', $idPlaceHolders) . ')', array_merge(array('banners', 'widget'), $extraSequences));
 	}
 
 
@@ -206,7 +239,7 @@ class BackendBannersModel
 	 * Returns the banner standards (sizes)
 	 *
 	 * @return	array
-	 * @param	bool $getEmpty		Should we also get the empty sizes? (no banners with that size)
+	 * @param	bool[optional] $getEmpty		Should we also get the empty sizes? (no banners with that size).
 	 */
 	public static function getStandards($getEmpty = true)
 	{
@@ -249,8 +282,26 @@ class BackendBannersModel
 	 */
 	public static function insertBanner(array $item)
 	{
-		// insert in db and return
-		return BackendModel::getDB(true)->insert('banners', $item);
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// insert in db
+		$id = $db->insert('banners', $item);
+
+		// build array for page extra
+		$extra['module'] = 'banners';
+		$extra['type'] = 'widget';
+		$extra['label'] = 'BannerExtraLabel';
+		$extra['action'] = 'index';
+		$extra['data'] = serialize(array('label_variables' => array($item['name']), 'id' => $id, 'language' => BL::getWorkingLanguage(), 'source' => 'banner', 'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $id));
+		$extra['hidden'] = 'N';
+		$extra['sequence'] = self::PAGES_EXTRAS_SEQUENCE_BANNERS . $id;
+
+		// insert extra
+		$db->insert('pages_extras', $extra);
+
+		// return banner id
+		return $id;
 	}
 
 
@@ -295,23 +346,23 @@ class BackendBannersModel
 		// get db
 		$db = BackendModel::getDB(true);
 
-		// insert in db and return
-		$groupId = $db->insert('banners_groups', $item);
+		// insert item in db
+		$id = $db->insert('banners_groups', $item);
 
 		// build array for page extra
 		$extra['module'] = 'banners';
 		$extra['type'] = 'widget';
-		$extra['label'] = 'Banners';
+		$extra['label'] = 'GroupExtraLabel';
 		$extra['action'] = 'index';
-		$extra['data'] = serialize(array('extra_label' => $item['name'], 'id' => $groupId, 'edit_url' => BackendModel::createURLForAction('edit_group') . '&id=' . $groupId));
+		$extra['data'] = serialize(array('label_variables' => array($item['name']), 'id' => $id, 'language' => BL::getWorkingLanguage(), 'source' => 'group', 'edit_url' => BackendModel::createURLForAction('edit_group') . '&id=' . $id));
 		$extra['hidden'] = 'N';
-		$extra['sequence'] = self::PAGES_EXTRAS_SEQUENCE . $groupId;
+		$extra['sequence'] = self::PAGES_EXTRAS_SEQUENCE_GROUPS . $id;
 
 		// insert extra
 		$db->insert('pages_extras', $extra);
 
-		// return the groupId
-		return $groupId;
+		// return the group id
+		return $id;
 	}
 
 
@@ -373,8 +424,18 @@ class BackendBannersModel
 	 */
 	public static function updateBanner($id, array $item)
 	{
-		// insert in db and return
-		return BackendModel::getDB(true)->update('banners', $item, 'id = ?', (int) $id);
+
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// build extra data
+		$extra['data'] = serialize(array('label_variables' => array($item['name']), 'id' => $id, 'language' => BL::getWorkingLanguage(), 'source' => 'banner', 'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $id));
+
+		// update extra
+		$db->update('pages_extras', $extra, 'module = ? AND type = ? AND sequence = ?', array('banners', 'widget', self::PAGES_EXTRAS_SEQUENCE_BANNERS . $id));
+
+		// update banner and return
+		return $db->update('banners', $item, 'id = ?', (int) $id);
 	}
 
 
@@ -387,7 +448,16 @@ class BackendBannersModel
 	 */
 	public static function updateGroup($id, array $item)
 	{
+		// get db
+		$db = BackendModel::getDB(true);
+
+		// build extra data
+		$extra['data'] = serialize(array('label_variables' => array($item['name']), 'id' => $id, 'language' => BL::getWorkingLanguage(), 'source' => 'group', 'edit_url' => BackendModel::createURLForAction('edit_group') . '&id=' . $id));
+
+		// update extra
+		$db->update('pages_extras', $extra, 'module = ? AND type = ? AND sequence = ?', array('banners', 'widget', self::PAGES_EXTRAS_SEQUENCE_GROUPS . $id));
+
 		// insert in db and return
-		return BackendModel::getDB(true)->update('banners_groups', $item, 'id = ?', (int) $id);
+		return $db->update('banners_groups', $item, 'id = ?', (int) $id);
 	}
 }
