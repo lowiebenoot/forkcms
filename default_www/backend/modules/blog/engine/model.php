@@ -112,17 +112,23 @@ class BackendBlogModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
 		// get db
 		$db = BackendModel::getDB(true);
 
 		// delete records
-		$db->delete('blog_posts', 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
-		$db->delete('blog_comments', 'post_id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
+		$db->delete('blog_posts', 'id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
+		$db->delete('blog_comments', 'post_id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
 
 		// get used meta ids
 		$metaIds = (array) $db->getColumn('SELECT meta_id
 											FROM blog_posts AS p
-											WHERE id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
+											WHERE id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
 
 		// delete meta
 		if(!empty($metaIds)) $db->delete('meta', 'id IN (' . implode(',', $metaIds) . ')');
@@ -168,6 +174,21 @@ class BackendBlogModel
 
 
 	/**
+	 * Checks if it is allowed to delete the a category
+	 *
+	 * @return	bool
+	 * @param	int $id		The id of the category.
+	 */
+	public static function deleteCategoryAllowed($id)
+	{
+		return (BackendModel::getDB()->getVar('SELECT COUNT(id)
+												FROM blog_posts AS i
+												WHERE i.category_id = ? AND i.language = ?',
+												array((int) $id, BL::getWorkingLanguage())) == 0);
+	}
+
+
+	/**
 	 * Deletes one or more comments
 	 *
 	 * @return	void
@@ -178,16 +199,22 @@ class BackendBlogModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
 		// get db
 		$db = BackendModel::getDB(true);
 
 		// get ids
 		$itemIds = (array) $db->getColumn('SELECT i.post_id
 											FROM blog_comments AS i
-											WHERE i.id IN (' . implode(',', $ids) . ') AND i.language = ?', array(BL::getWorkingLanguage()));
+											WHERE i.id IN (' . implode(', ', $idPlaceHolders) . ') AND i.language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
 
 		// update record
-		$db->delete('blog_comments', 'id IN (' . implode(',', $ids) . ') AND language = ?', array(BL::getWorkingLanguage()));
+		$db->delete('blog_comments', 'id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
 
 		// recalculate the comment count
 		if(!empty($itemIds)) self::reCalculateCommentCount($itemIds);
@@ -356,16 +383,29 @@ class BackendBlogModel
 	 * Get all categories
 	 *
 	 * @return	array
+	 * @param	bool[optional] $includeCount	Include the count?
 	 */
-	public static function getCategories()
+	public static function getCategories($includeCount = false)
 	{
 		// get db
-		$db = BackendModel::getDB(true);
+		$db = BackendModel::getDB();
+
+		// we should include the count
+		if($includeCount)
+		{
+			return (array) BackendModel::getDB()->getPairs('SELECT i.id, CONCAT(i.title, " (",  COUNT(p.category_id) ,")") AS title
+															FROM blog_categories AS i
+															LEFT OUTER JOIN blog_posts AS p ON i.id = p.category_id AND i.language = p.language AND p.status = ?
+															WHERE i.language = ?
+															GROUP BY i.id',
+															array('active', BL::getWorkingLanguage()));
+		}
 
 		// get records and return them
 		return (array) BackendModel::getDB()->getPairs('SELECT i.id, i.title
 														FROM blog_categories AS i
-														WHERE i.language = ?', array(BL::getWorkingLanguage()));
+														WHERE i.language = ?',
+														array(BL::getWorkingLanguage()));
 	}
 
 
@@ -434,7 +474,7 @@ class BackendBlogModel
 	{
 		return (array) BackendModel::getDB()->getRecords('SELECT *
 															FROM blog_comments AS i
-															WHERE i.id IN (' . implode(',', $ids) . ')');
+															WHERE i.id IN (' . implode(', ', array_fill(0, count($ids), '?')) . ')', $ids);
 	}
 
 
@@ -707,6 +747,7 @@ class BackendBlogModel
 												GROUP BY i.post_id',
 												array('published', BL::getWorkingLanguage(), 'active'));
 
+
 		// loop items
 		foreach($ids as $id)
 		{
@@ -737,6 +778,10 @@ class BackendBlogModel
 
 			// get the record of the exact item we're editing
 			$revision = self::getRevision($item['id'], $item['revision_id']);
+
+			// assign values
+			$item['created_on'] = BackendModel::getUTCDate('Y-m-d H:i:s', $revision['created_on']);
+			$item['num_comments'] = $revision['num_comments'];
 
 			// if it used to be a draft that we're now publishing, remove drafts
 			if($revision['status'] == 'draft') BackendModel::getDB(true)->delete('blog_posts', 'id = ? AND status = ?', array($item['id'], $revision['status']));
@@ -831,16 +876,22 @@ class BackendBlogModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
+		// loop and cast to integers
+		foreach($ids as &$id) $id = (int) $id;
+
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
 		// get ids
 		$itemIds = (array) BackendModel::getDB()->getColumn('SELECT i.post_id
 																FROM blog_comments AS i
-																WHERE i.id IN (' . implode(',', $ids) . ')');
+																WHERE i.id IN (' . implode(', ', $idPlaceHolders) . ')', $ids);
 
 		// update record
 		BackendModel::getDB(true)->execute('UPDATE blog_comments
 											SET status = ?
-											WHERE id IN (' . implode(',', $ids) . ')',
-											array((string) $status));
+											WHERE id IN (' . implode(', ', $idPlaceHolders) . ')',
+											array_merge(array((string) $status), $ids));
 
 		// recalculate the comment count
 		if(!empty($itemIds)) self::reCalculateCommentCount($itemIds);
