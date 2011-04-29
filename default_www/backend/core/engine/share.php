@@ -218,7 +218,7 @@ class BackendShare
 		{
 			if($this->frm->getField('shareMessage')->isFilled(BL::err('ShareMessageIsRequired')))
 			{
-				// controleer of de url gebruikt wordt -> contains "%1$s"
+				// @TODO: controleer of de url gebruikt wordt -> contains %1$s?
 			}
 		}
 
