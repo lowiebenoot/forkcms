@@ -54,6 +54,7 @@ class FrontendShare
 		{
 			foreach($options[$item['id']] as $option)
 			{
+				// @TODO: switch instead of case
 				// the setting is for facebook?
 				if($option['service_name'] == 'facebook')
 				{
