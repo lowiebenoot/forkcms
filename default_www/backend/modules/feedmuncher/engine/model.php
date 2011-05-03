@@ -16,9 +16,9 @@ class BackendFeedmuncherModel
 											INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
 											WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ? AND hidden = ?';
 	const QRY_DATAGRID_BROWSE_ARTICLES_FOR_CATEGORY = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.num_comments AS comments, i.hidden, i.blog_post_id
-											FROM feedmuncher_posts AS i
-											INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-											WHERE i.category_id = ? AND i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ? AND hidden = ?';
+														FROM feedmuncher_posts AS i
+														INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
+														WHERE i.category_id = ? AND i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ? AND hidden = ?';
 	const QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.hidden
 														FROM feedmuncher_posts AS i
 														INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
@@ -148,7 +148,7 @@ class BackendFeedmuncherModel
 			$article = self::getArticle($id);
 
 			// delete search indexes
-			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($article, $id);
+			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($article, $id); // @todo: is this right? first argument for removeIndex is the module.
 		}
 
 		// invalidate the cache for feedmuncher
