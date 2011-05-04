@@ -6,7 +6,7 @@
  * @package		backend
  * @subpackage	share
  *
- * @author		Tijs Verkoyen <tijs@netlash.com>
+ * @author		Lowie Benoot <lowie@netlash.com>
  * @since		2.1
  */
 class BackendSettingsShare extends BackendBaseActionIndex

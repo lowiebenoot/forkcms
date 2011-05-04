@@ -570,6 +570,12 @@ CREATE  TABLE IF NOT EXISTS `share_services` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
+INSERT INTO `share_services` (`id`, `name`) VALUES
+(null, 'facebook'),
+(null, 'twitter'),
+(null, 'delicious'),
+(null, 'stumble upon');
+
 
 CREATE  TABLE IF NOT EXISTS `share_modules` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
