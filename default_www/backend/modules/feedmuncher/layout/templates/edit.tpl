@@ -1,11 +1,19 @@
 {include:{$BACKEND_CORE_PATH}/layout/templates/head.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_start_module.tpl}
 
-{form:addFeed}
+{option:isDeleted}
+	<div class="generalMessage infoMessage content">
+		<p class="pb0">{$msgFeedIsDeleted|sprintf:{$restoreURL}}</p>
+	</div>
+{/option:isDeleted}
+
+{form:editFeed}
 	<div class="box">
+
 		<div class="heading">
 			<h3>{$lblFeeds|ucfirst}: {$msgEditFeed|sprintf:{$item.name}}</h3>
 		</div>
+
 		<div class="options horizontal">
 			<p>
 				<label for="name">{$lblName|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
@@ -69,7 +77,7 @@
 			</p>
 		</div>
 	</div>
-{/form:addFeed}
+{/form:editFeed}
 
 {include:{$BACKEND_CORE_PATH}/layout/templates/structure_end_module.tpl}
 {include:{$BACKEND_CORE_PATH}/layout/templates/footer.tpl}

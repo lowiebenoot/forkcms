@@ -70,7 +70,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 	private function loadForm()
 	{
 		// create form
-		$this->frm = new BackendForm('addFeed');
+		$this->frm = new BackendForm('editFeed');
 
 		// publishing in feedmuncher?
 		if($this->record['target'] == 'feedmuncher')
@@ -140,6 +140,17 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 
 		// pare the record
 		$this->tpl->assign('item', $this->record);
+
+		// is the feed deleted?
+		if($this->record['deleted'] == 'Y')
+		{
+			// assign option
+			$this->tpl->assign('isDeleted', true);
+
+			// assign restore message
+			$this->tpl->assign('restoreURL', BackendModel::createURLForAction('undo_delete') . '&amp;url=' . $this->record['url']);
+		}
+
 	}
 
 
