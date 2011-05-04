@@ -22,6 +22,9 @@ class SettingsInstall extends ModuleInstaller
 		// add 'settings' as a module
 		$this->addModule('settings', 'The module to manage your settings.');
 
+		// add the share module
+		$this->addModule('share', 'The share module');
+
 		// module rights
 		$this->setModuleRights(1, 'settings');
 

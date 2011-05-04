@@ -3,7 +3,7 @@
 		{option:facebook_share_url}
 			<div class="shareOption facebook">
 				<script src="http://connect.facebook.net/en_US/all.js#xfbml=1"></script>
-				<fb:like href="{$facebook_share_url}" show_faces="false" width="300" font=""></fb:like>
+				<fb:like href="http://lowiebenoot.be/blog/detail/feedmuncher-banners-translations-en-share" show_faces="false" width="300" font=""></fb:like>
 			</div>
 		{/option:facebook_share_url}
 
