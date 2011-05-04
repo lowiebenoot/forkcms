@@ -131,41 +131,27 @@ $navigation = array(
 				)
 			),
 			array(
-				'url' => 'feedmuncher/index',
-				'label' => 'Feedmuncher',
+				'url' => 'banners/index',
+				'label' => 'Banners',
 				'children' => array(
 					array(
-						'url' => 'feedmuncher/index',
-						'label' => 'Feeds',
+						'url' => 'banners/index',
+						'label' => 'Banners',
 						'selected_for' => array(
-							'feedmuncher/add',
-							'feedmuncher/edit',
+							'banners/add',
+							'banners/edit'
 						)
 					),
 					array(
-						'url' => 'feedmuncher/articles',
-						'label' => 'Articles',
+						'url' => 'banners/groups',
+						'label' => 'Groups',
 						'selected_for' => array(
-							'feedmuncher/edit_article',
+							'banners/add_group',
+							'banners/edit_group'
 						)
-					),
-					array(
-						'url' => 'feedmuncher/categories',
-						'label' => 'Categories',
-						'selected_for' => array(
-							'feedmuncher/add_category',
-							'feedmuncher/edit_category',
-						)
-					),
-					array(
-						'url' => 'feedmuncher/comments',
-						'label' => 'Comments',
-						'selected_for' => array(
-							'feedmuncher/edit_comment',
-						)
-					),
+					)
 				)
-			),
+			)
 		)
 	),
 	array(

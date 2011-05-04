@@ -1,0 +1,16 @@
+label.nofloat {
+	float: none !important;
+	margin-left: 3px;
+}
+
+input.inputDate {
+	width: 80px;
+}
+
+input.time {
+	width: 40px;
+}
+
+.groupmembers ul {
+	padding-bottom: 0;
+}
