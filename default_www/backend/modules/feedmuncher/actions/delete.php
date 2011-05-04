@@ -33,9 +33,6 @@ class BackendFeedmuncherDelete extends BackendBaseActionDelete
 			// delete item
 			BackendFeedmuncherModel::delete($this->id);
 
-			// delete search indexes
-			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($this->record['target'], $this->id);
-
 			// item was deleted, so redirect
 			$this->redirect(BackendModel::createURLForAction('index') . '&report=deletedFeed&var=' . urlencode($this->record['name']));
 		}

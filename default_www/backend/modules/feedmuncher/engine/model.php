@@ -148,7 +148,7 @@ class BackendFeedmuncherModel
 			$article = self::getArticle($id);
 
 			// delete search indexes
-			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($article, $id);
+			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($article['target'], $id);
 		}
 
 		// invalidate the cache for feedmuncher
