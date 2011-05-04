@@ -135,7 +135,7 @@ class SpoonFeedAtomRSSItem
 	 * Add an author for the item.
 	 *
 	 * @return	void
-	 * @param	array $author	the author values (name, email, uri)
+	 * @param	array $author	The author values (name, email, uri).
 	 */
 	public function addAuthor($author)
 	{
@@ -147,7 +147,7 @@ class SpoonFeedAtomRSSItem
 	 * Add a category for the item.
 	 *
 	 * @return	void
-	 * @param	array $category		the category with all the properties
+	 * @param	array $category		The category with all the properties.
 	 */
 	public function addCategory($category)
 	{
@@ -159,9 +159,9 @@ class SpoonFeedAtomRSSItem
 	 * Add a contributor for the item.
 	 *
 	 * @return	void
-	 * @param	string $name	the name of the contributor
-	 * @param	string $email	the email of the contributor
-	 * @param	string $uri		the uri of the contributor
+	 * @param	string $name	The name of the contributor.
+	 * @param	string $email	The email of the contributor.
+	 * @param	string $uri		The uri of the contributor.
 	 */
 	public function addContributor($name, $email, $uri)
 	{
@@ -179,7 +179,7 @@ class SpoonFeedAtomRSSItem
 	 * Add a link for the item.
 	 *
 	 * @return	void
-	 * @param	array $link		the link with all the properties.
+	 * @param	array $link		The link with all the properties.
 	 */
 	public function addLink($link)
 	{
@@ -298,7 +298,7 @@ class SpoonFeedAtomRSSItem
 		}
 
 		// close item
-		$XML .= '</entry>'."\n";
+		$XML .= '</entry>' . "\n";
 
 		// return
 		return $XML;
@@ -350,17 +350,6 @@ class SpoonFeedAtomRSSItem
 
 
 	/**
-	 * Get the summary.
-	 *
-	 * @return	string
-	 */
-	public function getSummary()
-	{
-		return $this->summary;
-	}
-
-
-	/**
 	 * Get the id (URI).
 	 *
 	 * @return	string
@@ -405,6 +394,17 @@ class SpoonFeedAtomRSSItem
 
 
 	/**
+	 * Get the summary.
+	 *
+	 * @return	string
+	 */
+	public function getSummary()
+	{
+		return $this->summary;
+	}
+
+
+	/**
 	 * Get the title.
 	 *
 	 * @return	string
@@ -439,6 +439,17 @@ class SpoonFeedAtomRSSItem
 
 		// fallback
 		return true;
+	}
+
+
+	/**
+	 * Parse the item
+	 *
+	 * @return	string	The XML for the item.
+	 */
+	public function parse()
+	{
+		return $this->buildXML();
 	}
 
 
@@ -537,17 +548,6 @@ class SpoonFeedAtomRSSItem
 
 
 	/**
-	 * Parse the item
-	 *
-	 * @return	string	The XML for the item
-	 */
-	public function parse()
-	{
-		return $this->buildXML();
-	}
-
-
-	/**
 	 * Set the author.
 	 *
 	 * @return	void
@@ -583,7 +583,7 @@ class SpoonFeedAtomRSSItem
 		$id = (string) $id;
 
 		// validate
-		if(!SpoonFilter::isURL($id)) throw new SpoonFeedException('This ('. $id .') isn\'t a valid link.');
+		if(!SpoonFilter::isURL($id)) throw new SpoonFeedException('This (' . $id . ') isn\'t a valid link.');
 
 		// set property
 		$this->id = $id;
@@ -606,7 +606,7 @@ class SpoonFeedAtomRSSItem
 	 * Set the rights for the item.
 	 *
 	 * @return	void
-	 * @param	string $rights	Conveys information about rights, e.g. copyrights, held in and over the item
+	 * @param	string $rights	Conveys information about rights, e.g. copyrights, held in and over the item.
 	 */
 	public function setRights($rights)
 	{

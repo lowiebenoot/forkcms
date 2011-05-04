@@ -160,7 +160,7 @@ class SpoonFeedAtomRSS
 	 * Add an author for the feed.
 	 *
 	 * @return	void
-	 * @param	array $author	the author values (name, email, uri)
+	 * @param	array $author	The author values (name, email, uri).
 	 */
 	public function addAuthor($author)
 	{
@@ -172,7 +172,7 @@ class SpoonFeedAtomRSS
 	 * Add a category for the feed.
 	 *
 	 * @return	void
-	 * @param	array $category		the category with all the properties
+	 * @param	array $category		The category with all the properties.
 	 */
 	public function addCategory($category)
 	{
@@ -184,9 +184,9 @@ class SpoonFeedAtomRSS
 	 * Add a contributor for the feed.
 	 *
 	 * @return	void
-	 * @param	string $name	the name of the contributor
-	 * @param	string $email	the email of the contributor
-	 * @param	string $uri		the uri of the contributor
+	 * @param	string $name	The name of the contributor.
+	 * @param	string $email	The email of the contributor.
+	 * @param	string $uri		The uri of the contributor.
 	 */
 	public function addContributor($name, $email, $uri)
 	{
@@ -216,7 +216,7 @@ class SpoonFeedAtomRSS
 	 * Add a link for the feed.
 	 *
 	 * @return	void
-	 * @param	array $link		the link with all the properties.
+	 * @param	array $link		The link with all the properties.
 	 */
 	public function addLink($link)
 	{
@@ -401,17 +401,6 @@ class SpoonFeedAtomRSS
 
 
 	/**
-	 * Retrieves the items.
-	 *
-	 * @return	array
-	 */
-	public function getItems()
-	{
-		return $this->items;
-	}
-
-
-	/**
 	 * Get the icon for the feed.
 	 *
 	 * @return	string
@@ -430,6 +419,17 @@ class SpoonFeedAtomRSS
 	public function getId()
 	{
 		return $this->id;
+	}
+
+
+	/**
+	 * Retrieves the items.
+	 *
+	 * @return	array
+	 */
+	public function getItems()
+	{
+		return $this->items;
 	}
 
 
@@ -513,7 +513,7 @@ class SpoonFeedAtomRSS
 		$type = (string) SpoonFilter::getValue($type, array('url', 'string'), 'url');
 
 		// validate
-		if($type == 'url' && !SpoonFilter::isURL($URL)) throw new SpoonFeedException('This ('. $URL .') isn\'t a valid url.');
+		if($type == 'url' && !SpoonFilter::isURL($URL)) throw new SpoonFeedException('This (' . $URL . ') isn\'t a valid url.');
 
 		// load xmlstring
 		if($type == 'url')
@@ -572,7 +572,7 @@ class SpoonFeedAtomRSS
 		$type = (string) SpoonFilter::getValue($type, array('url', 'string'), 'url');
 
 		// validate
-		if($type == 'url' && !SpoonFilter::isURL($URL)) throw new SpoonFeedException('This ('. SpoonFilter::htmlentities($URL) .') isn\'t a valid URL.');
+		if($type == 'url' && !SpoonFilter::isURL($URL)) throw new SpoonFeedException('This (' . SpoonFilter::htmlentities($URL) . ') isn\'t a valid URL.');
 		if(!self::isValid($URL, $type)) throw new SpoonFeedException('Invalid feed');
 
 		// load xmlstring
@@ -714,7 +714,7 @@ class SpoonFeedAtomRSS
 	 */
 	public function setGenerator($generator = null)
 	{
-		$this->generator = ($generator == null) ? 'Spoon/'. SPOON_VERSION : (string) $generator;
+		$this->generator = ($generator == null) ? 'Spoon/' . SPOON_VERSION : (string) $generator;
 	}
 
 
@@ -742,7 +742,7 @@ class SpoonFeedAtomRSS
 		$id = (string) $id;
 
 		// validate
-		if(!SpoonFilter::isURL($id)) throw new SpoonFeedException('This ('. $id .') isn\'t a valid link.');
+		if(!SpoonFilter::isURL($id)) throw new SpoonFeedException('This (' . $id . ') isn\'t a valid link.');
 
 		// set property
 		$this->id = $id;
@@ -765,7 +765,7 @@ class SpoonFeedAtomRSS
 	 * Set the rights for the feed.
 	 *
 	 * @return	void
-	 * @param	string $rights	Conveys information about rights, e.g. copyrights, held in and over the feed
+	 * @param	string $rights	Conveys information about rights, e.g. copyrights, held in and over the feed.
 	 */
 	public function setRights($rights)
 	{
