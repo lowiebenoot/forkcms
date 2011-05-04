@@ -555,6 +555,7 @@ CREATE  TABLE IF NOT EXISTS `share_settings` (
   `id` INT(11) NOT NULL auto_increment ,
   `module` VARCHAR(255) NOT NULL ,
   `other_id` INT(11) NOT NULL ,
+  `item_type` VARCHAR(255) NOT NULL ,
   `service_id` INT(11) NOT NULL ,
   `message` VARCHAR(255) NOT NULL ,
   `num_clicks` INT(11) NOT NULL ,
@@ -573,6 +574,7 @@ CREATE  TABLE IF NOT EXISTS `share_services` (
 CREATE  TABLE IF NOT EXISTS `share_modules` (
   `id` INT(11) NOT NULL AUTO_INCREMENT ,
   `module` VARCHAR(255) NOT NULL ,
-  `mesage` VARCHAR(255) NOT NULL ,
+  `item_type` VARCHAR(255) NOT NULL ,
+  `message` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;

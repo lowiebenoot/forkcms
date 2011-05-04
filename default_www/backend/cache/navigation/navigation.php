@@ -270,6 +270,10 @@ $navigation = array(
 				)
 			),
 			array(
+				'url' => 'settings/share',
+				'label' => 'Share',
+			),
+			array(
 				'url' => 'analytics/settings',
 				'label' => 'Modules',
 				'children' => array(

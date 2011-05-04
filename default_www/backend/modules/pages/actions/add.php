@@ -143,6 +143,9 @@ class BackendPagesAdd extends BackendBaseActionAdd
 
 		// extra
 		$this->frm->addDropdown('extra_type', BackendPagesModel::getTypes());
+
+		// share
+		$this->share = new BackendShare($this->frm, $this->URL->getModule(), 'page');
 	}
 
 
@@ -199,6 +202,9 @@ class BackendPagesAdd extends BackendBaseActionAdd
 			// validate meta
 			$this->meta->validate();
 
+			// validate share
+			$this->share->validate();
+
 			// no errors?
 			if($this->frm->isCorrect())
 			{
@@ -234,6 +240,8 @@ class BackendPagesAdd extends BackendBaseActionAdd
 
 				// insert page, store the id, we need it when building the blocks
 				$page['revision_id'] = BackendPagesModel::insert($page);
+
+				$this->share->save($page['id']);
 
 				// init var
 				$hasBlock = false;

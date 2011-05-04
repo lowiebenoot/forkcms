@@ -44,20 +44,32 @@ class BackendShare
 
 
 	/**
+	 * The type, it is used to separate the ids (example: blog article ids - blog category ids)
+	 *
+	 * @var	string
+	 */
+	private $type;
+
+
+	/**
 	 * Default constructor
 	 *
 	 * @return	void
 	 * @param	BackendForm $form			An instance of Backendform, the elements will be parsed in here.
 	 * @param	string $module				The module.
+	 * @param	string $type				The type, it is used to separate the ids (example: blog article ids - blog category ids).
 	 * @param	int[optional] $shareId		The shareId to load.
 	 */
-	public function __construct(BackendForm $form, $module, $otherId = null)
+	public function __construct(BackendForm $form, $module, $type, $otherId = null)
 	{
 		// set form instance
 		$this->frm = $form;
 
 		// set module
 		$this->module = $module;
+
+		// set type
+		$this->type = $type;
 
 		// load existing share settings
 		if($otherId != null)
@@ -69,8 +81,8 @@ class BackendShare
 			// get data
 			$this->data = (array) BackendModel::getDB()->getRecords('SELECT *
 																	FROM share_settings AS s
-																	WHERE s.other_id = ? AND s.module = ?',
-																	array($this->otherId, $this->module));
+																	WHERE s.other_id = ? AND s.module = ? AND s.item_type = ?',
+																	array($this->otherId, $this->module, $this->type));
 		}
 
 		// load the form
@@ -163,6 +175,7 @@ class BackendShare
 		{
 			// build and insert a share setting for each service
 			$item['module'] = $this->module;
+			$item['item_type'] = $this->type;
 			$item['other_id'] = $otherId;
 			$item['service_id'] = (int) $service;
 			$item['message'] = $message;
@@ -213,15 +226,8 @@ class BackendShare
 		// get services
 		$services = $this->frm->getField('services')->getValue();
 
-		// if services are checked, the messag field has to be filled in
-		if(!empty($services))
-		{
-			if($this->frm->getField('shareMessage')->isFilled(BL::err('ShareMessageIsRequired')))
-			{
-				// @TODO: controleer of de url gebruikt wordt -> contains %1$s?
-			}
-		}
-
+		// if services are checked, the message field has to be filled in
+		if(!empty($services)) $this->frm->getField('shareMessage')->isFilled(BL::err('ShareMessageIsRequired'));
 	}
 }
 

@@ -27,6 +27,7 @@
 			<li><a href="#tabTags">{$lblTags|ucfirst}</a></li>
 			<li><a href="#tabTemplate">{$lblTemplate|ucfirst}</a></li>
 			<li><a href="#tabSEO">{$lblSEO|ucfirst}</a></li>
+			<li><a href="#tabShare">{$lblShare|ucfirst}</a></li>
 		</ul>
 
 		<div id="tabContent">
@@ -176,6 +177,11 @@
 				</div>
 			</div>
 		</div>
+
+		<div id="tabShare">
+			{include:{$BACKEND_CORE_PATH}/layout/templates/share.tpl}
+		</div>
+
 		<div id="tabTemplate">
 			<div class="pageTitle">
 				{* Do not change the ID! *}

@@ -191,6 +191,9 @@ class FrontendPage extends FrontendBaseObject
 			if($block['extra_type'] == 'widget') $redirect = false;
 		}
 
+		// get share options
+		FrontendShare::getShareOptionsForItem('pages', 'page', $this->record, array('FrontendPage', 'getShareURL'));
+
 		// should we redirect?
 		if($redirect)
 		{
@@ -352,6 +355,18 @@ class FrontendPage extends FrontendBaseObject
 	private function storeStatistics()
 	{
 		// @later	save temp statistics data here.
+	}
+
+	public static function getShareURL($ids)
+	{
+		// define array
+		$urls = array();
+
+		// loop ids and add url to array
+		foreach($ids as $id) $urls[$id] = SITE_URL . FrontendNavigation::getURL($id);
+
+		// return
+		return $urls;
 	}
 }
 

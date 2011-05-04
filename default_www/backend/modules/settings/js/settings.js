@@ -25,18 +25,6 @@ jsBackend.settings =
 		
 		// service message inline edit
 		jsBackend.settings.serviceMessageInlineEdit();
-		
-		// url shortener on/off
-		if($('input[name=shorten]').length != 0)
-		{
-			// hide or show the dropdownmenus
-			jsBackend.settings.showHideShorteners();
-			
-			$('input[name=shorten]').change(function()
-			{
-				jsBackend.settings.showHideShorteners();
-			});
-		}
 	},
 
 	
@@ -78,24 +66,14 @@ jsBackend.settings =
 	
 	serviceMessageInlineEdit: function()
 	{
-		if($('#shareableModules .datagridHolder td.serviceMessage').length > 0)
+		if($('#shareableModules td.message').length > 0)
 		{
 			// buil ajax-url
 			var url = '/backend/ajax.php?module=settings&action=save_service_message&language='+ jsBackend.current.language;
-
 			
 			// bind
-			$('#shareableModules .datagridHolder td.serviceMessage').inlineTextEdit( { saveUrl: url, tooltip: '{$msgClickToEdit}' });
+			$('#shareableModules td.message').inlineTextEdit( { saveUrl: url, tooltip: '{$msgClickToEdit}' });
 		}
-	},
-	
-	
-	// hide or show the url shortener options
-	showHideShorteners: function()
-	{
-		// show the shortener services or hide them, depending from the shorten radiobutton
-		if($('input[name=shorten]:checked').length != 0) $('div#shorteners').show('slideUp');
-		else $('div#shorteners').hide('slideDown');
 	},
 	
 

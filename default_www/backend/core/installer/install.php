@@ -567,6 +567,26 @@ class ModuleInstaller
 
 
 	/**
+	 * Make a module searchable
+	 *
+	 * @return	void
+	 * @param	string $module		The module to make shareable.
+	 * @param	string $type		The type of the element that is shared (example: article/category/...).
+	 * @param	string $message		The message.
+	 */
+	protected function makeShareable($module, $type, $message)
+	{
+		// build item
+		$item['module'] = (string) $module;
+		$item['item_type'] = (string) $type;
+		$item['message'] = (string) $message;
+
+		// insert in db
+		$this->getDB()->insert('share_modules', $item);
+	}
+
+
+	/**
 	 * Set the rights for an action
 	 *
 	 * @return	void

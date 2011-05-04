@@ -50,8 +50,6 @@ class BackendSettingsShare extends BackendBaseActionIndex
 	 */
 	private function loadForm()
 	{
-		// get shareable modules
-		$this->modules = BackendSettingsModel::getShareableModules();
 
 		// create form
 		$this->frm = new BackendForm('share');
@@ -62,17 +60,16 @@ class BackendSettingsShare extends BackendBaseActionIndex
 		// add checkbox for shorten option
 		$this->frm->addCheckbox('shorten', BackendModel::getModuleSetting('share', 'shorten_urls'));
 
-		// get shorteners from settings
-		$aShorteners = BackendModel::getModuleSetting('share', 'shorteners');
+		// create datagrid for shareable modules
+		$this->datagrid = new BackendDataGridArray(BackendSettingsModel::getShareableModules());
 
-		// redefine the shorteners so it can be used for a radiobutton field
-		$shorteners = array();
+		// add attributes for inline editing
+		$this->datagrid->setColumnAttributes('message' , array('data-id' => '{id: [id]}'));
 
-		// loop shorteners and add to the redefined array
-		foreach($aShorteners as $shortener) $shorteners[] = array('value' => $shortener['id'], 'label' => $shortener['name']);
-
-		// add radiobutton for shortener services
-		$this->frm->addRadiobutton('shortener', $shorteners, BackendModel::getModuleSetting('share', 'shortener'));
+		// set widths for columns
+		$this->datagrid->setColumnAttributes('module', array('width' => '20%'));
+		$this->datagrid->setColumnAttributes('item_type', array('width' => '20%'));
+		$this->datagrid->setColumnAttributes('message', array('width' => '60%'));
 	}
 
 
@@ -86,8 +83,8 @@ class BackendSettingsShare extends BackendBaseActionIndex
 		// parse the form
 		$this->frm->parse($this->tpl);
 
-		// assign iteration
-		$this->tpl->assign(array('modules' => $this->modules));
+		// assign datagrid
+		$this->tpl->assign('dgModules', $this->datagrid->getContent());
 	}
 
 
@@ -111,21 +108,15 @@ class BackendSettingsShare extends BackendBaseActionIndex
 				BackendModel::setModuleSetting('share', 'services', $checkedServices);
 
 				// should the urls be shortened?
-				$shortenURLs = $this->frm->getField('shorten')->getValue();
+				$shortenURLs = $this->frm->getField('shorten')->isChecked();
 
 				// save as setting
 				BackendModel::setModuleSetting('share', 'shorten_urls', $shortenURLs);
-
-				// if urls should be shortened, which shortener should be used?
-				if($shortenURLs)
-				{
-					// get the selected shortener
-					$shortener = $this->frm->getField('shortener')->getValue();
-
-					// save as setting
-					BackendModel::setModuleSetting('share', 'shortener', $shortener);
-				}
 			}
+
+			// assign report
+			$this->tpl->assign('report', true);
+			$this->tpl->assign('reportMessage', BL::msg('Saved'));
 		}
 	}
 }

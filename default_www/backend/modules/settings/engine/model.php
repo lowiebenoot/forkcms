@@ -8,6 +8,7 @@
  *
  * @author		Davy Hellemans <davy@netlash.com>
  * @author		Tijs Verkoyen <tijs@sumocoders.be>
+ * @author		Lowie Benoot <lowie@netlash.com>
  * @since		2.0
  */
 class BackendSettingsModel
@@ -46,6 +47,17 @@ class BackendSettingsModel
 	public static function getShareableModules()
 	{
 		return (array) BackendModel::getDB()->getRecords('SELECT * FROM share_modules');
+	}
+
+
+	/**
+	 * Get the shareable modules ids
+	 *
+	 * @return	array
+	 */
+	public static function getShareableModulesIds()
+	{
+		return (array) BackendModel::getDB()->getColumn('SELECT id FROM share_modules');
 	}
 
 
@@ -136,6 +148,19 @@ class BackendSettingsModel
 
 		// return
 		return (array) $warnings;
+	}
+
+
+	/**
+	 * Update the share message for a module
+	 *
+	 * @return	void
+	 * @param	int $id				The id of the shareable module.
+	 * @param	string $message		The message.
+	 */
+	public static function updateShareMessageForModule($id, $message)
+	{
+		BackendModel::getDB(true)->update('share_modules', array('message' => $message), 'id = ?', (int) $id);
 	}
 }
 

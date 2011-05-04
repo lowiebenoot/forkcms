@@ -22,6 +22,18 @@
         <translation language="nl"><![CDATA[app secret]]></translation>
         <translation language="en"><![CDATA[app secret]]></translation>
       </item>
+      <item type="label" name="ItemType">
+        <translation language="nl"><![CDATA[item type]]></translation>
+        <translation language="en"><![CDATA[item type]]></translation>
+      </item>
+      <item type="label" name="ShortenURLs">
+        <translation language="nl"><![CDATA[verkort URL's]]></translation>
+        <translation language="en"><![CDATA[shorten URLs]]></translation>
+      </item>
+      <item type="label" name="Services">
+        <translation language="nl"><![CDATA[diensten]]></translation>
+        <translation language="en"><![CDATA[services]]></translation>
+      </item>
       <item type="message" name="ConfigurationError">
         <translation language="nl"><![CDATA[Sommige instellingen zijn nog niet geconfigureerd:]]></translation>
         <translation language="en"><![CDATA[Some settings are not yet configured.]]></translation>
@@ -119,5 +131,23 @@
         <translation language="en"><![CDATA[The test email was sent.]]></translation>
       </item>
     </settings>
+    <core>
+      <item type="label" name="Share">
+        <translation language="nl"><![CDATA[delen]]></translation>
+        <translation language="en"><![CDATA[share]]></translation>
+      </item>
+      <item type="label" name="ShareMessage">
+        <translation language="nl"><![CDATA[bericht]]></translation>
+        <translation language="en"><![CDATA[message]]></translation>
+      </item>
+      <item type="message" name="HelpShareMessage">
+        <translation language="nl"><![CDATA[Dit bericht wordt gebruikt voor sommige sharediensten (vb. Twitter).]]></translation>
+        <translation language="en"><![CDATA[This message is used for some share services (ex. Twitter).]]></translation>
+      </item>
+      <item type="message" name="SelectServices">
+        <translation language="nl"><![CDATA[Selecteer de diensten dat je wil gebruiken voor te delen.]]></translation>
+        <translation language="en"><![CDATA[Select the services you want to use for sharing.]]></translation>
+      </item>
+    </core>
   </backend>
 </locale>

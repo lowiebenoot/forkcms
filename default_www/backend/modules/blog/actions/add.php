@@ -74,7 +74,7 @@ class BackendBlogAdd extends BackendBaseActionAdd
 		$this->meta = new BackendMeta($this->frm, null, 'title', true);
 
 		// share
-		$this->share = new BackendShare($this->frm, $this->URL->getModule());
+		$this->share = new BackendShare($this->frm, $this->URL->getModule(), 'article');
 	}
 
 

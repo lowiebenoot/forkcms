@@ -1,8 +1,4 @@
 <div id="shareOptions" class="subtleBox">
-	<div class="heading">
-		<h3>{$lblShare|ucfirst}</h3>
-	</div>
-
 	<div class="options">
 		<p>{$msgSelectServices}</p>
 		{option:services}
