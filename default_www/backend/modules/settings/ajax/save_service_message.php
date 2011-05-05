@@ -6,8 +6,8 @@
  * @package		backend
  * @subpackage	settings
  *
- * @author		Tijs Verkoyen <tijs@sumocoders.be>
- * @since		2.0
+ * @author		Lowie Benoot <lowie@netlash.com>
+ * @since		2.1
  */
 class BackendSettingsAjaxSaveServiceMessage extends BackendBaseAJAXAction
 {
@@ -25,8 +25,8 @@ class BackendSettingsAjaxSaveServiceMessage extends BackendBaseAJAXAction
 		$message = SpoonFilter::getPostValue('value', null, null, null);
 		$moduleId = SpoonFilter::getPostValue('id', BackendSettingsModel::getShareableModulesIds(), null, 'int');
 
-		// validate @TODO: correct errormessage
-		if($moduleId == 0) $this->output(self::ERROR, null, BL::getError('InvalidModule'));
+		// validate module
+		if($moduleId == 0) $this->output(self::ERROR, null, BL::getError('Error'));
 
 		// save message
 		BackendSettingsModel::updateShareMessageForModule($moduleId, $message);

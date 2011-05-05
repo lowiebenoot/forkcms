@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This class will handle the share options
  *
@@ -14,13 +15,15 @@ class FrontendShare
 	 * Add the share options to the given items
 	 *
 	 * @return	void
-	 * @param	string $string		The module.
-	 * @param	string $type		The type of the element that is shared (example: article/category/...).
-	 * @param	array $item			The item to add the share options to.
-	 * @param	array $callback		The callback that is used to get the shareURL.
-	 * @param	array $options		The share options
+	 * @param	string $module				The module.
+	 * @param	string $type				The type of the element that is shared (example: article/category/...).
+	 * @param	array $item					The item to add the share options to.
+	 * @param	string $titleKey			The array key that is used to get the title.
+	 * @param	array $callback				The callback that is used to get the shareURL.
+	 * @param	array[optional] $options	The share options.
+	 * @param	array[optional] $urls		The urls for the items (with as keys the ids of the items).
 	 */
-	public static function getShareOptionsForItem($module, $type, &$item, $callback, $options = null, $urls = null)
+	public static function getShareOptionsForItem($module, $type, &$item, $titleKey, $callback, $options = null, $urls = null)
 	{
 		// get the share settings for this module
 		if($options == null) $options = self::getShareOptionsForModuleAndType($module, $type);
@@ -35,6 +38,9 @@ class FrontendShare
 		// get share url that belongs to this item
 		$url = $urls[(int) $item['id']];
 
+		// get title
+		$title = $item[$titleKey];
+
 		// create a new template
 		$tpl = new FrontendTemplate(false);
 
@@ -48,7 +54,7 @@ class FrontendShare
 			foreach($options[$item['id']] as $option)
 			{
 				// which share service?
-				switch($option['service_name'])
+				switch(strtolower($option['service_name']))
 				{
 					// the setting is for facebook?
 					case 'facebook':
@@ -65,7 +71,13 @@ class FrontendShare
 						if($shortenURLs) $shortenedURL = self::shortenURL($url);
 
 						// create twitter message for the url
-						$twitterMessage = str_replace('#', '%23', $option['message'] . ($option['message'] == '' ? '' : ' - ') . ($shortenURLs ? $shortenedURL : $url));
+						$twitterMessage = urlencode($option['message'] . ($option['message'] == '' ? '' : ' - ') . ($shortenURLs ? $shortenedURL : $url));
+
+						// replace #
+						$twitterMessage = str_replace('#', '%23', $twitterMessage);
+
+						// replace + (space)
+						$twitterMessage = str_replace('+', '%20', $twitterMessage);
 
 						// assign url
 						$tpl->assign('twitter_share_url', $twitterMessage);
@@ -75,12 +87,69 @@ class FrontendShare
 					case 'delicious':
 						// assign url
 						$tpl->assign('delicious_share_url', $url);
+
+						// assign title
+						$tpl->assign('delicious_share_title', urlencode($title));
 					break;
 
-					// the setting is for delicious?
-					case 'stumble upon':
+					// the setting is for stumbleupon?
+					case 'stumbleupon':
 						// assign url
-						$tpl->assign('stumbleupon_share_url', $url);
+						$tpl->assign('stumbleupon_share_url', urlencode($url));
+					break;
+
+					// the setting is for linkedin?
+					case 'linkedin':
+						// assign url
+						$tpl->assign('linkedin_share_url', urlencode($url));
+
+						// assign title
+						$tpl->assign('linkedin_share_title', urlencode($title));
+					break;
+
+					// the setting is for reddit?
+					case 'reddit':
+						// assign url
+						$tpl->assign('reddit_share_url', urlencode($url));
+
+						// assign title
+						$tpl->assign('reddit_share_title', urlencode($title));
+					break;
+
+					// the setting is for netlog?
+					case 'netlog':
+						// assign url
+						$tpl->assign('netlog_share_url', urlencode($url));
+
+						// assign title
+						$tpl->assign('netlog_share_title', urlencode($title));
+					break;
+
+					// the setting is for digg?
+					case 'digg':
+						// assign url
+						$tpl->assign('digg_share_url', urlencode($url));
+
+						// assign title
+						$tpl->assign('digg_share_title', urlencode($title));
+					break;
+
+					// the setting is for tumblr?
+					case 'tumblr':
+						// assign url
+						$tpl->assign('tumblr_share_url', urlencode($url));
+
+						// assign title
+						$tpl->assign('tumblr_share_title', urlencode($title));
+					break;
+
+					// the setting is for google buzz?
+					case 'google buzz':
+						// assign url
+						$tpl->assign('googlebuzz_share_url', urlencode($url));
+
+						// assign title
+						$tpl->assign('googlebuzz_share_title', urlencode($title));
 					break;
 
 					// non existing share service
@@ -105,9 +174,10 @@ class FrontendShare
 	 * @param	string $module		The module.
 	 * @param	string $type		The type of the element that is shared (example: article/category/...).
 	 * @param	array $items		The items to add the share options to.
+	 * @param	string $titleKey	The array key that is used to get the title.
 	 * @param	array $callback		The callback that is used to get the shareURL.
 	 */
-	public static function getShareOptionsForItems($module, $type, &$items, $callback)
+	public static function getShareOptionsForItems($module, $type, &$items, $titleKey, $callback)
 	{
 		// define ids array
 		$ids = array();
@@ -125,7 +195,7 @@ class FrontendShare
 		foreach($items as &$item)
 		{
 			// add share options for each item
-			self::getShareOptionsForItem($module, $type, $item, $callback, $options);
+			self::getShareOptionsForItem($module, $type, $item, $titleKey, $callback, $options);
 		}
 	}
 
@@ -160,8 +230,6 @@ class FrontendShare
 	}
 
 
-
-
 	/**
 	 * Shortens an URL by using the tinyURL API.
 	 *
@@ -183,7 +251,7 @@ class FrontendShare
 			$shortURL = $tiny->create($url);
 		}
 
-		// return the original url if there is an exception
+		// catch exceptions
 		catch(Exception $e)
 		{
 			// return original

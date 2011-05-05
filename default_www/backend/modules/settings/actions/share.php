@@ -4,7 +4,7 @@
  * This is the share-action, it will display a form to set share settings
  *
  * @package		backend
- * @subpackage	share
+ * @subpackage	settings
  *
  * @author		Lowie Benoot <lowie@netlash.com>
  * @since		2.1
@@ -50,26 +50,25 @@ class BackendSettingsShare extends BackendBaseActionIndex
 	 */
 	private function loadForm()
 	{
-
 		// create form
 		$this->frm = new BackendForm('share');
 
 		// add multicheckbox for share services
-		$this->frm->addMultiCheckbox('services', BackendSettingsModel::getShareServices(), BackendModel::getModuleSetting('share', 'services'));
+		$this->frm->addMultiCheckbox('services', BackendSettingsModel::getShareServices(), BackendModel::getModuleSetting('share', 'services_' . BL::getWorkingLanguage()));
 
 		// add checkbox for shorten option
-		$this->frm->addCheckbox('shorten', BackendModel::getModuleSetting('share', 'shorten_urls'));
+		$this->frm->addCheckbox('shorten', BackendModel::getModuleSetting('share', 'shorten_urls_' . BL::getWorkingLanguage()));
 
 		// create datagrid for shareable modules
 		$this->datagrid = new BackendDataGridArray(BackendSettingsModel::getShareableModules());
 
 		// add attributes for inline editing
-		$this->datagrid->setColumnAttributes('message' , array('data-id' => '{id: [id]}'));
+		$this->datagrid->setColumnAttributes('share_message' , array('data-id' => '{id: [id]}'));
 
 		// set widths for columns
 		$this->datagrid->setColumnAttributes('module', array('width' => '20%'));
 		$this->datagrid->setColumnAttributes('item_type', array('width' => '20%'));
-		$this->datagrid->setColumnAttributes('message', array('width' => '60%'));
+		$this->datagrid->setColumnAttributes('share_message', array('width' => '60%'));
 	}
 
 
@@ -84,7 +83,7 @@ class BackendSettingsShare extends BackendBaseActionIndex
 		$this->frm->parse($this->tpl);
 
 		// assign datagrid
-		$this->tpl->assign('dgModules', $this->datagrid->getContent());
+		if($this->datagrid->getContent() != null) $this->tpl->assign('dgModules', $this->datagrid->getContent());
 	}
 
 
@@ -105,13 +104,10 @@ class BackendSettingsShare extends BackendBaseActionIndex
 				$checkedServices = $this->frm->getField('services')->getChecked();
 
 				// save it in the settings
-				BackendModel::setModuleSetting('share', 'services', $checkedServices);
+				BackendModel::setModuleSetting('share', 'services_' . BL::getWorkingLanguage(), $checkedServices);
 
-				// should the urls be shortened?
-				$shortenURLs = $this->frm->getField('shorten')->isChecked();
-
-				// save as setting
-				BackendModel::setModuleSetting('share', 'shorten_urls', $shortenURLs);
+				// should the urls be shortened and save as setting?
+				BackendModel::setModuleSetting('share', 'shorten_urls_' . BL::getWorkingLanguage(), $this->frm->getField('shorten')->isChecked());
 			}
 
 			// assign report

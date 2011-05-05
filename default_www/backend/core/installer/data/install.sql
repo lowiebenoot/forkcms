@@ -551,36 +551,43 @@ CREATE TABLE IF NOT EXISTS `groups_rights_modules` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 
-CREATE  TABLE IF NOT EXISTS `share_settings` (
-  `id` INT(11) NOT NULL auto_increment ,
-  `module` VARCHAR(255) NOT NULL ,
-  `other_id` INT(11) NOT NULL ,
-  `item_type` VARCHAR(255) NOT NULL ,
-  `service_id` INT(11) NOT NULL ,
-  `message` VARCHAR(255) NOT NULL ,
-  `num_clicks` INT(11) NOT NULL ,
-  `active` ENUM('Y','N') NOT NULL ,
-  PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS `share_settings` (
+ `id` INT(11) NOT NULL auto_increment ,
+ `module` VARCHAR(255) NOT NULL ,
+ `other_id` INT(11) NOT NULL ,
+ `item_type` VARCHAR(255) NOT NULL ,
+ `service_id` INT(11) NOT NULL ,
+ `message` VARCHAR(255) NOT NULL ,
+ `num_clicks` INT(11) NOT NULL ,
+ PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
 
-CREATE  TABLE IF NOT EXISTS `share_services` (
-  `id` INT(11) NOT NULL auto_increment ,
-  `name` VARCHAR(255) NOT NULL ,
-  PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS `share_services` (
+ `id` INT(11) NOT NULL auto_increment ,
+ `name` VARCHAR(255) NOT NULL ,
+ PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
 
 INSERT INTO `share_services` (`id`, `name`) VALUES
 (null, 'facebook'),
 (null, 'twitter'),
 (null, 'delicious'),
-(null, 'stumble upon');
+(null, 'stumbleUpon'),
+(null, 'linkedin'),
+(null, 'reddit'),
+(null, 'netlog'),
+(null, 'digg'),
+(null, 'tumblr'),
+(null, 'google Buzz');
 
 
-CREATE  TABLE IF NOT EXISTS `share_modules` (
-  `id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `module` VARCHAR(255) NOT NULL ,
-  `item_type` VARCHAR(255) NOT NULL ,
-  `message` VARCHAR(255) NOT NULL ,
-  PRIMARY KEY (`id`)
+CREATE TABLE IF NOT EXISTS `share_modules` (
+ `id` INT(11) NOT NULL AUTO_INCREMENT ,
+ `module` VARCHAR(255) NOT NULL ,
+ `item_type` VARCHAR(255) NOT NULL ,
+ `message` VARCHAR(255) NOT NULL ,
+ `language` varchar(5) NOT NULL,
+ PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;

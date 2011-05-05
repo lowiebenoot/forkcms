@@ -1,6 +1,7 @@
 <div id="shareOptions" class="subtleBox">
 	<div class="options">
 		<p>{$msgSelectServices}</p>
+
 		{option:services}
 			<ul class="inputList">
 				{iteration:services}<li>{$services.chkServices} <label for="{$services.id}">{$services.label|ucfirst}</label></li>{/iteration:services}

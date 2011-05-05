@@ -192,7 +192,7 @@ class FrontendPage extends FrontendBaseObject
 		}
 
 		// get share options
-		FrontendShare::getShareOptionsForItem('pages', 'page', $this->record, array('FrontendPage', 'getShareURL'));
+		FrontendShare::getShareOptionsForItem('pages', 'page', $this->record, 'title', array('FrontendPage', 'getShareURL'));
 
 		// should we redirect?
 		if($redirect)
@@ -210,6 +210,25 @@ class FrontendPage extends FrontendBaseObject
 				SpoonHTTP::redirect($URL, 301);
 			}
 		}
+	}
+
+
+	/**
+	 * Get the URLs for the share module.
+	 *
+	 * @return	void
+	 * @param	array $ids		The ids of the pages.
+	 */
+	public static function getShareURL($ids)
+	{
+		// define array
+		$urls = array();
+
+		// loop ids and add url to array
+		foreach($ids as $id) $urls[$id] = SITE_URL . FrontendNavigation::getURL($id);
+
+		// return
+		return $urls;
 	}
 
 
@@ -355,18 +374,6 @@ class FrontendPage extends FrontendBaseObject
 	private function storeStatistics()
 	{
 		// @later	save temp statistics data here.
-	}
-
-	public static function getShareURL($ids)
-	{
-		// define array
-		$urls = array();
-
-		// loop ids and add url to array
-		foreach($ids as $id) $urls[$id] = SITE_URL . FrontendNavigation::getURL($id);
-
-		// return
-		return $urls;
 	}
 }
 

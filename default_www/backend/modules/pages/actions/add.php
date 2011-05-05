@@ -202,9 +202,6 @@ class BackendPagesAdd extends BackendBaseActionAdd
 			// validate meta
 			$this->meta->validate();
 
-			// validate share
-			$this->share->validate();
-
 			// no errors?
 			if($this->frm->isCorrect())
 			{
@@ -241,6 +238,7 @@ class BackendPagesAdd extends BackendBaseActionAdd
 				// insert page, store the id, we need it when building the blocks
 				$page['revision_id'] = BackendPagesModel::insert($page);
 
+				// save share settings
 				$this->share->save($page['id']);
 
 				// init var

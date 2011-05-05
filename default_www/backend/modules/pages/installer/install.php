@@ -40,6 +40,9 @@ class PagesInstall extends ModuleInstaller
 		// set rights
 		$this->setRights();
 
+		// loop languages and make pages shareable
+		foreach($this->getLanguages() as $language) $this->makeShareable('pages', 'page', $language);
+
 		// import locale
 		$this->importLocale(dirname(__FILE__) . '/data/locale.xml');
 	}

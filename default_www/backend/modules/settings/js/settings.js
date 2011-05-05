@@ -66,13 +66,13 @@ jsBackend.settings =
 	
 	serviceMessageInlineEdit: function()
 	{
-		if($('#shareableModules td.message').length > 0)
+		if($('#shareableModules td.share_message').length > 0)
 		{
 			// buil ajax-url
 			var url = '/backend/ajax.php?module=settings&action=save_service_message&language='+ jsBackend.current.language;
 			
 			// bind
-			$('#shareableModules td.message').inlineTextEdit( { saveUrl: url, tooltip: '{$msgClickToEdit}' });
+			$('#shareableModules td.share_message').inlineTextEdit( { saveUrl: url, tooltip: '{$msgClickToEdit}', allowEmpty: true });
 		}
 	},
 	

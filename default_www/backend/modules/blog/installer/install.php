@@ -97,6 +97,9 @@ class BlogInstall extends ModuleInstaller
 		// loop languages
 		foreach($this->getLanguages() as $language)
 		{
+			// make shareable
+			$this->makeShareable('blog', 'article', $language);
+
 			// fetch current categoryId
 			$this->defaultCategoryId = $this->getCategory($language);
 

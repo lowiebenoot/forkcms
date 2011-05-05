@@ -105,7 +105,7 @@
 					{option:!block2IsHTML}
 						{include:{$block2}}
 					{/option:!block2IsHTML}
-
+					{$page.share}
 				</div>
 
 				{* Left column *}
@@ -211,7 +211,6 @@
 					{option:!block8IsHTML}
 						{include:{$block8}}
 					{/option:!block8IsHTML}
-
 				</div>
 			</div>
 		</div>

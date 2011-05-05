@@ -118,6 +118,10 @@
         <translation language="nl"><![CDATA[Nog geen admin-ids]]></translation>
         <translation language="en"><![CDATA[No admin ids yet.]]></translation>
       </item>
+      <item type="message" name="NoShareableModules">
+        <translation language="nl"><![CDATA[Er zijn nog geen deelbare modules.]]></translation>
+        <translation language="en"><![CDATA[There are no shareable modules yet.]]></translation>
+      </item>
       <item type="message" name="SendTestMail">
         <translation language="nl"><![CDATA[verstuur testmail]]></translation>
         <translation language="en"><![CDATA[send test email]]></translation>
@@ -145,9 +149,49 @@
         <translation language="en"><![CDATA[This message is used for some share services (ex. Twitter).]]></translation>
       </item>
       <item type="message" name="SelectServices">
-        <translation language="nl"><![CDATA[Selecteer de diensten dat je wil gebruiken voor te delen.]]></translation>
+        <translation language="nl"><![CDATA[Selecteer de diensten dat je wil gebruiken om te delen.]]></translation>
         <translation language="en"><![CDATA[Select the services you want to use for sharing.]]></translation>
       </item>
     </core>
   </backend>
+  <frontend>
+  	<core>
+		<item type="label" name="ShareOnDelicious">
+			<translation language="nl"><![CDATA[deel via Delicious]]></translation>
+			<translation language="en"><![CDATA[share on Delicious]]></translation>
+		</item>
+		<item type="label" name="ShareOnDigg">
+			<translation language="nl"><![CDATA[deel via Digg]]></translation>
+			<translation language="en"><![CDATA[share on Digg]]></translation>
+		</item>
+		<item type="label" name="ShareOnGoogleBuzz">
+			<translation language="nl"><![CDATA[deel via Google Buzz]]></translation>
+			<translation language="en"><![CDATA[share on Google Buzz]]></translation>
+		</item>
+		<item type="label" name="ShareOnLinkedin">
+			<translation language="nl"><![CDATA[deel via LinkedIn]]></translation>
+			<translation language="en"><![CDATA[share on LinkedIn]]></translation>
+		</item>
+		<item type="label" name="ShareOnNetlog">
+			<translation language="nl"><![CDATA[deel via Netlog]]></translation>
+			<translation language="en"><![CDATA[share on Netlog]]></translation>
+		</item>
+		<item type="label" name="ShareOnReddit">
+			<translation language="nl"><![CDATA[deel via Reddit]]></translation>
+			<translation language="en"><![CDATA[share on Reddit]]></translation>
+		</item>
+		<item type="label" name="ShareOnStumbleupon">
+			<translation language="nl"><![CDATA[deel via StumbleUpon]]></translation>
+			<translation language="en"><![CDATA[share on StumbleUpon]]></translation>
+		</item>
+		<item type="label" name="ShareOnTumblr">
+			<translation language="nl"><![CDATA[deel via Tumblr]]></translation>
+			<translation language="en"><![CDATA[share on Tumblr]]></translation>
+		</item>
+		<item type="label" name="ShareOnTwitter">
+			<translation language="nl"><![CDATA[deel via Twitter]]></translation>
+			<translation language="en"><![CDATA[share on Twitter]]></translation>
+		</item>
+  	</core>
+  </frontend>
 </locale>

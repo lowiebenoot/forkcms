@@ -123,9 +123,6 @@ class BackendBlogAdd extends BackendBaseActionAdd
 			// validate meta
 			$this->meta->validate();
 
-			// validate share
-			$this->share->validate();
-
 			// no errors?
 			if($this->frm->isCorrect())
 			{

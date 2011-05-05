@@ -273,6 +273,9 @@ class BackendPagesEdit extends BackendBaseActionEdit
 
 		// meta
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
+
+		// share
+		$this->share = new BackendShare($this->frm, $this->URL->getModule(), 'page', $this->id);
 	}
 
 
@@ -433,6 +436,9 @@ class BackendPagesEdit extends BackendBaseActionEdit
 
 				// insert page, store the id, we need it when building the blocks
 				$page['revision_id'] = BackendPagesModel::update($page);
+
+				// save share settings
+				$this->share->save($this->id, true);
 
 				// init var
 				$hasBlock = false;

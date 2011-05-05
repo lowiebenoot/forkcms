@@ -58,7 +58,7 @@ class BackendShare
 	 * @param	BackendForm $form			An instance of Backendform, the elements will be parsed in here.
 	 * @param	string $module				The module.
 	 * @param	string $type				The type, it is used to separate the ids (example: blog article ids - blog category ids).
-	 * @param	int[optional] $shareId		The shareId to load.
+	 * @param	int[optional] $otherId		The otherId (the id of the item that is being edited).
 	 */
 	public function __construct(BackendForm $form, $module, $type, $otherId = null)
 	{
@@ -80,9 +80,9 @@ class BackendShare
 
 			// get data
 			$this->data = (array) BackendModel::getDB()->getRecords('SELECT *
-																	FROM share_settings AS s
-																	WHERE s.other_id = ? AND s.module = ? AND s.item_type = ?',
-																	array($this->otherId, $this->module, $this->type));
+																		FROM share_settings AS s
+																		WHERE s.other_id = ? AND s.module = ? AND s.item_type = ?',
+																		array($this->otherId, $this->module, $this->type));
 		}
 
 		// load the form
@@ -104,25 +104,25 @@ class BackendShare
 		$services = (array) $db->getRecords('SELECT i.id AS value, i.name AS label FROM share_services AS i');
 
 		// get the services that should be checked (from settings)
-		if($this->otherId != null && $this->module != null) $checked = (array) $db->getColumn('SELECT i.service_id
-																								FROM share_settings AS i
-																								WHERE i.module = ? AND i.other_id = ?',
-																								array($this->module, $this->otherId));
+		if($this->otherId != null) $checked = (array) $db->getColumn('SELECT i.service_id
+																		FROM share_settings AS i
+																		WHERE i.module = ? AND i.other_id = ?',
+																		array($this->module, $this->otherId));
 
 		// get the settings from the general settings page
-		else $checked = BackendModel::getModuleSetting('share', 'services');
+		else $checked = BackendModel::getModuleSetting('share', 'services_' . BL::getWorkingLanguage());
 
 		// add multi checkbox
 		$this->frm->addMultiCheckbox('services', $services, $checked);
 
 		// get the message if data is not empty, if empty, get it from the general settings
-		if(!empty($this->data))  $message = $this->data[0]['message'];
+		if(!empty($this->data)) $message = $this->data[0]['message'];
 
 		// get default message for this module
 		else $message = (string) $db->getVar('SELECT i.message
 												FROM share_modules as i
-												WHERE i.module = ?',
-												$this->module);
+												WHERE i.module = ? AND i.language = ?',
+												array($this->module, BL::getWorkingLanguage()));
 
 		// add textfield for the message
 		$this->frm->addText('shareMessage', $message);
@@ -149,9 +149,10 @@ class BackendShare
 		// get db
 		$db = BackendModel::getDB(true);
 
-		// get current settings
+		// are we updating?
 		if($update)
 		{
+			// get current settings
 			$currentSettingsIdsAndServices = (array) $db->getPairs('SELECT i.id, i.service_id
 																	FROM share_settings AS i
 																	WHERE i.other_id = ? AND i.module = ?',
@@ -180,7 +181,6 @@ class BackendShare
 			$item['service_id'] = (int) $service;
 			$item['message'] = $message;
 			if(!$update) $item['num_clicks'] = 0;
-			$item['active'] = 'Y';
 
 			// update share settings
 			if($update)
@@ -213,21 +213,6 @@ class BackendShare
 				$db->insert('share_settings', $item);
 			}
 		}
-	}
-
-
-	/**
-	 * Validates the form
-	 *
-	 * @return	void
-	 */
-	public function validate()
-	{
-		// get services
-		$services = $this->frm->getField('services')->getValue();
-
-		// if services are checked, the message field has to be filled in
-		if(!empty($services)) $this->frm->getField('shareMessage')->isFilled(BL::err('ShareMessageIsRequired'));
 	}
 }
 

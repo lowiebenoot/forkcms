@@ -26,10 +26,15 @@
 		<div class="heading">
 			<h3>{$lblModules|ucfirst}</h3>
 		</div>
-		<div class="options pb0" id="shareableModules">
-			<div class="datagridHolder">
-				{$dgModules}
-			</div>
+		<div class="options" id="shareableModules">
+			{option:dgModules}
+				<div class="datagridHolder">
+					{$dgModules}
+				</div>
+			{/option:dgModules}
+			{option:!dgModules}
+				<p>{$msgNoShareableModules}</p>
+			{/option:!dgModules}
 		</div>
 	</div>
 
