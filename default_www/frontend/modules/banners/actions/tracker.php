@@ -27,16 +27,16 @@ class FrontendBannersTracker extends FrontendBaseBlock
 			// get parameters
 			$id = SpoonFilter::getGetValue('id', null, null, 'int');
 			$url = urldecode(SpoonFilter::getGetValue('url', null, 'string'));
-			$utmParams = array(
+			$utmParams = array( // @todo would be cleaner: first init the array then add elements
 				'utm_campaign' => urldecode(SpoonFilter::getGetValue('utm_campaign', null, null, 'string')),
 				'utm_medium' => urldecode(SpoonFilter::getGetValue('utm_medium', null, null, 'string')),
 				'utm_source' => urldecode(SpoonFilter::getGetValue('utm_source', null, null, 'string')));
 
 			// id and url given?
-			if($id != 0 && $url != '')
+			if($id != 0 && $url != '') // @todo cleaner in my eyes: !empty($url)
 			{
 				// banner exists?
-				if(FrontendBannersModel::exists($id))
+				if(FrontendBannersModel::exists($id)) // @todo is a check to see if the id is 0 needed? if it's 0, the exists check will return false, no?
 				{
 					// add a click
 					FrontendBannersModel::increaseNumClicks($id);

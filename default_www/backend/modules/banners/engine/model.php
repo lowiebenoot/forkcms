@@ -11,11 +11,15 @@
  */
 class BackendBannersModel
 {
+	// @todo try to avoid these sequence thingies. An extra can have a sequence starting from 1 because you have to choose a module first when linking an extra to a page
+	// @todo [bis] If you want to put the banners first and then the groups you can add 1000 to the sequence of the banners for instance. (Think this through and also look at the deletion/adding/editing of extra's - you have an id saved in the data array ;-) .)
 	const PAGES_EXTRAS_SEQUENCE_BANNERS = 9011;
 	const PAGES_EXTRAS_SEQUENCE_GROUPS = 9021;
+	// @todo I would split the select columns into 2 lines to avoid vertical scrolling on smaller screens
 	const QRY_DATAGRID_BROWSE_BANNERS = 'SELECT i.id, i.name, UNIX_TIMESTAMP(i.date_from) as date_from, UNIX_TIMESTAMP(i.date_till) as date_till, i.num_clicks, i.num_views, standard_id
 										FROM banners AS i
 										WHERE i.language = ?';
+	// @todo mind your indenting, make sure the rules under the select statement are equally or further indented (also for the query above)
 	const QRY_DATAGRID_BROWSE_BANNERS_BY_STANDARD = 'SELECT i.id, i.name, UNIX_TIMESTAMP(i.date_from) as date_from, UNIX_TIMESTAMP(i.date_till) as date_till, i.num_clicks, i.num_views, standard_id
 										FROM banners AS i
 										WHERE i.standard_id = ? AND i.language = ?';

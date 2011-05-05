@@ -41,12 +41,14 @@ class FrontendBannersWidgetIndex extends FrontendBaseWidget
 	 */
 	private function parse()
 	{
+		// @todo this comment only applies to the second line of code, comment both lines please
+		// @todo you assume a banner will be returned. What if null or an empty array is returned?
 		// get a random banner for the group
 		if($this->data['source'] == 'banner') $banner = FrontendBannersModel::getBanner((int) $this->data['id']);
 		else $banner = FrontendBannersModel::getRandomBannerForGroup((int) $this->data['id']);
 
 		// create utm parameters
-		$utmParams = array(
+		$utmParams = array( // @todo cleaner would be: init array and add elements with []
 				'utm_source' => FrontendModel::getModuleSetting('core', 'site_title_' . FRONTEND_LANGUAGE),
 				'utm_medium' => 'banner',
 				'utm_campaign' => FrontendModel::getModuleSetting('core', 'site_title_' . FRONTEND_LANGUAGE));

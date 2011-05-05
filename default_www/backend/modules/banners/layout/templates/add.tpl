@@ -14,7 +14,7 @@
 			<p>
 				<label for="url">{$lblURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtUrl}
-				{$txtUrlError}
+				{$txtUrlError} {* @todo normal field and field error on one line *}
 				<span class="helpTxt">{$lblTrackerUrl|ucfirst}: <span>{$trackerUrl}<span id="generatedUrl"></span></span></span>
 			</p>
 			<p>
@@ -36,13 +36,13 @@
 				<label for="startDate">{$lblStartDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtStartDate} <label for="startTime" class="nofloat">{$lblAt}</label> {$txtStartTime}
 				{$txtStartDateError}
-				{$txtStartTimeError}
+				{$txtStartTimeError} {* @todo normal field and field error on one line *}
 			</p>
 			<p>
 				<label for="endDate">{$lblEndDate|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtEndDate} <label for="endTime" class="nofloat">{$lblAt}</label> {$txtEndTime}
 				{$txtEndDateError}
-				{$txtEndTimeError}
+				{$txtEndTimeError} {* @todo normal field and field error on one line *}
 			</p>
 		</div>
 	</div>
