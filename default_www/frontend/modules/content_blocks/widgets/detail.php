@@ -39,6 +39,21 @@ class FrontendContentBlocksWidgetDetail extends FrontendBaseWidget
 
 		// parse
 		$this->parse();
+
+		// check if the given template exists
+		try
+		{
+			$template = FrontendTheme::getPath(FRONTEND_MODULES_PATH . '/content_blocks/layout/widgets/' . $this->item['template']);
+		}
+
+		// template does not exist; assume default.tpl
+		catch(Exception $e)
+		{
+			$template = FRONTEND_MODULES_PATH . '/content_blocks/layout/widgets/default.tpl';
+		}
+
+		// display the widget
+		return $this->tpl->getContent($template);
 	}
 
 
@@ -62,17 +77,11 @@ class FrontendContentBlocksWidgetDetail extends FrontendBaseWidget
 	 */
 	protected function loadTemplate($path = null)
 	{
-		// check if the given template exists
-		try
-		{
-			parent::loadTemplate(FrontendTheme::getPath(FRONTEND_MODULES_PATH . '/content_blocks/layout/widgets/' . $this->item['template']));
-		}
+		// redefine (and trick codesniffer)
+		$path = ($path !== null) ? (string) $path : null;
 
-		// template does not exist; assume default.tpl
-		catch(FrontendException $e)
-		{
-			parent::loadTemplate(FRONTEND_MODULES_PATH . '/content_blocks/layout/widgets/default.tpl');
-		}
+		// overwrite the template with an empty one
+		$this->tpl = new FrontendTemplate(false);
 	}
 
 
