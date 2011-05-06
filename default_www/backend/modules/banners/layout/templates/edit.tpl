@@ -18,8 +18,7 @@
 			</p>
 			<p>
 				<label for="url">{$lblURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$txtUrl}
-				{$txtUrlError} {* @todo normal field and field error on one line *}
+				{$txtUrl} {$txtUrlError}
 				<span class="helpTxt">{$lblTrackerUrl|ucfirst}: <span>{$trackerUrl}<span id="generatedUrl">{$url}</span></span></span>
 			</p>
 			<p>

@@ -11,18 +11,14 @@
  */
 class BackendBannersModel
 {
-	// @todo try to avoid these sequence thingies. An extra can have a sequence starting from 1 because you have to choose a module first when linking an extra to a page
-	// @todo [bis] If you want to put the banners first and then the groups you can add 1000 to the sequence of the banners for instance. (Think this through and also look at the deletion/adding/editing of extra's - you have an id saved in the data array ;-) .)
-	const PAGES_EXTRAS_SEQUENCE_BANNERS = 9011;
-	const PAGES_EXTRAS_SEQUENCE_GROUPS = 9021;
-	// @todo I would split the select columns into 2 lines to avoid vertical scrolling on smaller screens
-	const QRY_DATAGRID_BROWSE_BANNERS = 'SELECT i.id, i.name, UNIX_TIMESTAMP(i.date_from) as date_from, UNIX_TIMESTAMP(i.date_till) as date_till, i.num_clicks, i.num_views, standard_id
-										FROM banners AS i
-										WHERE i.language = ?';
-	// @todo mind your indenting, make sure the rules under the select statement are equally or further indented (also for the query above)
-	const QRY_DATAGRID_BROWSE_BANNERS_BY_STANDARD = 'SELECT i.id, i.name, UNIX_TIMESTAMP(i.date_from) as date_from, UNIX_TIMESTAMP(i.date_till) as date_till, i.num_clicks, i.num_views, standard_id
-										FROM banners AS i
-										WHERE i.standard_id = ? AND i.language = ?';
+	const QRY_DATAGRID_BROWSE_BANNERS = 'SELECT i.id, i.name, UNIX_TIMESTAMP(i.date_from) as date_from,
+											UNIX_TIMESTAMP(i.date_till) as date_till, i.num_clicks, i.num_views, standard_id
+											FROM banners AS i
+											WHERE i.language = ?';
+	const QRY_DATAGRID_BROWSE_BANNERS_BY_STANDARD = 'SELECT i.id, i.name, UNIX_TIMESTAMP(i.date_from) as date_from,
+														UNIX_TIMESTAMP(i.date_till) as date_till, i.num_clicks, i.num_views, standard_id
+														FROM banners AS i
+														WHERE i.standard_id = ? AND i.language = ?';
 	const QRY_DATAGRID_BROWSE_BANNERS_GROUPS = 'SELECT i.id, i.name, i.standard_id, bs.name AS size, bs.width, bs.height
 												FROM banners_groups AS i
 												INNER JOIN banners_standards AS bs ON bs.id = i.standard_id
@@ -39,29 +35,36 @@ class BackendBannersModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
-		// create an array with the page sequences
-		$pageSequences = array();
+		// create an array with an equal amount of questionmarks as ids provided
+		$idPlaceHolders = array_fill(0, count($ids), '?');
+
+		// define array for the extra sequences
+		$extraSequences = array();
 
 		// loop ids
 		foreach($ids as &$id)
 		{
+			// add to the pagesequences array
+			$extraSequences[] = (string) $id;
+
 			// cast to integers
 			$id = (int) $id;
-
-			// add to the pagesequences array
-			$extraSequences[] = self::PAGES_EXTRAS_SEQUENCE_BANNERS . $id;
 		}
-
-		// create an array with an equal amount of questionmarks as ids provided
-		$idPlaceHolders = array_fill(0, count($ids), '?');
 
 		// get db
 		$db = BackendModel::getDB(true);
 
+		// get the extra ids to delete
+		$extraIds = (array) $db->getColumn('SELECT i.id
+											FROM pages_extras AS i
+											WHERE i.module = ? AND i.type = ? AND sequence IN (' . implode(', ', $idPlaceHolders) . ')',
+											array_merge(array('banners', 'widget'), $extraSequences));
+
 		// delete records
 		$db->delete('banners', 'id IN (' . implode(',', $ids) . ')', $ids);
 		$db->delete('banners_groups_members', 'banner_id IN (' . implode(', ', $idPlaceHolders) . ')', $ids);
-		$db->delete('pages_extras', 'module = ? AND type = ? AND sequence IN (' . implode(', ', $idPlaceHolders) . ')', array_merge(array('banners', 'widget'), $extraSequences));
+		$db->delete('pages_extras', 'id IN (' . implode(', ', $extraIds) . ')');
+		$db->update('pages_blocks', array('extra_id' => null, 'html' => ''), 'extra_id IN (' . implode(', ', $extraIds) . ')');
 	}
 
 
@@ -76,6 +79,9 @@ class BackendBannersModel
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
+		// define array for the extra sequences
+		$extraSequences = array();
+
 		// loop ids
 		foreach($ids as &$id)
 		{
@@ -83,7 +89,7 @@ class BackendBannersModel
 			$id = (int) $id;
 
 			// add to the pagesequences array
-			$extraSequences[] = self::PAGES_EXTRAS_SEQUENCE_GROUPS . $id;
+			$extraSequences[] = (string) (1000 + $id);
 		}
 
 		// create an array with an equal amount of questionmarks as ids provided
@@ -92,10 +98,17 @@ class BackendBannersModel
 		// get db
 		$db = BackendModel::getDB(true);
 
+		// get the extra ids to delete
+		$extraIds = (array) $db->getColumn('SELECT i.id
+											FROM pages_extras AS i
+											WHERE i.module = ? AND i.type = ? AND sequence IN (' . implode(', ', $idPlaceHolders) . ')',
+											array_merge(array('banners', 'widget'), $extraSequences));
+
 		// delete records
 		$db->delete('banners_groups', 'id IN (' . implode(', ', $idPlaceHolders) . ')', $ids);
 		$db->delete('banners_groups_members', 'group_id IN (' . implode(',', $idPlaceHolders) . ')', $ids);
-		$db->delete('pages_extras', 'module = ? AND type = ? AND sequence IN (' . implode(', ', $idPlaceHolders) . ')', array_merge(array('banners', 'widget'), $extraSequences));
+		$db->delete('pages_extras', 'ID IN (' . implode(', ', $extraIds) . ')');
+		$db->update('pages_blocks', array('extra_id' => null, 'html' => ''), 'extra_id IN (' . implode(', ', $extraIds) . ')');
 	}
 
 
@@ -299,7 +312,7 @@ class BackendBannersModel
 		$extra['action'] = 'index';
 		$extra['data'] = serialize(array('label_variables' => array($item['name']), 'id' => $id, 'language' => BL::getWorkingLanguage(), 'source' => 'banner', 'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $id));
 		$extra['hidden'] = 'N';
-		$extra['sequence'] = self::PAGES_EXTRAS_SEQUENCE_BANNERS . $id;
+		$extra['sequence'] = $id;
 
 		// insert extra
 		$db->insert('pages_extras', $extra);
@@ -360,7 +373,7 @@ class BackendBannersModel
 		$extra['action'] = 'index';
 		$extra['data'] = serialize(array('label_variables' => array($item['name']), 'id' => $id, 'language' => BL::getWorkingLanguage(), 'source' => 'group', 'edit_url' => BackendModel::createURLForAction('edit_group') . '&id=' . $id));
 		$extra['hidden'] = 'N';
-		$extra['sequence'] = self::PAGES_EXTRAS_SEQUENCE_GROUPS . $id;
+		$extra['sequence'] = 1000 + (int) $id;
 
 		// insert extra
 		$db->insert('pages_extras', $extra);
@@ -436,7 +449,7 @@ class BackendBannersModel
 		$extra['data'] = serialize(array('label_variables' => array($item['name']), 'id' => $id, 'language' => BL::getWorkingLanguage(), 'source' => 'banner', 'edit_url' => BackendModel::createURLForAction('edit') . '&id=' . $id));
 
 		// update extra
-		$db->update('pages_extras', $extra, 'module = ? AND type = ? AND sequence = ?', array('banners', 'widget', self::PAGES_EXTRAS_SEQUENCE_BANNERS . $id));
+		$db->update('pages_extras', $extra, 'module = ? AND type = ? AND sequence = ?', array('banners', 'widget', $id));
 
 		// update banner and return
 		return $db->update('banners', $item, 'id = ?', (int) $id);
@@ -459,7 +472,7 @@ class BackendBannersModel
 		$extra['data'] = serialize(array('label_variables' => array($item['name']), 'id' => $id, 'language' => BL::getWorkingLanguage(), 'source' => 'group', 'edit_url' => BackendModel::createURLForAction('edit_group') . '&id=' . $id));
 
 		// update extra
-		$db->update('pages_extras', $extra, 'module = ? AND type = ? AND sequence = ?', array('banners', 'widget', self::PAGES_EXTRAS_SEQUENCE_GROUPS . $id));
+		$db->update('pages_extras', $extra, 'module = ? AND type = ? AND sequence = ?', array('banners', 'widget', 1000 + (int) $id));
 
 		// insert in db and return
 		return $db->update('banners_groups', $item, 'id = ?', (int) $id);

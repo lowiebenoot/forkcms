@@ -84,7 +84,7 @@ class BackendBannersEdit extends BackendBaseActionEdit
 		$this->frm->addImage('file');
 		$this->frm->addDate('start_date', $showPermanently ? null : $this->record['date_from']);
 		$this->frm->addTime('start_time', $showPermanently ? null : date('H:i', $this->record['date_from']), 'inputText time');
-		$this->frm->addDate('end_date', $showPermanently ? strtotime("+1 month") : $this->record['date_till']); // @todo use single quotes
+		$this->frm->addDate('end_date', $showPermanently ? strtotime('+1 month') : $this->record['date_till']);
 		$this->frm->addTime('end_time', $showPermanently ? null : date('H:i', $this->record['date_till']), 'inputText time');
 		$this->frm->addCheckbox('show_permanently', $showPermanently);
 	}
@@ -147,7 +147,8 @@ class BackendBannersEdit extends BackendBaseActionEdit
 			// an array that is used to check if everything is ok with the dates
 			$datesOK = array();
 
-			if(!$showPermanently) // @todo add some comment (see add.php)
+			// check dates if the banner isn't shown permanently
+			if(!$showPermanently)
 			{
 				// validate the dates and times
 				$datesOK[] = $this->frm->getField('start_date')->isFilled() ? $this->frm->getField('start_date')->isValid(BL::err('StartDateIsInvalid')) : $this->frm->getField('start_date')->isFilled(BL::err('StartDateIsRequired'));

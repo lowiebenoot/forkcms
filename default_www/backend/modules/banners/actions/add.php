@@ -52,7 +52,7 @@ class BackendBannersAdd extends BackendBaseActionAdd
 		$this->frm->addImage('file');
 		$this->frm->addDate('start_date');
 		$this->frm->addTime('start_time', null, 'inputText time');
-		$this->frm->addDate('end_date', strtotime("+1 month")); // @todo use single quotes
+		$this->frm->addDate('end_date', strtotime('+1 month'));
 		$this->frm->addTime('end_time', null, 'inputText time');
 		$this->frm->addCheckbox('show_permanently');
 
@@ -84,7 +84,8 @@ class BackendBannersAdd extends BackendBaseActionAdd
 			// an array that is used to check if everything is ok with the dates
 			$datesOK = array();
 
-			if(!$showPermanently) // @todo add some comment, for instance: "only check dates if the banner isn't shown permanently"
+			// check dates if the banner isn't shown permanently
+			if(!$showPermanently)
 			{
 				// validate the dates and times
 				$datesOK[] = $this->frm->getField('start_date')->isFilled() ? $this->frm->getField('start_date')->isValid(BL::err('StartDateIsInvalid')) : $this->frm->getField('start_date')->isFilled(BL::err('StartDateIsRequired'));

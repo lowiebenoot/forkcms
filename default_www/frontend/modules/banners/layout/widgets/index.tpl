@@ -15,7 +15,7 @@
 		{/option:isSWF}
 
 		{option:!isSWF}
-			<a class="bannerWidgetURL linkedImage" href="{$var|geturlforblock:'banners':'tracker'}?id={$item.id}&url={$item.url|urlencode}" title="{$item.url}" data-id="{$item.id}" data-url="{$item.url}"><img src="/frontend/files/banners/resized/{$item.id}_{$item.file}" alt="{$item.url}" width="{$item.width}" height="{$item.height}" /></a>
+			<a class="bannerWidgetURL linkedImage" href="{$trackerURL}&id={$item.id}&url={$item.url|urlencode}" title="{$item.url}" data-id="{$item.id}" data-url="{$item.url}"><img src="/frontend/files/banners/resized/{$item.id}_{$item.file}" alt="{$item.url}" width="{$item.width}" height="{$item.height}" /></a>
 		{/option:!isSWF}
 	</div>
 {/option:item}

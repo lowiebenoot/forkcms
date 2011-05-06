@@ -29,6 +29,7 @@ jsFrontend.banners.controls =
 		{
 			// get element
 			$this = $(this);
+			var test = $(this);
 			
 			// get original url
 			var originalUrl = $this.data('url');
@@ -39,12 +40,11 @@ jsFrontend.banners.controls =
 			// change url to the original url
 			$this.attr('href', originalUrl);
 			
-			// add onclick so it redirects to the tracker url
+			// change the href onclick so it redirects to the tracker page
 			$this.click(function()
 			{
-				// redirect
-				window.location.href = trackerUrl;
-				return false;
+				// change href
+				$(this).attr('href', trackerUrl);
 			});
 		});
 	},
