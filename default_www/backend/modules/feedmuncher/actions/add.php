@@ -52,24 +52,28 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 		$this->frm->addText('name', null, 255);
 		$this->frm->addText('url');
 		$this->frm->addText('website', null, 255);
+		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), BackendAuthentication::getUser()->getUserId());
+		$this->frm->addCheckbox('auto_publish', BackendModel::getModuleSetting('feedmuncher', 'auto_publish'));
+		$this->frm->addCheckbox('link_to_original');
 
 		// get feedmuncher categories and add the 'add category' item
 		$feedmuncherCategories = BackendFeedmuncherModel::getCategories();
 		$feedmuncherCategories['new_category'] = ucfirst(BL::getLabel('AddCategory'));
 
+		// add dropdown for categories
 		$this->frm->addDropdown('category', $feedmuncherCategories);
+
+		// blog is installed?
 		if($this->blogIsInstalled)
 		{
 			// get blog categories and add the 'add category' item
 			$blogCategories = BackendFeedmuncherModel::getCategoriesFromBlog();
 			$blogCategories['new_category'] = ucfirst(BL::getLabel('AddCategory'));
 
+			// add radiobutton for target
 			$this->frm->addRadiobutton('target', array(array('label' => BL::getLabel('PostInFeedmuncher'), 'value' => 'feedmuncher'), array('label' => BL::getLabel('PostInBlog'), 'value' => 'blog')), 'feedmuncher');
 			$this->frm->addDropdown('category_blog', $blogCategories);
 		}
-		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), BackendAuthentication::getUser()->getUserId());
-		$this->frm->addCheckbox('auto_publish', BackendModel::getModuleSetting('feedmuncher', 'auto_publish'));
-		$this->frm->addCheckbox('link_to_original');
 
 		// assign whether blog is installed or not
 		$this->tpl->assign('blogIsInstalled', $this->blogIsInstalled);

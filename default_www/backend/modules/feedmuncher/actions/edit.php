@@ -102,15 +102,21 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 		$this->frm->addText('name', $this->record['name'], 255);
 		$this->frm->addText('url', $this->record['url']);
 		$this->frm->addText('website', $this->record['source'], 255);
+		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), $this->record['author_user_id']);
+		$this->frm->addCheckbox('auto_publish', ($this->record['auto_publish'] == 'Y' ? true : false));
+		$this->frm->addCheckbox('link_to_original', ($this->record['link_to_original'] == 'Y' ? true : false));
 
-		//  add dropdown and radiobutton if blog is installed
+		// blog is installed?
 		if($this->blogIsInstalled)
 		{
 			// get blog categories and add the 'add category' item
 			$blogCategories = BackendFeedmuncherModel::getCategoriesFromBlog();
 			$blogCategories['new_category'] = ucfirst(BL::getLabel('AddCategory'));
 
+			// add radiobutton for target
 			$this->frm->addRadiobutton('target', array(array('label' => BL::getLabel('PostInFeedmuncher'), 'value' => 'feedmuncher', 'attributes' => $feedHasArticles ? array('disabled' => '') : null), array('label' => BL::getLabel('PostInBlog'), 'value' => 'blog', 'attributes' => $feedHasArticles ? array('disabled' => '') : null)), $this->record['target']);
+
+			// add dropdown for blog categories
 			$this->frm->addDropdown('category_blog', $blogCategories, $blogCategory);
 		}
 
@@ -118,10 +124,8 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 		$feedmuncherCategories = BackendFeedmuncherModel::getCategories();
 		$feedmuncherCategories['new_category'] = ucfirst(BL::getLabel('AddCategory'));
 
+		// add dropdown for feedmuncher categories
 		$this->frm->addDropdown('category', $feedmuncherCategories, $feedmuncherCategory);
-		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), $this->record['author_user_id']);
-		$this->frm->addCheckbox('auto_publish', ($this->record['auto_publish'] == 'Y' ? true : false));
-		$this->frm->addCheckbox('link_to_original', ($this->record['link_to_original'] == 'Y' ? true : false));
 	}
 
 
