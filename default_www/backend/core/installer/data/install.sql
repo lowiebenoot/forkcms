@@ -559,6 +559,7 @@ CREATE TABLE IF NOT EXISTS `share_settings` (
  `service_id` INT(11) NOT NULL ,
  `message` VARCHAR(255) NOT NULL ,
  `num_clicks` INT(11) NOT NULL ,
+ `active` enum('N','Y') NOT NULL,
  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 

@@ -29,6 +29,9 @@ jsFrontend =
 
 		// init search
 		jsFrontend.search.init();
+		
+		// init share
+		jsFrontend.share.init();
 	},
 
 
@@ -381,6 +384,59 @@ jsFrontend.search =
 
 	// end
 	eoo: true
+},
+
+
+jsFrontend.share = 
+{
+	init: function()
+	{
+		// loop all share URLs
+		$('.shareOptions .shareOption a').each(function()
+		{
+			// get the item
+			$this = $(this);
+
+			// get the tracker url
+			var trackerUrl = $this.attr('href');
+
+			// set the href to the original url
+			$this.attr('href', $this.data('url'));
+
+			// add on click
+			$this.click(function()
+			{
+				// change href to the trackerUrl
+				$(this).attr('href', trackerUrl);
+			});
+		});
+
+		// split url to get the language
+		var chunks = document.location.pathname.split('/');
+
+		// get language
+		var language = chunks[1];
+
+		// add event on like
+		FB.Event.subscribe('edge.create', function(href, widget)
+		{
+			// get the share_setting id from the like button ref attribute
+			var settingId = widget._attr.ref;
+
+			// the share setting id was given?
+			if(settingId != undefined)
+			{
+				//do ajax call
+				$.ajax(
+				{
+					url: '/frontend/ajax.php?module=share&action=facebook_tracker&language=' + language + '&id=' + settingId,
+				});
+			}
+		});
+	},
+
+	// end
+	eeo: true
 }
 
 

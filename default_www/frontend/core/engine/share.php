@@ -60,6 +60,9 @@ class FrontendShare
 					case 'facebook':
 						// assign url in the like button
 						$tpl->assign('facebook_share_url', $url);
+
+						// assign id
+						$tpl->assign('facebook_share_id', $option['id']);
 					break;
 
 					// the setting is for twitter?
@@ -79,77 +82,86 @@ class FrontendShare
 						// replace + (space)
 						$twitterMessage = str_replace('+', '%20', $twitterMessage);
 
+						// share url
+						$shareURL= 'http://twitter.com?status=' . $twitterMessage;
+
 						// assign url
-						$tpl->assign('twitter_share_url', $twitterMessage);
+						$tpl->assign('twitter_share_url', $shareURL);
+
+						// assign id
+						$tpl->assign('twitter_share_id', $option['id']);
 					break;
 
 					// the setting is for delicious?
 					case 'delicious':
 						// assign url
-						$tpl->assign('delicious_share_url', $url);
+						$tpl->assign('delicious_share_url', urlencode('http://www.delicious.com/save?url=' . urlencode($url)));
 
-						// assign title
-						$tpl->assign('delicious_share_title', urlencode($title));
+						// assign id
+						$tpl->assign('delicious_share_id', $option['id']);
 					break;
 
 					// the setting is for stumbleupon?
 					case 'stumbleupon':
 						// assign url
-						$tpl->assign('stumbleupon_share_url', urlencode($url));
+						$tpl->assign('stumbleupon_share_url', urlencode('http://www.stumbleupon.com/submit?url=' . $url));
+
+						// assign id
+						$tpl->assign('stumbleupon_share_id', $option['id']);
 					break;
 
 					// the setting is for linkedin?
 					case 'linkedin':
 						// assign url
-						$tpl->assign('linkedin_share_url', urlencode($url));
+						$tpl->assign('linkedin_share_url', urlencode('http://www.linkedin.com/shareArticle?mini=true&url=' . urlencode($url) . '&title=' . urlencode($title)));
 
-						// assign title
-						$tpl->assign('linkedin_share_title', urlencode($title));
+						// assign id
+						$tpl->assign('linkedin_share_id', $option['id']);
 					break;
 
 					// the setting is for reddit?
 					case 'reddit':
 						// assign url
-						$tpl->assign('reddit_share_url', urlencode($url));
+						$tpl->assign('reddit_share_url', urlencode('http://www.reddit.com/submit?url=' . urlencode($url) . '&title=' . urlencode($title)));
 
-						// assign title
-						$tpl->assign('reddit_share_title', urlencode($title));
+						// assign id
+						$tpl->assign('reddit_share_id', $option['id']);
 					break;
 
 					// the setting is for netlog?
 					case 'netlog':
 						// assign url
-						$tpl->assign('netlog_share_url', urlencode($url));
+						$tpl->assign('netlog_share_url', urlencode('http://www.netlog.com/go/manage/links/view=save&origin=external&url=' . urlencode($url) . '&title=' . urlencode($title)));
 
-						// assign title
-						$tpl->assign('netlog_share_title', urlencode($title));
+						// assign id
+						$tpl->assign('netlog_share_id', $option['id']);
 					break;
 
 					// the setting is for digg?
 					case 'digg':
 						// assign url
-						$tpl->assign('digg_share_url', urlencode($url));
+						$tpl->assign('digg_share_url', urlencode('http://digg.com/submit?url=' . urlencode($url) . '&title=' . urlencode($title)));
 
-						// assign title
-						$tpl->assign('digg_share_title', urlencode($title));
+						// assign id
+						$tpl->assign('digg_share_id', $option['id']);
 					break;
 
 					// the setting is for tumblr?
 					case 'tumblr':
 						// assign url
-						$tpl->assign('tumblr_share_url', urlencode($url));
+						$tpl->assign('tumblr_share_url', urlencode('http://www.tumblr.com/share?v=3&u=' . urlencode($url) . '&t=' . urlencode($title)));
 
-						// assign title
-						$tpl->assign('tumblr_share_title', urlencode($title));
+						// assign id
+						$tpl->assign('tumblr_share_id', $option['id']);
 					break;
 
 					// the setting is for google buzz?
 					case 'google buzz':
 						// assign url
-						$tpl->assign('googlebuzz_share_url', urlencode($url));
+						$tpl->assign('googlebuzz_share_url', urlencode('http://www.google.com/buzz/post?url=' . urlencode($url) . '&title=' . urlencode($title)));
 
-						// assign title
-						$tpl->assign('googlebuzz_share_title', urlencode($title));
+						// assign id
+						$tpl->assign('googlebuzz_share_id', $option['id']);
 					break;
 
 					// non existing share service
@@ -213,8 +225,8 @@ class FrontendShare
 		$options = (array) FrontendModel::getDB()->getRecords('SELECT i.*, s.name AS service_name
 														FROM share_settings AS i
 														INNER JOIN share_services AS s ON i.service_id = s.id
-														WHERE i.module = ? AND i.item_type = ?',
-														array($module, $type));
+														WHERE i.module = ? AND i.item_type = ? AND i.active = ?',
+														array($module, $type, 'Y'));
 
 		// return null if empty
 		if(empty($options)) return null;

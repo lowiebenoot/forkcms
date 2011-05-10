@@ -91,7 +91,7 @@ class BackendShare
 
 
 	/**
-	 * Add all element into the form
+	 * Add all elements into the form
 	 *
 	 * @return	void
 	 */
@@ -100,14 +100,31 @@ class BackendShare
 		// get db
 		$db = BackendModel::getDB();
 
-		// get the services
-		$services = (array) $db->getRecords('SELECT i.id AS value, i.name AS label FROM share_services AS i');
+		// other id is provided? (this means we're editing)
+		if($this->otherId != null)
+		{
+			// get the services with the amount of clicks
+			$services = (array) $db->getRecords('SELECT i.id AS value, i.name AS label, s.num_clicks
+													FROM share_services AS i
+													LEFT OUTER JOIN share_settings AS s ON i.id = s.service_id AND s.other_id = ?',
+													(int) $this->otherId);
+
+			// loop services and add the amount of clicks to the label
+			foreach($services as &$service) $service['label'] .= ' (' . sprintf(BL::lbl('NumShared'), (int) $service['num_clicks']) . ')';
+		}
+
+		// no other id is provided, get the services without the amount of clicks
+		else $services = (array) $db->getRecords('SELECT i.id AS value, i.name AS label, s.num_clicks
+													 FROM share_services AS i
+													 LEFT OUTER JOIN share_settings AS s ON i.id = s.service_id');
+
+
 
 		// get the services that should be checked (from settings)
 		if($this->otherId != null) $checked = (array) $db->getColumn('SELECT i.service_id
 																		FROM share_settings AS i
-																		WHERE i.module = ? AND i.other_id = ?',
-																		array($this->module, $this->otherId));
+																		WHERE i.module = ? AND i.other_id = ? AND i.active = ?',
+																		array($this->module, $this->otherId, 'Y'));
 
 		// get the settings from the general settings page
 		else $checked = BackendModel::getModuleSetting('share', 'services_' . BL::getWorkingLanguage());
@@ -164,11 +181,11 @@ class BackendShare
 			// loop currentSettings and add services to the array
 			foreach($currentSettingsIdsAndServices as $service) $currentServices[] = $service;
 
-			// get the services where from the settings should be deleted
+			// get the services where from the settings should be deleted (set active = 'N')
 			$servicesToDelete = array_diff($currentServices, $services);
 
-			// delete the settings
-			if(!empty($servicesToDelete)) $db->delete('share_settings', 'service_id IN (' . implode(',', $servicesToDelete) . ') AND other_id = ? AND module= ?', array($otherId, $this->module));
+			// delete the settings (set active = 'N')
+			if(!empty($servicesToDelete)) $db->update('share_settings', array('active' => 'N'), 'service_id IN (' . implode(',', $servicesToDelete) . ') AND other_id = ? AND module= ?', array($otherId, $this->module));
 		}
 
 		// loop services
@@ -180,6 +197,7 @@ class BackendShare
 			$item['other_id'] = $otherId;
 			$item['service_id'] = (int) $service;
 			$item['message'] = $message;
+			$item['active'] = 'Y';
 			if(!$update) $item['num_clicks'] = 0;
 
 			// update share settings
