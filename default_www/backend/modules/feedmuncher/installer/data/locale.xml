@@ -130,6 +130,10 @@
         <translation language="nl"><![CDATA[De feed "%1$s" werd opgeslagen.]]></translation>
         <translation language="en"><![CDATA[The feed "%1$s" was saved.]]></translation>
       </item>
+      <item type="message" name="FeedIsDeleted">
+        <translation language="nl"><![CDATA[Deze feed werd verwijderd. Nieuwe artikelen zullen niet gedownload worden. <a href="%1$s">Activeer deze feed</a>.]]></translation>
+        <translation language="en"><![CDATA[This feed was deleted. New articles will not be downloaded. <a href="%1$s">Restore this feed</a>.]]></translation>
+      </item>
       <item type="message" name="FollowAllCommentsInRSS">
         <translation language="nl"><![CDATA[Volg alle reacties in een RSS feed: <a href="%1$s">%1$s</a>.]]></translation>
         <translation language="en"><![CDATA[Follow all comments in a RSS feed: <a href="%1$s">%1$s</a>.]]></translation>

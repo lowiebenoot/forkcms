@@ -148,7 +148,7 @@ class BackendFeedmuncherModel
 			$article = self::getArticle($id);
 
 			// delete search indexes
-			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($article, $id); // @todo: is this right? first argument for removeIndex is the module.
+			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($article['target'], $id);
 		}
 
 		// invalidate the cache for feedmuncher
@@ -447,7 +447,7 @@ class BackendFeedmuncherModel
 		// get db
 		$db = BackendModel::getDB();
 
-		// we should include the count
+		// include count?
 		if($includeCount)
 		{
 			return (array) BackendModel::getDB()->getPairs('SELECT i.id, CONCAT(i.title, " (",  COUNT(p.category_id) ,")") AS title
@@ -477,7 +477,7 @@ class BackendFeedmuncherModel
 		// get db
 		$db = BackendModel::getDB();
 
-		// we should include the count
+		// include count?
 		if($includeCount)
 		{
 			return (array) BackendModel::getDB()->getPairs('SELECT i.id, CONCAT(i.title, " (",  COUNT(p.category_id) ,")") AS title
@@ -964,6 +964,7 @@ class BackendFeedmuncherModel
 			$db->update('feedmuncher_posts', array('num_comments' => $count), 'id = ? AND language = ?', array($id, BL::getWorkingLanguage()));
 		}
 
+		// success
 		return true;
 	}
 
@@ -1070,6 +1071,7 @@ class BackendFeedmuncherModel
 																		 LIMIT ?',
 																		 array($item['id'], $archiveType, BL::getWorkingLanguage(), $rowsToKeep));
 
+		// delete revisions that we shouln't keep
 		if(!empty($revisionIdsToKeep)) BackendModel::getDB(true)->delete('feedmuncher_posts', 'id = ? AND status = ? AND revision_id NOT IN (' . implode(', ', $revisionIdsToKeep) . ')', array($item['id'], $archiveType));
 
 		// insert new version

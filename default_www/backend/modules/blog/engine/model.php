@@ -30,7 +30,7 @@ class BackendBlogModel
 											FROM blog_comments AS i
 											INNER JOIN blog_posts AS p ON i.post_id = p.id AND i.language = p.language
 											INNER JOIN meta AS m ON p.meta_id = m.id
-											WHERE i.status = ? AND i.language = ?
+											WHERE i.status = ? AND i.language = ? AND p.status = ?
 											GROUP BY i.id';
 	const QRY_DATAGRID_BROWSE_DRAFTS = 'SELECT i.id, i.user_id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, i.num_comments AS comments
 										FROM blog_posts AS i
@@ -393,7 +393,7 @@ class BackendBlogModel
 		// we should include the count
 		if($includeCount)
 		{
-			return (array) BackendModel::getDB()->getPairs('SELECT i.id, CONCAT(i.title, " (",  COUNT(p.category_id) ,")") AS title
+			return (array) $db->getPairs('SELECT i.id, CONCAT(i.title, " (",  COUNT(p.category_id) ,")") AS title
 															FROM blog_categories AS i
 															LEFT OUTER JOIN blog_posts AS p ON i.id = p.category_id AND i.language = p.language AND p.status = ?
 															WHERE i.language = ?
@@ -402,7 +402,7 @@ class BackendBlogModel
 		}
 
 		// get records and return them
-		return (array) BackendModel::getDB()->getPairs('SELECT i.id, i.title
+		return (array) $db->getPairs('SELECT i.id, i.title
 														FROM blog_categories AS i
 														WHERE i.language = ?',
 														array(BL::getWorkingLanguage()));
@@ -514,7 +514,7 @@ class BackendBlogModel
 																array((string) $status, 'active', BL::getWorkingLanguage(), (int) $limit));
 
 		// loop entries
-		foreach($comments as $key => &$row)
+		foreach($comments as &$row)
 		{
 			// add full url
 			$row['full_url'] = BackendModel::getURLForBlock('blog', 'detail', $row['language']) . '/' . $row['url'];

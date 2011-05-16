@@ -21,7 +21,7 @@ class BackendFeedmuncherUndoDelete extends BackendBaseAction
 		// get parameters
 		$url = $this->getParameter('url', 'string');
 
-		// does the user exist
+		// an url is given?
 		if($url !== null)
 		{
 			// call parent, this will probably add some general CSS/JS or other required files
