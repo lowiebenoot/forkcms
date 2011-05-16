@@ -29,7 +29,7 @@ jsFrontend.banners.controls =
 		{
 			// get element
 			$this = $(this);
-			var test = $(this);
+			var test = $(this); // @todo never used?
 			
 			// get original url
 			var originalUrl = $this.data('url');

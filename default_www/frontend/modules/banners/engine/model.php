@@ -23,6 +23,7 @@ class FrontendBannersModel
 														FROM banners AS i
 														WHERE i.id = ?',
 														(int) $id);
+		// @todo this should have the same condition as the getBanner query (date_till, date_from)
 	}
 
 
