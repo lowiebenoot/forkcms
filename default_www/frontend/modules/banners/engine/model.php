@@ -22,8 +22,8 @@ class FrontendBannersModel
 		return (bool) FrontendModel::getDB()->getVar('SELECT COUNT(id)
 														FROM banners AS i
 														WHERE i.id = ?
-														AND (b.date_till >= NOW() OR b.date_till IS NULL)
-														AND (b.date_from <= NOW() OR b.date_from IS NULL)',
+														AND (i.date_till >= NOW() OR i.date_till IS NULL)
+														AND (i.date_from <= NOW() OR i.date_from IS NULL)',
 														(int) $id);
 	}
 
