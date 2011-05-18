@@ -21,9 +21,10 @@ class FrontendBannersModel
 	{
 		return (bool) FrontendModel::getDB()->getVar('SELECT COUNT(id)
 														FROM banners AS i
-														WHERE i.id = ?',
+														WHERE i.id = ?
+														AND (b.date_till >= NOW() OR b.date_till IS NULL)
+														AND (b.date_from <= NOW() OR b.date_from IS NULL)',
 														(int) $id);
-		// @todo this should have the same condition as the getBanner query (date_till, date_from)
 	}
 
 
