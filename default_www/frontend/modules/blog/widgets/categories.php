@@ -21,25 +21,11 @@ class FrontendBlogWidgetCategories extends FrontendBaseWidget
 		// call parent
 		parent::execute();
 
-		// get data
-		$this->getData();
-
 		// load template
 		$this->loadTemplate();
 
 		// parse
 		$this->parse();
-	}
-
-
-	/**
-	 * Get the data
-	 *
-	 * @return	void
-	 */
-	private function getData()
-	{
-
 	}
 
 
