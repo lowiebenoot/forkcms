@@ -12,12 +12,20 @@
 				{$txtName} {$txtNameError}
 			</p>
 			<p>
+				<label for="type">{$lblType|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+				{$ddmType} {$ddmTypeError}
+			</p>
+			<p>
 				<label for="url">{$lblFeedURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtUrl} {$txtUrlError}
 			</p>
 			<p>
 				<label for="website">{$lblWebsite|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$txtWebsite} {$txtWebsiteError}
+			</p>
+			<p>
+				<label for="username">{$lblUsername|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+				{$txtUsername} {$txtUsernameError}
 			</p>
 			{option:blogIsInstalled}
 				<ul class="inputList">
@@ -36,12 +44,20 @@
 				<label for="author">{$lblAuthor|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$ddmAuthor} {$ddmAuthorError}
 			</p>
-			<p>
-				<ul class="inputList">
-					<li>{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label></li>
-					<li>{$chkLinkToOriginal} <label for="linkToOriginal">{$lblLinkToOriginal|ucfirst}</label></li>
-				</ul>
+			<ul class="inputList pb0">
+				<li>{$chkAggregateFeed} <label for="aggregateFeed" id="aggregateFeedLabel">{$lblAggregateFeed|ucfirst}</label></li>
+			</ul>
+			<p id="reoccurrenceWrapper">
+				<label for="reoccurrence" class="noFloat">{$lblAggregate|ucfirst}</label>{$ddmReoccurrence}
+				<label for="day" class="noFloat">{$lblOn}</label>
+				{$ddmDay} <label for="time" class="noFloat">{$lblAt}</label>{$txtTime}
+				{$txtTimeError}
+				<span class="helpTxt">{$msgHelpReoccurrence}</span>
 			</p>
+			<ul class="inputList pb0">
+				<li>{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label></li>
+				<li>{$chkLinkToOriginal} <label for="linkToOriginal">{$lblLinkToOriginal|ucfirst}</label></li>
+			</ul>
 		</div>
 	</div>
 

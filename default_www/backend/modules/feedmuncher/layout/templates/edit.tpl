@@ -20,13 +20,27 @@
 				{$txtName} {$txtNameError}
 			</p>
 			<p>
-				<label for="url">{$lblFeedURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$txtUrl} {$txtUrlError}
+				<label for="type">{$lblType|ucfirst}</label>
+				<span>{$item.feed_type}</span>
 			</p>
-			<p>
-				<label for="website">{$lblWebsite|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
-				{$txtWebsite} {$txtWebsiteError}
-			</p>
+			{option:txtUrl}
+				<p>
+					<label for="url">{$lblFeedURL|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+					{$txtUrl} {$txtUrlError}
+				</p>
+			{/option:txtUrl}
+			{option:txtWebsite}
+				<p>
+					<label for="website">{$lblWebsite|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+					{$txtWebsite} {$txtWebsiteError}
+				</p>
+			{/option:txtWebsite}
+			{option:txtUsername}
+				<p>
+					<label for="username">{$lblUsername|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
+					{$txtUsername} {$txtUsernameError}
+				</p>
+			{/option:txtUsername}
 			{option:blogIsInstalled}
 				<ul class="inputList">
 					{iteration:target}
@@ -44,12 +58,22 @@
 				<label for="author">{$lblAuthor|ucfirst}<abbr title="{$lblRequiredField}">*</abbr></label>
 				{$ddmAuthor} {$ddmAuthorError}
 			</p>
-			<p>
-				<ul class="inputList">
-					<li>{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label></li>
-					<li>{$chkLinkToOriginal} <label for="linkToOriginal">{$lblLinkToOriginal|ucfirst}</label></li>
+			{option:chkAggregateFeed}
+				<ul class="inputList pb0">
+					<li>{$chkAggregateFeed} <label for="aggregateFeed" id="aggregateFeedLabel">{$lblAggregateFeed|ucfirst}</label></li>
 				</ul>
+			{/option:chkAggregateFeed}
+			<p id="reoccurrenceWrapper">
+				<label for="reoccurrence" class="noFloat">{$lblAggregate|ucfirst}</label>{$ddmReoccurrence}
+				<label for="day" class="noFloat">{$lblOn}</label>
+				{$ddmDay} <label for="time" class="noFloat">{$lblAt}</label>{$txtTime}
+				{$txtTimeError}
+				<span class="helpTxt">{$msgHelpReoccurrence}</span>
 			</p>
+			<ul class="inputList pb0">
+				<li>{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label></li>
+				{option:chkLinkToOriginal}<li>{$chkLinkToOriginal} <label for="linkToOriginal">{$lblLinkToOriginal|ucfirst}</label></li>{/option:chkLinkToOriginal}
+			</ul>
 		</div>
 	</div>
 

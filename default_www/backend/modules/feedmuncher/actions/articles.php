@@ -92,7 +92,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		if($this->blogCategoryId != null)
 		{
 			// create datagrid
-			$this->dgBlogPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES_FOR_CATEGORY, array($this->blogCategoryId, 'active', BL::getWorkingLanguage(), 'N', 'blog', 'N'));
+			$this->dgBlogPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES_FOR_CATEGORY, array($this->blogCategoryId, 'active', BL::getWorkingLanguage(), 'blog', 'N'));
 
 			// set the URL
 			$this->dgBlogPosts->setURL('&amp;blogCategory=' . $this->blogCategoryId, true);
@@ -101,7 +101,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		else
 		{
 			// create datagrid
-			$this->dgBlogPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'N', 'blog', 'N'));
+			$this->dgBlogPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'blog', 'N'));
 		}
 
 		// set headers
@@ -144,7 +144,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		if($this->feedmuncherCategoryId != null)
 		{
 			// create datagrid
-			$this->dgFeedmuncherPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES_FOR_CATEGORY, array($this->feedmuncherCategoryId, 'active', BL::getWorkingLanguage(), 'N', 'feedmuncher', 'N'));
+			$this->dgFeedmuncherPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES_FOR_CATEGORY, array($this->feedmuncherCategoryId, 'active', BL::getWorkingLanguage(), 'feedmuncher', 'N'));
 
 			// set the URL
 			$this->dgFeedmuncherPosts->setURL('&amp;feedmuncherategory=' . $this->feedmuncherCategoryId, true);
@@ -153,7 +153,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 		else
 		{
 			// create datagrid
-			$this->dgFeedmuncherPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'N', 'feedmuncher', 'N'));
+			$this->dgFeedmuncherPosts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES, array('active', BL::getWorkingLanguage(), 'feedmuncher', 'N'));
 		}
 
 		// set headers
@@ -193,7 +193,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	private function loadDatagridDrafts()
 	{
 		// create datagrid
-		$this->dgDrafts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_DRAFTS, array('draft', BackendAuthentication::getUser()->getUserId(), BL::getWorkingLanguage(), 'N'));
+		$this->dgDrafts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_DRAFTS, array('draft', BackendAuthentication::getUser()->getUserId(), BL::getWorkingLanguage()));
 
 		// hide columns
 		$this->dgDrafts->setColumnsHidden(array('revision_id', 'feed_id', 'hidden', 'created_on'));
@@ -228,7 +228,7 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 	private function loadDatagridNotPublished()
 	{
 		// create datagrid
-		$this->dgNotPublished = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED, array('active', BL::getWorkingLanguage(), 'N', 'Y'));
+		$this->dgNotPublished = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED, array('active', BL::getWorkingLanguage(), 'Y'));
 
 		// set headers
 		$this->dgNotPublished->setHeaderLabels(array('publish_on' => ucfirst(BL::lbl('PublishedOn'))));
@@ -340,6 +340,9 @@ class BackendFeedmuncherArticles extends BackendBaseActionIndex
 				$frm->getField('blogCategory')->setDefaultElement('');
 			}
 		}
+
+		// are there any feeds?
+		$this->tpl->assign('noFeeds', BackendFeedmuncherModel::getAllFeedsCount() == 0);
 
 		// parse form
 		$frm->parse($this->tpl);

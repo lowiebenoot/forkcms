@@ -137,7 +137,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 	private function loadDrafts()
 	{
 		// create datagrid
-		$this->dgDrafts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_SPECIFIC_DRAFTS, array('draft', $this->record['id'], BL::getWorkingLanguage(), 'N', 'feedmuncher'));
+		$this->dgDrafts = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_SPECIFIC_DRAFTS, array('draft', $this->record['id'], BL::getWorkingLanguage(), 'feedmuncher'));
 
 		// hide columns
 		$this->dgDrafts->setColumnsHidden(array('id', 'revision_id'));
@@ -190,9 +190,10 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 		$this->frm->addDropdown('category_id', $categories, $this->record['category_id']);
 		if(count($categories) > 2) $this->frm->getField('category_id')->setDefaultElement('');
 		$this->frm->addDropdown('user_id', BackendUsersModel::getUsers(), $this->record['user_id']);
-		$this->frm->addText('tags', BackendTagsModel::getTags($this->URL->getModule(), $this->record['revision_id']), null, 'inputText tagBox', 'inputTextError tagBox');
+		$this->frm->addText('tags', BackendTagsModel::getTags($this->URL->getModule(), $this->record['id']), null, 'inputText tagBox', 'inputTextError tagBox');
 		$this->frm->addDate('publish_on_date', $this->record['publish_on']);
 		$this->frm->addTime('publish_on_time', date('H:i', $this->record['publish_on']));
+		if($this->record['target'] == 'feedmuncher' && $this->record['feed_type'] == 'feed') $this->frm->addCheckbox('link_to_original', $this->record['link_to_original'] == 'Y');
 
 		// meta object
 		$this->meta = new BackendMeta($this->frm, $this->record['meta_id'], 'title', true);
@@ -312,6 +313,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 				$item['edited_on'] = BackendModel::getUTCDate();
 				$item['target'] = $this->record['target'];
 				$item['original_url'] = $this->record['original_url'];
+				if($this->record['target'] == 'feedmuncher' && $this->record['feed_type'] == 'feed') $item['link_to_original'] = $this->frm->getField('link_to_original')->getValue() ? 'Y' : 'N';
 
 				// update the item
 				$item['revision_id'] = BackendFeedmuncherModel::updateArticle($item);
@@ -323,7 +325,7 @@ class BackendFeedmuncherEditArticle extends BackendBaseActionEdit
 				BackendFeedmuncherModel::reCalculateCommentCount(array($this->id));
 
 				// save the tags
-				BackendTagsModel::saveTags($item['revision_id'], $this->frm->getField('tags')->getValue(), $this->URL->getModule());
+				BackendTagsModel::saveTags($item['id'], $this->frm->getField('tags')->getValue(), $this->URL->getModule());
 
 				// active
 				if($item['status'] == 'active')

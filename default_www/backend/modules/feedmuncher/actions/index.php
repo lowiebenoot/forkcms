@@ -30,7 +30,7 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 		parent::execute();
 
 		// load the datagrids
-		$this->loadDatagrids();
+		$this->loadDatagrid();
 
 		// parse the datagrids
 		$this->parse();
@@ -66,28 +66,49 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 
 
 	/**
+	 * Get the source to use in the datagrid
+	 * example: 'Twitter: @netlash'.
+	 *
+	 * @return	string
+	 * @param	string $type		The type of the feed.
+	 * @param	int $source			The source.
+	 */
+	public static function getSource($type, $source)
+	{
+		// twitter feed?
+		if($type == 'twitter') return 'Twitter: <a href="http://twitter.com/#!/' . $source . '">@' . $source . '</a>';
+
+		// delicious feed?
+		elseif($type == 'delicious') return 'Delicious: <a href="http://www.delicious.com/' . $source . '">' . $source . '</a>';
+
+		// normal feed
+		return '<a href="' . $source . '">' . $source . '</a>';
+	}
+
+
+	/**
 	 * Load the datagrids
 	 *
 	 * @return	void
 	 */
-	private function loadDatagrids()
+	private function loadDatagrid()
 	{
 		// create feeds datagrid
 		$this->dgFeeds = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_FEEDS, array(BL::getWorkingLanguage(), 'N'));
 
 		// set hidden columns
-		$this->dgFeeds->setColumnHidden('target');
+		$this->dgFeeds->setColumnsHidden(array('target', 'feed_type'));
 
 		// set paging
 		$this->dgFeeds->setPaging(false);
 
 		// set colum URLs
 		$this->dgFeeds->setColumnURL('name', BackendModel::createURLForAction('edit') . '&amp;id=[id]');
-		$this->dgFeeds->setColumnURL('source', '[source]');
 
 		// set column functions
 		$this->dgFeeds->setColumnFunction(array('BackendDatagridFunctions', 'getUser'), array('[author]'), 'author', true);
 		$this->dgFeeds->setColumnFunction(array('BackendFeedmuncherIndex', 'getCategory'), array('[target]', '[category]'), 'category', true);
+		$this->dgFeeds->setColumnFunction(array('BackendFeedmuncherIndex', 'getSource'), array('[feed_type]', '[source]'), 'source', true);
 
 		// add edit column
 		$this->dgFeeds->addColumn('edit', null, BL::lbl('Edit'), BackendModel::createURLForAction('edit') . '&amp;id=[id]', BL::lbl('Edit'));
@@ -95,6 +116,7 @@ class BackendFeedmuncherIndex extends BackendBaseActionIndex
 		// set sorting columns
 		$this->dgFeeds->setSortingColumns(array('name', 'author', 'source'), 'id');
 		$this->dgFeeds->setSortParameter('desc');
+
 
 		// our JS needs to know an id, so we can highlight it
 		$this->dgFeeds->setRowAttributes(array('id' => 'row-[revision_id]'));

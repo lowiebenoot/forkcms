@@ -12,7 +12,7 @@
 			<div class="bd content">
 				<ul>
 					{iteration:widgetFeedmuncherRecentArticlesList}
-						<li><a href="{option:!widgetFeedmuncherRecentArticlesList.link_to_original}{$widgetFeedmuncherRecentArticlesList.full_url}{/option:!widgetFeedmuncherRecentArticlesList.link_to_original}{option:widgetFeedmuncherRecentArticlesList.link_to_original}{$widgetFeedmuncherRecentArticlesList.original_url}{/option:widgetFeedmuncherRecentArticlesList.link_to_original}" title="{$widgetFeedmuncherRecentArticlesList.title}">{$widgetFeedmuncherRecentArticlesList.title}</a></li>
+						<li><a href="{$widgetFeedmuncherRecentArticlesList.full_url}" {option:widgetFeedmuncherRecentArticlesList.link_to_original}class="linkToOriginal"{/option:widgetFeedmuncherRecentArticlesList.link_to_original} title="{$widgetFeedmuncherRecentArticlesList.title}">{$widgetFeedmuncherRecentArticlesList.title}</a></li>
 					{/iteration:widgetFeedmuncherRecentArticlesList}
 				</ul>
 			</div>

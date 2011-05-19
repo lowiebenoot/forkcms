@@ -49,12 +49,18 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 		$this->frm = new BackendForm('addFeed');
 
 		// create elements
+		$this->frm->addDropdown('type', array('feed' => 'feed', 'twitter' => 'twitter', 'delicious' => 'delicious'));
 		$this->frm->addText('name', null, 255);
 		$this->frm->addText('url');
 		$this->frm->addText('website', null, 255);
 		$this->frm->addDropdown('author', BackendUsersModel::getUsers(), BackendAuthentication::getUser()->getUserId());
 		$this->frm->addCheckbox('auto_publish', BackendModel::getModuleSetting('feedmuncher', 'auto_publish'));
 		$this->frm->addCheckbox('link_to_original');
+		$this->frm->addCheckbox('aggregate_feed');
+		$this->frm->addText('username');
+		$this->frm->addDropdown('reoccurrence', array('daily' => BL::lbl('Daily'), 'weekly' => BL::lbl('Weekly')));
+		$this->frm->addDropdown('day', array(1 => BL::lbl('Monday'), 2 => BL::lbl('Tuesday'), 3 => BL::lbl('Wednesday'), 4 => BL::lbl('Thursday'), 5 => BL::lbl('Friday'), 6 => BL::lbl('Saturday'), 7 => BL::lbl('Sunday')));
+		$this->frm->addTime('time', null, 'inputText inputTime noFloat');
 
 		// get feedmuncher categories and add the 'add category' item
 		$feedmuncherCategories = BackendFeedmuncherModel::getCategories();
@@ -93,43 +99,116 @@ class BackendFeedmuncherAdd extends BackendBaseActionAdd
 			// cleanup the submitted fields, ignore fields that were added by hackers
 			$this->frm->cleanupFields();
 
+			// get the feed type
+			$type = $this->frm->getField('type')->getValue();
+
 			// is the name filled in?
 			$this->frm->getField('name')->isFilled(BL::err('NameIsRequired'));
 
-			// is the url filled in?
-			if($this->frm->getField('url')->isFilled(BL::err('UrlIsRequired')))
+			// type is feed?
+			if($type == 'feed')
 			{
-				// is the url a valid urL?
-				if($this->frm->getField('url')->isURL(BL::err('UrlIsInvalid')))
+				// is the url filled in?
+				if($this->frm->getField('url')->isFilled(BL::err('UrlIsRequired')))
 				{
-					// is there already a feed with that url (and same language)
-					if(BackendFeedmuncherModel::existsByURL($this->frm->getField('url')->getValue()))
+					// is the url a valid urL?
+					if($this->frm->getField('url')->isURL(BL::err('UrlIsInvalid')))
 					{
-						// is it deleted before?
-						if(BackendFeedmuncherModel::feedDeletedBefore($this->frm->getField('url')->getValue())) $this->frm->getField('url')->addError(sprintf(BL::err('FeedWasDeletedBefore'), BackendModel::createURLForAction('undo_delete', null, null, array('url' => $this->frm->getField('url')->getValue()))));
+						// is there already a feed with that url (and same language)
+						if(BackendFeedmuncherModel::existsByURL($this->frm->getField('url')->getValue()))
+						{
+							// is it deleted before?
+							if(BackendFeedmuncherModel::feedDeletedBefore($this->frm->getField('url')->getValue())) $this->frm->getField('url')->addError(sprintf(BL::err('FeedWasDeletedBefore'), BackendModel::createURLForAction('undo_delete', null, null, array('url' => $this->frm->getField('url')->getValue()))));
 
-						// not deleted before
-						else $this->frm->getField('url')->addError(BL::getError('FeedAlreadyExists'));
+							// not deleted before
+							else $this->frm->getField('url')->addError(BL::getError('FeedAlreadyExists'));
+						}
+					}
+				}
+
+				// is website filled in?
+				if($this->frm->getField('website')->isFilled(BL::err('WebsiteIsRequired'))) $this->frm->getField('website')->isURL(BL::err('WebsiteIsInvalid'));
+			}
+
+			// type is twitter or delicious
+			else
+			{
+				// get the username field
+				$username = $this->frm->getField('username');
+
+				// username filled in?
+				if($username->isFilled(BL::err('UsernameIsRequired')))
+				{
+					// type is twitter?
+					if($type == 'twitter')
+					{
+						// is it a possible username?
+						if(!(bool) preg_match('/^[a-z0-9_]+$/i', $username->getValue())) $username->addError(BL::err('UsernameTwitterIsInvalid'));
+					}
+
+					// type is delicious
+					if($type == 'delicious')
+					{
+						// is it a possible username?
+						if(!(bool) preg_match('/^[a-z0-9_-]+$/i', $username->getValue())) $username->addError(BL::err('UsernameDeliciousIsInvalid'));
+					}
+
+					// no errors on the username field yet?
+					if($username->getErrors() == null)
+					{
+						// already exists?
+						if(BackendFeedmuncherModel::existsByUsernameAndType($username->getValue(), $type))
+						{
+							// is it deleted before?
+							if(BackendFeedmuncherModel::feedDeletedBeforeByUsernameAndType($username->getValue(), $type)) $username->addError(sprintf(BL::err('FeedWasDeletedBefore'), BackendModel::createURLForAction('undo_delete', null, null, array('username' => $username->getValue(), 'type' => $type))));
+
+							// not deleted before
+							else $username->addError(BL::getError('UsernameAlreadyExists'));
+						}
 					}
 				}
 			}
 
-			// is website filled in?
-			if($this->frm->getField('website')->isFilled(BL::err('WebsiteIsRequired'))) $this->frm->getField('website')->isURL(BL::err('WebsiteIsInvalid'));
+			// are we aggregating?
+			if($type != 'feed' || ($type == 'feed' && $this->frm->getField('aggregate_feed')->isChecked()))
+			{
+				// set aggregating to true
+				$aggregating = true;
+
+				// time filled in and correct?
+				if($this->frm->getField('time')->isFilled(BL::err('TimeIsRequired'))) $this->frm->getField('time')->isValid(BL::err('TimeIsInvalid'));
+			}
+
+			// not aggregating
+			else $aggregating = false;
 
 			// is the form correct?
 			if($this->frm->isCorrect())
 			{
 				// build item
 				$item['name'] = $this->frm->getField('name')->getValue();
-				$item['url'] = $this->frm->getField('url')->getValue();
-				$item['source'] = $this->frm->getField('website')->getValue();
+				$item['feed_type'] = $type;
+				$item['url'] = $type == 'feed' ? $this->frm->getField('url')->getValue() : null;
+				$item['source'] = $type == 'feed' ? $this->frm->getField('website')->getValue() : $this->frm->getField('username')->getValue();
 				$item['author_user_id'] = (int) $this->frm->getField('author')->getValue();
 				$item['target'] = ($this->blogIsInstalled) ? $this->frm->getField('target')->getValue() : 'feedmuncher';
 				$item['category_id'] = $item['target'] == 'feedmuncher' ? (int) $this->frm->getField('category')->getValue() : (int) $this->frm->getField('category_blog')->getValue();
 				$item['auto_publish'] = $this->frm->getField('auto_publish')->isChecked() == true ? 'Y' : 'N';
-				$item['link_to_original'] = $this->frm->getField('link_to_original')->isChecked() == true ? 'Y' : 'N';
+				$item['link_to_original'] = $this->frm->getField('link_to_original')->isChecked() == true && $type == 'feed' ? 'Y' : 'N';
 				$item['language'] = BL::getWorkingLanguage();
+				$item['date_fetched'] = null;
+
+				// type is not feed, so we need a reoccurrence
+				if($aggregating)
+				{
+					// create array for the reoccurrence
+					$reoccurrence['reoccurrence'] = $this->frm->getField('reoccurrence')->getValue();
+					$reoccurrence['day'] = $reoccurrence['reoccurrence'] == 'weekly' ? $this->frm->getField('day')->getValue() : null;
+					$reoccurrence['time'] = $this->frm->getField('time')->getValue();
+
+					// add the reocurrence to the item as serialized data
+					$item['reoccurrence'] = serialize($reoccurrence);
+				}
 
 				// insert in DB
 				$feedId = BackendFeedmuncherModel::insert($item);

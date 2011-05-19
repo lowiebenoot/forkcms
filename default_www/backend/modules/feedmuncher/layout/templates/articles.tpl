@@ -3,6 +3,9 @@
 
 <div class="pageTitle">
 	<h2>{$lblFeedmuncher|ucfirst}: {$lblArticles}</h2>
+	<div class="buttonHolderRight">
+		<a href="{$var|geturl:'loading'}" id="getArticles" class="submitButton button inputButton mainButton icon iconRefresh"><span>{$lblGetArticlesNow|ucfirst}</span></a>
+	</div>
 </div>
 
 <div id="tabs" class="tabs">
@@ -28,7 +31,12 @@
 				</div>
 			{/option:dgFeedmuncherPosts}
 
-			{option:!dgFeedmuncherPosts}<p>{$msgNoItems|sprintf:{$var|geturl:'add'}}</p>{/option:!dgFeedmuncherPosts}
+			{option:!dgFeedmuncherPosts}
+				<p>
+					{option:noFeeds}{$msgNoFeeds|sprintf:{$var|geturl:'add'}}{/option:noFeeds}
+					{option:!noFeeds}{$msgNoItems|sprintf:{$var|geturl:'add'}}{/option:!noFeeds}
+				</p>
+			{/option:!dgFeedmuncherPosts}
 		</div>
 
 		{option:blogIsInstalled}
@@ -45,8 +53,12 @@
 						{$dgBlogPosts}
 					</div>
 				{/option:dgBlogPosts}
-
-				{option:!dgBlogPosts}<p>{$msgNoItems|sprintf:{$var|geturl:'add'}}</p>{/option:!dgBlogPosts}
+				{option:!dgBlogPosts}
+					<p>
+						{option:noFeeds}{$msgNoFeeds|sprintf:{$var|geturl:'add'}}{/option:noFeeds}
+						{option:!noFeeds}{$msgNoItems|sprintf:{$var|geturl:'add'}}{/option:!noFeeds}
+					</p>
+				{/option:!dgBlogPosts}
 			</div>
 		{/option:blogIsInstalled}
 	{/form:filter}
@@ -60,7 +72,10 @@
 			</form>
 		{/option:dgNotPublished}
 		{option:!dgNotPublished}
-			<p>{$msgNoItems|sprintf:{$var|geturl:'add'}}</p>
+			<p>
+				{option:noFeeds}{$msgNoFeeds|sprintf:{$var|geturl:'add'}}{/option:noFeeds}
+				{option:!noFeeds}{$msgNoItems|sprintf:{$var|geturl:'add'}}{/option:!noFeeds}
+			</p>
 		{/option:!dgNotPublished}
 	</div>
 

@@ -10,7 +10,7 @@
 			<article class="mod article">
 				<div class="inner">
 					<header class="hd">
-						<h3><a href="{option:!items.link_to_original}{$items.full_url}{/option:!items.link_to_original}{option:items.link_to_original}{$items.original_url}{/option:items.link_to_original}" title="{$items.title}">{$items.title}</a></h3>
+						<h3><a href="{$items.full_url}" {option:items.link_to_original}class="linkToOriginal"{/option:items.link_to_original} title="{$items.title}">{$items.title}</a></h3>
 						<ul>
 							<li>
 								{* Written by *}
@@ -40,6 +40,10 @@
 									{/option:items.comments}
 								</li>
 							{/option:!items.link_to_original}
+							<li>
+								{* Source *}
+								{$msgSource|ucfirst|sprintf:{$items.source_name}:{$items.source_url}}
+							</li>
 						</ul>
 					</header>
 					<div class="bd content">

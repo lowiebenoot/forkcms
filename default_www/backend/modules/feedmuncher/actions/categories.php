@@ -40,7 +40,7 @@ class BackendFeedmuncherCategories extends BackendBaseActionIndex
 	private function loadDataGrid()
 	{
 		// create datagrid
-		$this->datagrid = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_CATEGORIES, array('active', 'N','N', 'feedmuncher', BL::getWorkingLanguage()));
+		$this->datagrid = new BackendDataGridDB(BackendFeedmuncherModel::QRY_DATAGRID_BROWSE_CATEGORIES, array('active', 'N', 'feedmuncher', BL::getWorkingLanguage()));
 
 		// set headers
 		$this->datagrid->setHeaderLabels(array('num_items' => ucfirst(BL::lbl('Amount'))));

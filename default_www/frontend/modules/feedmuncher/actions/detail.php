@@ -110,7 +110,7 @@ class FrontendFeedmuncherDetail extends FrontendBaseBlock
 		if(empty($this->record)) $this->redirect(FrontendNavigation::getURL(404));
 
 		// shoul it be redirected to the original article, but somehow the user ended up here? Redirect to original article.
-		if(FrontendModel::getModuleSetting('feedmuncher', 'link_to_original', false)) $this->redirect($this->record['original_url']);
+		if($this->record['link_to_original'] == 'Y') $this->redirect($this->record['original_url']);
 
 		// overwrite URLs
 		$this->record['category_full_url'] = FrontendNavigation::getURLForBlock('feedmuncher', 'category') . '/' . $this->record['category_url'];

@@ -29,7 +29,7 @@
 						{iteration:items}
 							<tr>
 								<td class="date">{$items.publish_on|date:{$dateFormatShort}:{$LANGUAGE}}</td>
-								<td class="title"><a href="{option:!items.link_to_original}{$items.full_url}{/option:!items.link_to_original}{option:items.link_to_original}{$items.original_url}{/option:items.link_to_original}" title="{$items.title}">{$items.title}</a></td>
+								<td class="title"><a href="{$items.full_url}" {option:items.link_to_original}class="linkToOriginal"{/option:items.link_to_original} title="{$items.title}">{$items.title}</a></td>
 								<td class="comments">
 									{option:!items.link_to_original}
 										{option:!items.comments}<a href="{$items.full_url}#{$actComment}">{$msgFeedmuncherNoComments|ucfirst}</a>{/option:!items.comments}

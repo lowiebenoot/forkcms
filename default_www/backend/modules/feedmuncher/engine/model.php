@@ -14,18 +14,18 @@ class BackendFeedmuncherModel
 	const QRY_DATAGRID_BROWSE_ARTICLES = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.num_comments AS comments, i.hidden, i.blog_post_id
 											FROM feedmuncher_posts AS i
 											INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-											WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ? AND hidden = ?';
+											WHERE i.status = ? AND i.language = ? AND i.target = ? AND hidden = ?';
 	const QRY_DATAGRID_BROWSE_ARTICLES_FOR_CATEGORY = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.num_comments AS comments, i.hidden, i.blog_post_id
 														FROM feedmuncher_posts AS i
 														INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-														WHERE i.category_id = ? AND i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ? AND hidden = ?';
+														WHERE i.category_id = ? AND i.status = ? AND i.language = ? AND i.target = ? AND hidden = ?';
 	const QRY_DATAGRID_BROWSE_ARTICLES_NOT_PUBLISHED = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.hidden
 														FROM feedmuncher_posts AS i
 														INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-														WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND hidden = ?';
+														WHERE i.status = ? AND i.language = ? AND hidden = ?';
 	const QRY_DATAGRID_BROWSE_CATEGORIES = 'SELECT i.id, i.title, COUNT(p.id) AS num_items
 											FROM feedmuncher_categories AS i
-											LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND p.status = ? AND p.language = i.language AND p.hidden = ? AND p.deleted = ? AND p.target = ?
+											LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND p.status = ? AND p.language = i.language AND p.hidden = ? AND p.target = ?
 											WHERE i.language = ?
 											GROUP BY i.id';
 	const QRY_DATAGRID_BROWSE_COMMENTS = 'SELECT i.id, UNIX_TIMESTAMP(i.created_on) AS created_on, i.author, i.text,
@@ -33,7 +33,7 @@ class BackendFeedmuncherModel
 											FROM feedmuncher_comments AS i
 											INNER JOIN feedmuncher_posts AS p ON i.post_id = p.id AND i.language = p.language
 											INNER JOIN meta AS m ON p.meta_id = m.id
-											WHERE i.status = ? AND i.language = ?
+											WHERE i.status = ? AND i.language = ? AND p.status = ?
 											GROUP BY i.id';
 	const QRY_DATAGRID_BROWSE_DRAFTS = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id AS author, i.num_comments AS comments, i.hidden
 										FROM feedmuncher_posts AS i
@@ -45,14 +45,14 @@ class BackendFeedmuncherModel
 											GROUP BY i.id
 										) AS p
 										INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-										WHERE i.revision_id = p.revision_id  AND i.deleted = ?';
-	const QRY_DATAGRID_BROWSE_FEEDS = 'SELECT i.id, i.name, i.source, i.category_id AS category, i.target, i.author_user_id AS author
+										WHERE i.revision_id = p.revision_id';
+	const QRY_DATAGRID_BROWSE_FEEDS = 'SELECT i.id, i.name, i.source, i.category_id AS category, i.target, i.author_user_id AS author, i.feed_type
 										FROM feedmuncher_feeds AS i
-										WHERE i.language = ? AND deleted = ?';
+										WHERE i.language = ? AND i.deleted = ?';
 	const QRY_DATAGRID_BROWSE_RECENT = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, UNIX_TIMESTAMP(i.created_on) AS created_on, f.id AS feed_id, f.name AS feed, i.user_id, i.num_comments AS comments, i.hidden
 										FROM feedmuncher_posts AS i
 										INNER JOIN feedmuncher_feeds as f ON f.id = i.feed_id
-										WHERE i.status = ? AND i.language = ? AND i.deleted = ? AND i.target = ?
+										WHERE i.status = ? AND i.language = ? AND i.target = ?
 										ORDER BY i.date DESC
 										LIMIT ?';
 	const QRY_DATAGRID_BROWSE_REVISIONS = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, i.user_id, i.hidden
@@ -61,7 +61,7 @@ class BackendFeedmuncherModel
 											ORDER BY i.date DESC';
 	const QRY_DATAGRID_BROWSE_SPECIFIC_DRAFTS = 'SELECT i.id, i.revision_id, i.title, UNIX_TIMESTAMP(i.edited_on) AS edited_on, UNIX_TIMESTAMP(i.created_on) AS created_on, i.user_id
 													FROM feedmuncher_posts AS i
-													WHERE i.status = ? AND i.id = ? AND i.language = ? AND i.deleted = ? AND i.target = ?
+													WHERE i.status = ? AND i.id = ? AND i.language = ? AND i.target = ?
 													ORDER BY i.date DESC';
 
 
@@ -91,8 +91,8 @@ class BackendFeedmuncherModel
 		$deletedArticles = (array) BackendModel::getDB()->getColumn('SELECT i.id
 																		FROM feedmuncher_posts AS i
 																		LEFT OUTER JOIN blog_posts AS b on b.id = i.blog_post_id
-																		WHERE i.target = ? AND i.hidden = ? AND b.id IS NULL AND i.deleted = ?',
-																		array('blog', 'N', 'N'));
+																		WHERE i.target = ? AND i.hidden = ? AND b.id IS NULL',
+																		array('blog', 'N'));
 
 		// delete the articles
 		if(!empty($deletedArticles)) self::deleteArticle($deletedArticles);
@@ -129,6 +129,9 @@ class BackendFeedmuncherModel
 	 */
 	public static function deleteArticle($ids)
 	{
+		// get db
+		$db = BackendModel::getDB(true);
+
 		// make sure $ids is an array
 		$ids = (array) $ids;
 
@@ -138,18 +141,27 @@ class BackendFeedmuncherModel
 		// create an array with an equal amount of questionmarks as ids provided
 		$idPlaceHolders = array_fill(0, count($ids), '?');
 
-		// delete article in db (mark as deleted)
-		BackendModel::getDB(true)->update('feedmuncher_posts', array('deleted' => 'Y') , 'id IN (' . implode(',', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
-
-		// loop artilces
+		// loop articles
 		foreach($ids as $id)
 		{
 			// get article
 			$article = self::getArticle($id);
 
+			// delete tags
+			BackendTagsModel::saveTags($id, '', $article['target']);
+
 			// delete search indexes
 			if(is_callable(array('BackendSearchModel', 'removeIndex'))) BackendSearchModel::removeIndex($article['target'], $id);
+
+			// delete meta
+			$db->delete('meta', 'id = ?', (int) $article['meta_id']);
 		}
+
+		// delete article
+		$db->delete('feedmuncher_posts', 'id IN (' . implode(',', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
+
+		// delete comments
+		$db->delete('feedmuncher_comments', 'post_id IN (' . implode(', ', $idPlaceHolders) . ') AND language = ?', array_merge($ids, array(BL::getWorkingLanguage())));
 
 		// invalidate the cache for feedmuncher
 		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
@@ -194,8 +206,8 @@ class BackendFeedmuncherModel
 	{
 		return (BackendModel::getDB()->getVar('SELECT COUNT(id)
 												FROM feedmuncher_posts AS i
-												WHERE i.category_id = ? AND i.target = ? AND i.deleted = ? AND i.language = ?',
-												array((int) $id, 'feedmuncher', 'N', BL::getWorkingLanguage())) == 0);
+												WHERE i.category_id = ? AND i.target = ? AND i.language = ?',
+												array((int) $id, 'feedmuncher', BL::getWorkingLanguage())) == 0);
 	}
 
 
@@ -309,6 +321,23 @@ class BackendFeedmuncherModel
 
 
 	/**
+	 * Checks if a feed exists by username and type
+	 *
+	 * @return	bool
+	 * @param	string $username	The username to check for existing.
+	 * @param	string $type		The type of the feed.
+	 */
+	public static function existsByUsernameAndType($username, $type)
+	{
+		// exists?
+		return (bool) ((int) BackendModel::getDB()->getVar('SELECT COUNT(i.id)
+															FROM feedmuncher_feeds AS i
+															WHERE i.source = ? AND i.feed_type = ? AND i.language = ?',
+															array($username, $type, BL::getWorkingLanguage())) > 0);
+	}
+
+
+	/**
 	 * Checks if a category exists
 	 *
 	 * @return	bool
@@ -352,8 +381,29 @@ class BackendFeedmuncherModel
 		// no user to ignore
 		return (bool) BackendModel::getDB()->getVar('SELECT COUNT(i.id)
 														FROM feedmuncher_feeds AS i
-														WHERE i.url = ? AND i.deleted = ?',
-														array($url, 'Y'));
+														WHERE i.url = ? AND i.deleted = ? AND i.language = ?',
+														array($url, 'Y', BL::getWorkingLanguage()));
+	}
+
+
+	/**
+	 * Was a feed deleted before (by username and type)?
+	 *
+	 * @return	bool
+	 * @param	string $username	The username of the feed to check.
+	 * @param	string $type		The type of the feed to check.
+	 */
+	public static function feedDeletedBeforeByUsernameAndType($username, $type)
+	{
+		// redefine
+		$username = (string) $username;
+		$type = (string) $type;
+
+		// no user to ignore
+		return (bool) BackendModel::getDB()->getVar('SELECT COUNT(i.id)
+														FROM feedmuncher_feeds AS i
+														WHERE i.source = ? AND i.feed_type = ? AND i.deleted = ? AND i.language = ?',
+														array($username, $type, 'Y', BL::getWorkingLanguage()));
 	}
 
 
@@ -402,6 +452,20 @@ class BackendFeedmuncherModel
 
 
 	/**
+	 * Get all feeds
+	 *
+	 * @return	array
+	 */
+	public static function getAllFeedsCount()
+	{
+		return (int) BackendModel::getDB()->getVar('SELECT count(i.id)
+													FROM feedmuncher_feeds as i
+													WHERE deleted = ?',
+													'N');
+	}
+
+
+	/**
 	 * Get all data for a given id
 	 *
 	 * @return	array
@@ -409,10 +473,10 @@ class BackendFeedmuncherModel
 	 */
 	public static function getArticle($id)
 	{
-		return (array) BackendModel::getDB()->getRecord('SELECT i.*, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.date) AS created_on, UNIX_TIMESTAMP(i.edited_on) AS edited_on,
-															m.url
+		return (array) BackendModel::getDB()->getRecord('SELECT i.*, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.date) AS created_on, UNIX_TIMESTAMP(i.edited_on) AS edited_on, f.feed_type, m.url
 															FROM feedmuncher_posts AS i
 															INNER JOIN meta AS m ON m.id = i.meta_id
+															INNER JOIN feedmuncher_feeds AS f ON f.id = i.feed_id
 															WHERE i.id = ? AND i.status = ? AND i.language = ?
 															LIMIT 1',
 															array((int) $id, 'active', BL::getWorkingLanguage()));
@@ -428,9 +492,10 @@ class BackendFeedmuncherModel
 	 */
 	public static function getArticleRevision($id, $revisionId)
 	{
-		return (array) BackendModel::getDB()->getRecord('SELECT i.*, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.date) AS created_on, UNIX_TIMESTAMP(i.edited_on) AS edited_on, m.url
+		return (array) BackendModel::getDB()->getRecord('SELECT i.*, UNIX_TIMESTAMP(i.date) AS publish_on, UNIX_TIMESTAMP(i.date) AS created_on, UNIX_TIMESTAMP(i.edited_on) AS edited_on, m.url, f.feed_type
 															FROM feedmuncher_posts AS i
 															INNER JOIN meta AS m ON m.id = i.meta_id
+															INNER JOIN feedmuncher_feeds AS f ON f.id = i.feed_id
 															WHERE i.id = ? AND i.revision_id = ?',
 															array((int) $id, (int) $revisionId));
 	}
@@ -452,10 +517,10 @@ class BackendFeedmuncherModel
 		{
 			return (array) BackendModel::getDB()->getPairs('SELECT i.id, CONCAT(i.title, " (",  COUNT(p.category_id) ,")") AS title
 															FROM feedmuncher_categories AS i
-															LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND i.language = p.language AND p.status = ? AND p.hidden = ? AND p.target = ? AND p.deleted = ?
+															LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND i.language = p.language AND p.status = ? AND p.hidden = ? AND p.target = ?
 															WHERE i.language = ?
 															GROUP BY i.id',
-															array('active', 'N', 'feedmuncher', 'N', BL::getWorkingLanguage()));
+															array('active', 'N', 'feedmuncher', BL::getWorkingLanguage()));
 		}
 
 		// get records and return them
@@ -482,10 +547,10 @@ class BackendFeedmuncherModel
 		{
 			return (array) BackendModel::getDB()->getPairs('SELECT i.id, CONCAT(i.title, " (",  COUNT(p.category_id) ,")") AS title
 															FROM blog_categories AS i
-															LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND i.language = p.language AND p.status = ? AND p.hidden = ? AND p.target = ? AND p.deleted = ?
+															LEFT OUTER JOIN feedmuncher_posts AS p ON i.id = p.category_id AND i.language = p.language AND p.status = ? AND p.hidden = ? AND p.target = ?
 															WHERE i.language = ?
 															GROUP BY i.id',
-															array('active', 'N', 'blog', 'N', BL::getWorkingLanguage()));
+															array('active', 'N', 'blog', BL::getWorkingLanguage()));
 		}
 
 		// get records and return them
@@ -626,18 +691,6 @@ class BackendFeedmuncherModel
 	public static function getMetaByid($id)
 	{
 		return (int) BackendModel::getDB()->getVar('SELECT * FROM meta AS m WHERE m.id = ?', (int) $id);
-	}
-
-
-	/**
-	 * Get all the dates from the publicated articles from a feed
-	 *
-	 * @return	array
-	 * @param	int $id		The id of the feed.
-	 */
-	public static function getPublishedDates($id)
-	{
-		return (array) BackendModel::getDB()->getColumn('SELECT date FROM feedmuncher_posts WHERE feed_id = ?', (int) $id);
 	}
 
 
@@ -897,7 +950,7 @@ class BackendFeedmuncherModel
 					$item['meta_id'] = self::insertMeta($record['title'], BackendBlogModel::getURL($record['title']));
 
 					// unset the keys that we don't need for blog
-					unset($item['revision_id'], $item['date'], $item['target'], $item['feed_id'], $item['deleted'], $item['target'], $item['blog_post_id'], $item['url'], $item['original_url']);
+					unset($item['revision_id'], $item['date'], $item['target'], $item['feed_id'], $item['target'], $item['blog_post_id'], $item['url'], $item['original_url'], $item['link_to_original'], $item['feed_type']);
 
 					// add search index
 					if(is_callable(array('BackendSearchModel', 'editIndex'))) BackendSearchModel::editIndex('blog', $item['id'], array('title' => $record['title'], 'text' => $record['text']));
@@ -923,6 +976,9 @@ class BackendFeedmuncherModel
 				}
 			}
 		}
+
+		// invalidate the cache for feedmuncher
+		BackendModel::invalidateFrontendCache('feedmuncher', BL::getWorkingLanguage());
 	}
 
 
@@ -985,34 +1041,48 @@ class BackendFeedmuncherModel
 	/**
 	 * Restores a user
 	 *
-	 * @return	bool
-	 * @param	string $url		The url of the feed to restore.
+	 * @return	mixed
+	 * @param	string $url			The url of the feed to restore.
+	 * @param	string $username	The username of the feed to restore.
+	 * @param	string $type		The type of the feed to restore.
 	 */
-	public static function undoDelete($url)
+	public static function undoDelete($url, $username, $type)
 	{
-		// redefine
-		$url = (string) $url;
-
 		// get db
 		$db = BackendModel::getDB(true);
 
-		// get id
-		$id = $db->getVar('SELECT id
-							FROM feedmuncher_feeds AS i
-							WHERE i.url = ? AND i.deleted = ?',
-							array($url, 'Y'));
+		// undelete by url
+		if($url !== null)
+		{
+			// get id
+			$id = (int) $db->getVar('SELECT i.id
+								FROM feedmuncher_feeds AS i
+								WHERE i.url = ? AND i.language = ? AND i.deleted = ?',
+								array($url, BL::getWorkingLanguage(), 'Y'));
+		}
 
-		// no valid users
-		if($id === null) return false;
-
+		// undelete by username and type
 		else
 		{
+			// get id
+			$id = (int) $db->getVar('SELECT i.id
+								FROM feedmuncher_feeds AS i
+								WHERE i.source = ? AND i.feed_type = ? AND i.language = ? AND i.deleted = ?',
+								array($username, $type, BL::getWorkingLanguage(), 'Y'));
+		}
+
+		// a feed was found
+		if($id != null)
+		{
 			// restore
-			$db->update('feedmuncher_feeds', array('deleted' => 'N'), 'id = ?', (int) $id);
+			$db->update('feedmuncher_feeds', array('deleted' => 'N'), 'id = ?', $id);
 
 			// return
 			return $id;
 		}
+
+		// no feed found
+		return false;
 	}
 
 

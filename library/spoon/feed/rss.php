@@ -844,8 +844,9 @@ class SpoonFeedRSS
 	 * @return	SpoonRSS					Returns as an instance of SpoonRSS.
 	 * @param	string $URL					An URL where the feed is located or the XML of the feed.
 	 * @param	string[optional] $type		The type of feed, possible values are: url, string.
+	 * @param	bool[optional] $force		Force to read this feed without validation.
 	 */
-	public static function readFromFeed($URL, $type = 'url')
+	public static function readFromFeed($URL, $type = 'url', $force = false)
 	{
 		// redefine var
 		$URL = (string) $URL;
@@ -853,7 +854,7 @@ class SpoonFeedRSS
 
 		// validate
 		if($type == 'url' && !SpoonFilter::isURL($URL)) throw new SpoonFeedException('This (' . SpoonFilter::htmlentities($URL) . ') isn\'t a valid URL.');
-		if(!self::isValid($URL, $type)) throw new SpoonFeedException('Invalid feed');
+		if(!$force) if(!self::isValid($URL, $type)) throw new SpoonFeedException('Invalid feed');
 
 		// load xmlstring
 		if($type == 'url') $xmlString = SpoonHTTP::getContent($URL);

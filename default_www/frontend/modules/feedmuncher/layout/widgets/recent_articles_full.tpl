@@ -14,7 +14,7 @@
 					<article class="mod article">
 						<div class="inner">
 							<header class="hd">
-								<h4><a href="{option:!widgetFeedmuncherRecentArticlesFull.link_to_original}{$widgetFeedmuncherRecentArticlesFull.full_url}{/option:!widgetFeedmuncherRecentArticlesFull.link_to_original}{option:widgetFeedmuncherRecentArticlesFull.link_to_original}{$widgetFeedmuncherRecentArticlesFull.original_url}{/option:widgetFeedmuncherRecentArticlesFull.link_to_original}" title="{$widgetFeedmuncherRecentArticlesFull.title}">{$widgetFeedmuncherRecentArticlesFull.title}</a></h4>
+								<h4><a href="{$widgetFeedmuncherRecentArticlesFull.full_url}" {option:widgetFeedmuncherRecentArticlesFull.link_to_original}class="linkToOriginal"{/option:widgetFeedmuncherRecentArticlesFull.link_to_original} title="{$widgetFeedmuncherRecentArticlesFull.title}">{$widgetFeedmuncherRecentArticlesFull.title}</a></h4>
 								<ul>
 									<li>{$msgWrittenBy|ucfirst|sprintf:{$widgetFeedmuncherRecentArticlesFull.user_id|usersetting:'nickname'}} {$lblOn} {$widgetFeedmuncherRecentArticlesFull.publish_on|date:{$dateFormatLong}:{$LANGUAGE}}</li>
 									{option:!widgetFeedmuncherRecentArticlesFull.link_to_original}

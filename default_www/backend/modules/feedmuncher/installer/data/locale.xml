@@ -2,13 +2,25 @@
 <locale>
   <backend>
     <feedmuncher>
+      <item type="error" name="FeedAlreadyExists">
+        <translation language="nl"><![CDATA[Een feed met deze URL bestaat reeds.]]></translation>
+        <translation language="en"><![CDATA[A feed with this URL already exists.]]></translation>
+      </item>
       <item type="error" name="FeedWasDeletedBefore">
         <translation language="nl"><![CDATA[Een feed met deze URL werd vroeger verwijderd. <a href="%1$s">Activeer deze feed</a>.]]></translation>
         <translation language="en"><![CDATA[A feed with this URL was deleted. <a href="%1$s">Restore this feed</a>.]]></translation>
       </item>
+      <item type="error" name="GetDataError">
+        <translation language="nl"><![CDATA[Er liep iets mis bij het ophalen van de gegevens van jouw feeds. Onze excuses voor het ongemak. Probeer het later nog eens.]]></translation>
+        <translation language="en"><![CDATA[Something went wrong while collecting the data from your feeds. Our appologies for the inconvenience. Please try again later.]]></translation>
+      </item>
       <item type="error" name="RSSDescription">
-        <translation language="nl"><![CDATA[feedmuncher RSS beschrijving is nog niet geconfigureerd. <a href="%1$s">Configureer</a>]]></translation>
+        <translation language="nl"><![CDATA[Feedmuncher RSS beschrijving is nog niet geconfigureerd. <a href="%1$s">Configureer</a>]]></translation>
         <translation language="en"><![CDATA[Feedmuncher RSS description is not yet provided. <a href="%1$s">Configure</a>]]></translation>
+      </item>
+      <item type="error" name="TimeIsRequired">
+        <translation language="nl"><![CDATA[Gelieve een tijd in te geven.]]></translation>
+        <translation language="en"><![CDATA[Please provide a time.]]></translation>
       </item>
       <item type="error" name="UrlIsInvalid">
         <translation language="nl"><![CDATA[Feed URL is ongeldig.]]></translation>
@@ -17,6 +29,22 @@
       <item type="error" name="UrlIsRequired">
         <translation language="nl"><![CDATA[Gelieve een feed URL in te geven.]]></translation>
         <translation language="en"><![CDATA[Please provide a feed URL.]]></translation>
+      </item>
+      <item type="error" name="UsernameAlreadyExists">
+        <translation language="nl"><![CDATA[Een feed met deze gebruikersnaam bestaat reeds.]]></translation>
+        <translation language="en"><![CDATA[A feed with this username already exists.]]></translation>
+      </item>
+      <item type="error" name="UsernameDeliciousIsInvalid">
+        <translation language="nl"><![CDATA[Gelieve een geldige Delicious gebruikersnaam in te geven, deze kan enkel bestaan uit letters, cijfers, liggende streepjes en underscores.]]></translation>
+        <translation language="en"><![CDATA[Please provide a valid Delicious username, this can only contain letters, numbers and underscores.]]></translation>
+      </item>
+      <item type="error" name="UsernameIsRequired">
+        <translation language="nl"><![CDATA[Gelieve een gebruikersnaam in te geven.]]></translation>
+        <translation language="en"><![CDATA[Please provide username.]]></translation>
+      </item>
+      <item type="error" name="UsernameTwitterIsInvalid">
+        <translation language="nl"><![CDATA[Gelieve een geldige Twitter gebruikersnaam in te geven, deze kan enkel bestaan uit letters, cijfers en underscores.]]></translation>
+        <translation language="en"><![CDATA[Please provide a valid Twitter username, this can only contain letters, numbers and underscores.]]></translation>
       </item>
       <item type="error" name="WebsiteIsInvalid">
         <translation language="nl"><![CDATA[Website is ongeldig.]]></translation>
@@ -30,6 +58,22 @@
         <translation language="nl"><![CDATA[artikel toevoegen]]></translation>
         <translation language="en"><![CDATA[add article]]></translation>
       </item>
+      <item type="label" name="Aggregate">
+        <translation language="nl"><![CDATA[aggregeer]]></translation>
+        <translation language="en"><![CDATA[aggregate]]></translation>
+      </item>
+      <item type="label" name="AggregateFeed">
+        <translation language="nl"><![CDATA[aggregeer de artikels in 1 artikel]]></translation>
+        <translation language="en"><![CDATA[aggregate the articles in 1 article]]></translation>
+      </item>
+      <item type="label" name="At">
+        <translation language="nl"><![CDATA[om]]></translation>
+        <translation language="en"><![CDATA[at]]></translation>
+      </item>
+      <item type="label" name="Daily">
+        <translation language="nl"><![CDATA[dagelijks]]></translation>
+        <translation language="en"><![CDATA[daily]]></translation>
+      </item>
       <item type="label" name="Feed">
         <translation language="nl"><![CDATA[feed]]></translation>
         <translation language="en"><![CDATA[feed]]></translation>
@@ -42,20 +86,36 @@
         <translation language="nl"><![CDATA[feed URL]]></translation>
         <translation language="en"><![CDATA[feed URL]]></translation>
       </item>
+      <item type="label" name="Friday">
+        <translation language="nl"><![CDATA[vrijdag]]></translation>
+        <translation language="en"><![CDATA[friday]]></translation>
+      </item>
+      <item type="label" name="GetArticlesNow">
+        <translation language="nl"><![CDATA[haal artikels nu op]]></translation>
+        <translation language="en"><![CDATA[get articles now]]></translation>
+      </item>
       <item type="label" name="LinkToOriginal">
         <translation language="nl"><![CDATA[link naar het originele artikel]]></translation>
         <translation language="en"><![CDATA[link to the original article]]></translation>
+      </item>
+      <item type="label" name="Monday">
+        <translation language="nl"><![CDATA[maandag]]></translation>
+        <translation language="en"><![CDATA[monday]]></translation>
       </item>
       <item type="label" name="NotPublished">
         <translation language="nl"><![CDATA[niet gepubliceerd]]></translation>
         <translation language="en"><![CDATA[not published]]></translation>
       </item>
+      <item type="label" name="On">
+        <translation language="nl"><![CDATA[op]]></translation>
+        <translation language="en"><![CDATA[on]]></translation>
+      </item>
       <item type="label" name="PostInBlog">
-        <translation language="nl"><![CDATA[publiceer de artikelen in de blog module]]></translation>
+        <translation language="nl"><![CDATA[publiceer de artikels in de blog module]]></translation>
         <translation language="en"><![CDATA[publish the articles in the blog module]]></translation>
       </item>
       <item type="label" name="PostInFeedmuncher">
-        <translation language="nl"><![CDATA[publiceer de artikelen in de feedmuncher module]]></translation>
+        <translation language="nl"><![CDATA[publiceer de artikels in de feedmuncher module]]></translation>
         <translation language="en"><![CDATA[publish the articles in the feedmuncher module]]></translation>
       </item>
       <item type="label" name="PublishedInFeedmuncher">
@@ -66,6 +126,34 @@
         <translation language="nl"><![CDATA[gepubliceerd in blog]]></translation>
         <translation language="en"><![CDATA[published in blog]]></translation>
       </item>
+      <item type="label" name="Saturday">
+        <translation language="nl"><![CDATA[zaterdag]]></translation>
+        <translation language="en"><![CDATA[saturday]]></translation>
+      </item>
+      <item type="label" name="Sunday">
+        <translation language="nl"><![CDATA[zondag]]></translation>
+        <translation language="en"><![CDATA[sunday]]></translation>
+      </item>
+      <item type="label" name="Thursday">
+        <translation language="nl"><![CDATA[donderdag]]></translation>
+        <translation language="en"><![CDATA[thursday]]></translation>
+      </item>
+      <item type="label" name="Tuesday">
+        <translation language="nl"><![CDATA[dinsdag]]></translation>
+        <translation language="en"><![CDATA[tuesday]]></translation>
+      </item>
+      <item type="label" name="Week">
+        <translation language="nl"><![CDATA[week]]></translation>
+        <translation language="en"><![CDATA[week]]></translation>
+      </item>
+      <item type="label" name="Weekly">
+        <translation language="nl"><![CDATA[wekelijks]]></translation>
+        <translation language="en"><![CDATA[weekly]]></translation>
+      </item>
+      <item type="label" name="Wednesday">
+        <translation language="nl"><![CDATA[woensdag]]></translation>
+        <translation language="en"><![CDATA[wednesday]]></translation>
+      </item>
       <item type="message" name="Added">
         <translation language="nl"><![CDATA[Het artikel "%1$s" werd toegevoegd.]]></translation>
         <translation language="en"><![CDATA[The article "%1$s" was added.]]></translation>
@@ -73,6 +161,10 @@
       <item type="message" name="AddedFeed">
         <translation language="nl"><![CDATA[De feed "%1$s" werd toegevoegd.]]></translation>
         <translation language="en"><![CDATA[The feed "%1$s" was added.]]></translation>
+      </item>
+      <item type="message" name="ArticlesFetched">
+        <translation language="nl"><![CDATA[De artikels werden opgehaald.]]></translation>
+        <translation language="en"><![CDATA[The articles were fetched.]]></translation>
       </item>
       <item type="message" name="CommentOnWithURL">
         <translation language="nl"><![CDATA[Reactie op: <a href="%1$s">%2$s</a>]]></translation>
@@ -131,7 +223,7 @@
         <translation language="en"><![CDATA[The feed "%1$s" was saved.]]></translation>
       </item>
       <item type="message" name="FeedIsDeleted">
-        <translation language="nl"><![CDATA[Deze feed werd verwijderd. Nieuwe artikelen zullen niet gedownload worden. <a href="%1$s">Activeer deze feed</a>.]]></translation>
+        <translation language="nl"><![CDATA[Deze feed werd verwijderd. Nieuwe artikels zullen niet gedownload worden. <a href="%1$s">Activeer deze feed</a>.]]></translation>
         <translation language="en"><![CDATA[This feed was deleted. New articles will not be downloaded. <a href="%1$s">Restore this feed</a>.]]></translation>
       </item>
       <item type="message" name="FollowAllCommentsInRSS">
@@ -143,8 +235,12 @@
         <translation language="en"><![CDATA[Show the meta information for this feedmuncherpost in the RSS feed (category, tags, ...)]]></translation>
       </item>
       <item type="message" name="HelpPingServices">
-        <translation language="nl"><![CDATA[Laat verschillende feedmuncherservices weten wanneer je een nieuw bericht plaatst.]]></translation>
-        <translation language="en"><![CDATA[Let various feedmuncherservices know when you've posted a new article.]]></translation>
+        <translation language="nl"><![CDATA[Laat verschillende blogservices weten wanneer je een nieuw bericht plaatst.]]></translation>
+        <translation language="en"><![CDATA[Let various blogservices know when you've posted a new article.]]></translation>
+      </item>
+      <item type="message" name="HelpReoccurrence">
+        <translation language="nl"><![CDATA[Het is mogelijk dat de agragatie niet exact op het juiste tijdstip zal gebeuren. Dit is afhankelijk van de cronjob.]]></translation>
+        <translation language="en"><![CDATA[It is possible that the aggregation will not happen exactly at the correct time. This depends on the cronjob.]]></translation>
       </item>
       <item type="message" name="HelpSummary">
         <translation language="nl"><![CDATA[Maak voor lange artikels een inleiding of samenvatting. Die kan getoond worden op de homepage of het artikeloverzicht.]]></translation>
@@ -154,12 +250,16 @@
         <translation language="nl"><![CDATA[Schakel de ingebouwde spam-filter (Akismet) in om spam-berichten in reacties te vermijden.]]></translation>
         <translation language="en"><![CDATA[Enable the built-in spamfilter (Akismet) to help avoid spam comments.]]></translation>
       </item>
+      <item type="message" name="LoadingData">
+        <translation language="nl"><![CDATA[Fork haalt momenteel gegevens binnen van jouw feeds.]]></translation>
+        <translation language="en"><![CDATA[Fork is collecting the data from your feeds.]]></translation>
+      </item>
       <item type="message" name="MakeDefaultCategory">
         <translation language="nl"><![CDATA[Maak van deze categorie de standaardcategorie (de huidige standaardcategorie is %1$s).]]></translation>
         <translation language="en"><![CDATA[Make default category (current default category is: %1$s).]]></translation>
       </item>
       <item type="message" name="NoFeeds">
-        <translation language="nl"><![CDATA[Er zijn nog geen feeds. <a href="%1$s">Voeg een feed toe.</a>.]]></translation>
+        <translation language="nl"><![CDATA[Er zijn nog geen feeds. <a href="%1$s">Voeg een feed toe</a>.]]></translation>
         <translation language="en"><![CDATA[There are no feeds yet. <a href="%1$s">Add a feed</a>.]]></translation>
       </item>
       <item type="message" name="NoItems">
@@ -196,12 +296,16 @@
       </item>
     </feedmuncher>
     <core>
+      <item type="error" name="Error">
+        <translation language="nl"><![CDATA[Error.]]></translation>
+        <translation language="en"><![CDATA[Error.]]></translation>
+      </item>
       <item type="label" name="AddFeed">
         <translation language="nl"><![CDATA[feed toevoegen]]></translation>
         <translation language="en"><![CDATA[add feed]]></translation>
       </item>
       <item type="label" name="AutoPublish">
-        <translation language="nl"><![CDATA[publiceer artikelen automatisch]]></translation>
+        <translation language="nl"><![CDATA[publiceer artikels automatisch]]></translation>
         <translation language="en"><![CDATA[publish articles automatically]]></translation>
       </item>
       <item type="label" name="Feedmuncher">
@@ -213,8 +317,8 @@
         <translation language="en"><![CDATA[feeds]]></translation>
       </item>
       <item type="label" name="PingFeedmuncherServices">
-        <translation language="nl"><![CDATA[ping feedmuncherservices]]></translation>
-        <translation language="en"><![CDATA[ping feedmuncherservices]]></translation>
+        <translation language="nl"><![CDATA[ping blogservices]]></translation>
+        <translation language="en"><![CDATA[ping blogservices]]></translation>
       </item>
       <item type="label" name="Source">
         <translation language="nl"><![CDATA[bron]]></translation>
@@ -224,7 +328,7 @@
   </backend>
   <frontend>
     <core>
-   	 <item type="label" name="Feedmuncher">
+   	  <item type="label" name="Feedmuncher">
         <translation language="nl"><![CDATA[feedmuncher]]></translation>
         <translation language="en"><![CDATA[feedmuncher]]></translation>
       </item>
@@ -235,6 +339,26 @@
       <item type="label" name="The">
         <translation language="nl"><![CDATA[de]]></translation>
         <translation language="en"><![CDATA[the]]></translation>
+      </item>
+      <item type="label" name="NextArticle">
+        <translation language="nl"><![CDATA[volgend bericht]]></translation>
+        <translation language="en"><![CDATA[next article]]></translation>
+      </item>
+      <item type="label" name="PreviousArticle">
+        <translation language="nl"><![CDATA[vorig bericht]]></translation>
+        <translation language="en"><![CDATA[previous article]]></translation>
+      </item>
+      <item type="label" name="RecentArticles">
+        <translation language="nl"><![CDATA[recente artikels]]></translation>
+        <translation language="en"><![CDATA[recent articles]]></translation>
+      </item>
+      <item type="label" name="SubscribeToTheRSSFeed">
+        <translation language="nl"><![CDATA[schrijf je in op de RSS-feed]]></translation>
+        <translation language="en"><![CDATA[subscribe to the RSS feed]]></translation>
+      </item>
+      <item type="label" name="Wrote">
+        <translation language="nl"><![CDATA[schreef]]></translation>
+        <translation language="en"><![CDATA[wrote]]></translation>
       </item>
       <item type="message" name="Source">
         <translation language="nl"><![CDATA[Bron: <a href="%2$s" title="%1$s">%1$s</a>]]></translation>
@@ -277,7 +401,7 @@
         <translation language="en"><![CDATA[%1$s commented on <a href="%2$s">%3$s</a>. <a href="%4$s">Moderate</a> the comment to publish it.]]></translation>
       </item>
       <item type="message" name="FeedmuncherNoItems">
-        <translation language="nl"><![CDATA[Er zijn nog geen artikelen.]]></translation>
+        <translation language="nl"><![CDATA[Er zijn nog geen artikels.]]></translation>
         <translation language="en"><![CDATA[There are no articles yet.]]></translation>
       </item>
     </core>

@@ -33,6 +33,17 @@
 			<table border="0" cellspacing="0" cellpadding="0" width="100%">
 				<tr>
 					<td id="leftColumn">
+						{option:chkLinkToOriginal}
+							{* Link to original *}
+							<div class="box">
+								<div class="heading">
+									<h3>{$lblLinkToOriginal|ucfirst}</h3>
+								</div>
+								<div class="options">
+									{$chkLinkToOriginal} <label for="linkToOriginal">{$lblLinkToOriginal}</label>
+								</div>
+							</div>
+						{/option:chkLinkToOriginal}
 
 						{* Main content *}
 						<div class="box">

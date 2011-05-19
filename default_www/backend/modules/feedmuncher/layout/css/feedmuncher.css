@@ -1,0 +1,13 @@
+#reoccurrenceWrapper label,
+#reoccurrenceWrapper input,
+#reoccurrenceWrapper select {
+	float: none !important;
+}
+
+#reoccurrenceWrapper span {
+	padding: 0 !important;
+}
+
+#reoccurrenceWrapper .inputTime {
+	width: 40px;
+}

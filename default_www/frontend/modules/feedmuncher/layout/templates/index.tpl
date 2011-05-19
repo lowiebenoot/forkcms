@@ -20,7 +20,7 @@
 			<article class="mod">
 				<div class="inner">
 					<header class="hd">
-						<h3><a href="{option:!items.link_to_original}{$items.full_url}{/option:!items.link_to_original}{option:items.link_to_original}{$items.original_url}{/option:items.link_to_original}" title="{$items.title}">{$items.title}</a></h3>
+						<h3><a href="{$items.full_url}" {option:items.link_to_original}class="linkToOriginal"{/option:items.link_to_original} title="{$items.title}">{$items.title}</a></h3>
 						<ul>
 							<li>
 								{* Written by *}
@@ -43,10 +43,10 @@
 							{option:!items.link_to_original}
 							<li>
 								{* Comments *}
-								{option:!items.comments}<a href="{$items.full_url}#{$actComment}">{$msgBlogNoComments|ucfirst}</a>{/option:!items.comments}
+								{option:!items.comments}<a href="{$items.full_url}#{$actComment}">{$msgFeedmuncherNoComments|ucfirst}</a>{/option:!items.comments}
 								{option:items.comments}
-									{option:items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgBlogNumberOfComments|sprintf:{$items.comments_count}}</a>{/option:items.comments_multiple}
-									{option:!items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgBlogOneComment}</a>{/option:!items.comments_multiple}
+									{option:items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherNumberOfComments|sprintf:{$items.comments_count}}</a>{/option:items.comments_multiple}
+									{option:!items.comments_multiple}<a href="{$items.full_url}#{$actComments}">{$msgFeedmuncherOneComment}</a>{/option:!items.comments_multiple}
 								{/option:items.comments}
 							</li>
 							{/option:!items.link_to_original}

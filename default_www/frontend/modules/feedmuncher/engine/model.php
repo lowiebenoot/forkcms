@@ -19,9 +19,10 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	 */
 	public static function get($URL)
 	{
-		return (array) FrontendModel::getDB()->getRecord('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.original_url,
+		// get the item
+		$item =  (array) FrontendModel::getDB()->getRecord('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.original_url, i.link_to_original,
 															c.title AS category_title, m2.url AS category_url,
-															f.name AS source_name, f.source AS source_url,
+															f.name AS source_name, f.source AS source_url, f.feed_type,
 															UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
 															i.allow_comments,
 															m.keywords AS meta_keywords, m.keywords_overwrite AS meta_keywords_overwrite,
@@ -36,6 +37,25 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 															WHERE i.status = ? AND i.target = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND m.url = ?
 															LIMIT 1',
 															array('active', 'feedmuncher', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', (string) $URL));
+
+		// article from twitter feed?
+		if($item['feed_type'] == 'twitter')
+		{
+			// replace source url and name
+			$item['source_name'] = '@' . $item['source_url'] . ' ' . FL::lbl('On') . ' Twitter';
+			$item['source_url'] = 'http://twitter.com/#!/' . $item['source_url'];
+		}
+
+		// article from delicious feed?
+		elseif($item['feed_type'] == 'delicious')
+		{
+			// replace source url and name
+			$item['source_name'] = $item['source_url'] . ' ' . FL::lbl('On') . ' Delicious';
+			$item['source_url'] = 'http://www.delicious.com/' . $item['source_url'];
+		}
+
+		// return the item
+		return $item;
 	}
 
 
@@ -49,9 +69,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	public static function getAll($limit = 10, $offset = 0)
 	{
 		// get the item
-		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count, i.original_url,
+		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count, i.original_url, i.link_to_original,
 																c.title AS category_title, m2.url AS category_url,
-																f.name AS source_name, f.source AS source_url, f.link_to_original,
+																f.name AS source_name, f.source AS source_url, f.feed_type,
 																UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
 																m.url
 																FROM feedmuncher_posts AS i
@@ -78,16 +98,32 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 			// ids
 			$revisionIds[] = (int) $row['revision_id'];
 
-			// URLs
-			$items[$key]['full_url'] = $link . '/' . $row['url'];
-			$items[$key]['category_full_url'] = $categoryLink . '/' . $row['category_url'];
-
 			// link to original
-			$items[$key]['link_to_original'] = $row['link_to_original'] == 'Y' ? true: false;
+			$items[$key]['link_to_original'] = $row['link_to_original'] == 'Y';
+
+			// URLs
+			$items[$key]['full_url'] = $items[$key]['link_to_original'] ? $row['original_url'] : $link . '/' . $row['url'];
+			$items[$key]['category_full_url'] = $categoryLink . '/' . $row['category_url'];
 
 			// comments
 			if($row['comments_count'] > 0) $items[$key]['comments'] = true;
 			if($row['comments_count'] > 1) $items[$key]['comments_multiple'] = true;
+
+			// article from twitter feed?
+			if($row['feed_type'] == 'twitter')
+			{
+				// replace source url and name
+				$items[$key]['source_url'] = 'http://twitter.com/#!/' . $row['source_url'];
+				$items[$key]['source_name'] = '@' . $row['source_url'] . ' ' . FL::lbl('On') . ' Twitter';
+			}
+
+			// article from delicious feed?
+			elseif($row['feed_type'] == 'delicious')
+			{
+				// replace source url and name
+				$items[$key]['source_url'] = 'http://www.delicious.com/' . $row['source_url'];
+				$items[$key]['source_name'] = $row['source_url'] . ' ' . FL::lbl('On') . ' Delicious';
+			}
 		}
 
 		// get all tags
@@ -168,9 +204,9 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 	public static function getAllForCategory($categoryURL, $limit = 10, $offset = 0)
 	{
 		// get the items
-		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count, i.original_url,
+		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count, i.original_url, i.link_to_original,
 																c.title AS category_title, m2.url AS category_url,
-																f.name AS source_name, f.source AS source_url, f.link_to_original,
+																f.name AS source_name, f.source AS source_url, f.feed_type,
 																UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
 																m.url
 																FROM feedmuncher_posts AS i
@@ -197,16 +233,32 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 			// ids
 			$revisionIds[] = (int) $row['revision_id'];
 
-			// URLs
-			$items[$key]['full_url'] = $link . '/' . $row['url'];
-			$items[$key]['category_full_url'] = $categoryLink . '/' . $row['category_url'];
-
 			// comments
 			if($row['comments_count'] > 0) $items[$key]['comments'] = true;
 			if($row['comments_count'] > 1) $items[$key]['comments_multiple'] = true;
 
 			// link to original
-			$items[$key]['link_to_original'] = $row['link_to_original'] == 'Y' ? true : false;
+			$items[$key]['link_to_original'] = $row['link_to_original'] == 'Y';
+
+			// URLs
+			$items[$key]['full_url'] = $items[$key]['link_to_original'] ? $row['original_url'] : $link . '/' . $row['url'];
+			$items[$key]['category_full_url'] = $categoryLink . '/' . $row['category_url'];
+
+			// article from twitter feed?
+			if($row['feed_type'] == 'twitter')
+			{
+				// replace source url and name
+				$items[$key]['source_url'] = 'http://twitter.com/#!/' . $row['source_url'];
+				$items[$key]['source_name'] = '@' . $row['source_url'] . ' ' . FL::lbl('On') . ' Twitter';
+			}
+
+			// article from delicious feed?
+			elseif($row['feed_type'] == 'delicious')
+			{
+				// replace source url and name
+				$items[$key]['source_url'] = 'http://www.delicious.com/' . $row['source_url'];
+				$items[$key]['source_name'] = $row['source_url'] . ' ' . FL::lbl('On') . ' Delicious';
+			}
 		}
 
 		// get all tags
@@ -255,10 +307,10 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 		$offset = (int) $offset;
 
 		// get the items
-		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count, i.original_url,
+		$items = (array) FrontendModel::getDB()->getRecords('SELECT i.id, i.revision_id, i.language, i.title, i.introduction, i.text, i.num_comments AS comments_count, i.original_url, i.link_to_original,
 																c.title AS category_title, m2.url AS category_url,
 																UNIX_TIMESTAMP(i.date) AS publish_on, i.user_id,
-																f.name AS source_name, f.source AS source_url, f.link_to_original,
+																f.name AS source_name, f.source AS source_url,
 																m.url
 																FROM feedmuncher_posts AS i
 																INNER JOIN feedmuncher_categories AS c ON i.category_id = c.id
@@ -283,15 +335,15 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 			// ids
 			$revisionIds[] = (int) $row['revision_id'];
 
-			// URLs
-			$items[$key]['full_url'] = $link . '/' . $row['url'];
-
 			// comments
 			if($row['comments_count'] > 0) $items[$key]['comments'] = true;
 			if($row['comments_count'] > 1) $items[$key]['comments_multiple'] = true;
 
 			// link to original
-			$items[$key]['link_to_original'] = $row['link_to_original'] == 'Y' ? true : false;
+			$items[$key]['link_to_original'] = $row['link_to_original'] == 'Y';
+
+			// URLs
+			$items[$key]['full_url'] = $items[$key]['link_to_original'] ? $row['original_url'] : $link . '/' . $row['url'];
 		}
 
 		// get all tags
@@ -322,7 +374,7 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 		return (int) FrontendModel::getDB()->getVar('SELECT COUNT(i.id)
 														FROM feedmuncher_posts AS i
 														INNER JOIN feedmuncher_categories AS c ON i.category_id = c.id
-														WHERE i.status = ? AND i.target = ?AND i.language = ? AND i.hidden = ? AND i.date BETWEEN ? AND ?',
+														WHERE i.status = ? AND i.target = ? AND i.language = ? AND i.hidden = ? AND i.date BETWEEN ? AND ?',
 														array('active', 'feedmuncher', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i:s', $start), FrontendModel::getUTCDate('Y-m-d H:i:s', $end)));
 
 	}
@@ -534,7 +586,7 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 		$navigation['previous'] = $db->getRecord('SELECT i.id, i.title, m.url
 													FROM feedmuncher_posts AS i
 													INNER JOIN meta AS m ON i.meta_id = m.id
-													WHERE i.id != ? AND i.status = ? AND i.target = ? AND i.hidden = ? AND i.language = ? AND i.date <= ?
+													WHERE i.id != ? AND i.status = ? AND i.target = ? AND i.hidden = ? AND i.language = ? AND i.date < ?
 													ORDER BY i.date DESC
 													LIMIT 1',
 													array($id, 'active', 'feedmuncher', 'N', FRONTEND_LANGUAGE, $date));
@@ -575,7 +627,7 @@ class FrontendFeedmuncherModel implements FrontendTagsInterface
 																INNER JOIN feedmuncher_posts AS i ON c.post_id = i.id AND c.language = i.language
 																INNER JOIN meta AS m ON i.meta_id = m.id
 																INNER JOIN feedmuncher_feeds AS f ON f.id = i.feed_id
-																WHERE c.status = ? AND i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND f.link_to_original = ?
+																WHERE c.status = ? AND i.status = ? AND i.language = ? AND i.hidden = ? AND i.date <= ? AND i.link_to_original = ?
 																ORDER BY c.created_on DESC
 																LIMIT ?',
 																array('published', 'active', FRONTEND_LANGUAGE, 'N', FrontendModel::getUTCDate('Y-m-d H:i') . ':00', 'N', $limit));
