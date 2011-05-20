@@ -171,7 +171,7 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 			$this->tpl->assign('isDeleted', true);
 
 			// assign restore message
-			$this->tpl->assign('restoreURL', BackendModel::createURLForAction('undo_delete') . '&amp;url=' . $this->record['url']);
+			$this->tpl->assign('restoreURL', BackendModel::createURLForAction('undo_delete') . '&amp;id=' . $this->record['id']);
 		}
 
 	}
