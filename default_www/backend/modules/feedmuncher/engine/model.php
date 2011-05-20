@@ -368,46 +368,6 @@ class BackendFeedmuncherModel
 
 
 	/**
-	 * Was a feed deleted before?
-	 *
-	 * @return	bool
-	 * @param	string $url		The url of the feed to check.
-	 */
-	public static function feedDeletedBefore($url)
-	{
-		// redefine
-		$url = (string) $url;
-
-		// no user to ignore
-		return (bool) BackendModel::getDB()->getVar('SELECT COUNT(i.id)
-														FROM feedmuncher_feeds AS i
-														WHERE i.url = ? AND i.deleted = ? AND i.language = ?',
-														array($url, 'Y', BL::getWorkingLanguage()));
-	}
-
-
-	/**
-	 * Was a feed deleted before (by username and type)?
-	 *
-	 * @return	bool
-	 * @param	string $username	The username of the feed to check.
-	 * @param	string $type		The type of the feed to check.
-	 */
-	public static function feedDeletedBeforeByUsernameAndType($username, $type)
-	{
-		// redefine
-		$username = (string) $username;
-		$type = (string) $type;
-
-		// no user to ignore
-		return (bool) BackendModel::getDB()->getVar('SELECT COUNT(i.id)
-														FROM feedmuncher_feeds AS i
-														WHERE i.source = ? AND i.feed_type = ? AND i.deleted = ? AND i.language = ?',
-														array($username, $type, 'Y', BL::getWorkingLanguage()));
-	}
-
-
-	/**
 	 * Checks if a the feed already has articles posted
 	 *
 	 * @return	bool
@@ -1026,6 +986,34 @@ class BackendFeedmuncherModel
 
 
 	/**
+	 * Was a feed deleted before (by url or by username and type)?
+	 *
+	 * @return	int
+	 * @param	string $url			The url of the feed to check.
+	 * @param	string $username	The username of the feed to check.
+	 * @param	string $type		The type of the feed to check.
+	 */
+	public static function searchForDeletedFeed($url, $username = null, $type = null)
+	{
+		if($url !== null)
+		{
+			return (int) BackendModel::getDB()->getVar('SELECT i.id
+															FROM feedmuncher_feeds AS i
+															WHERE i.url = ? AND i.deleted = ? AND i.language = ?',
+															array($url, 'Y', BL::getWorkingLanguage()));
+		}
+
+		elseif($username !== null && $type !== null)
+		{
+			return (int) BackendModel::getDB()->getVar('SELECT i.id
+															FROM feedmuncher_feeds AS i
+															WHERE i.source = ? AND i.feed_type = ? AND i.deleted = ? AND i.language = ?',
+															array($username, $type, 'Y', BL::getWorkingLanguage()));
+		}
+	}
+
+
+	/**
 	 * Sets the blog post id for a feedmuncher posts (that is posted in the blog)
 	 *
 	 * @return	int					Number of affected rows.
@@ -1042,43 +1030,24 @@ class BackendFeedmuncherModel
 	 * Restores a user
 	 *
 	 * @return	mixed
-	 * @param	string $url			The url of the feed to restore.
-	 * @param	string $username	The username of the feed to restore.
-	 * @param	string $type		The type of the feed to restore.
+	 * @param	string $id			The id of the feed to restore.
 	 */
-	public static function undoDelete($url, $username, $type)
+	public static function undoDelete($id)
 	{
+		// redefine
+		$id = (int) $id;
+
 		// get db
 		$db = BackendModel::getDB(true);
 
-		// undelete by url
-		if($url !== null)
-		{
-			// get id
-			$id = (int) $db->getVar('SELECT i.id
-								FROM feedmuncher_feeds AS i
-								WHERE i.url = ? AND i.language = ? AND i.deleted = ?',
-								array($url, BL::getWorkingLanguage(), 'Y'));
-		}
-
-		// undelete by username and type
-		else
-		{
-			// get id
-			$id = (int) $db->getVar('SELECT i.id
-								FROM feedmuncher_feeds AS i
-								WHERE i.source = ? AND i.feed_type = ? AND i.language = ? AND i.deleted = ?',
-								array($username, $type, BL::getWorkingLanguage(), 'Y'));
-		}
-
 		// a feed was found
-		if($id != null)
+		if($id != 0)
 		{
 			// restore
-			$db->update('feedmuncher_feeds', array('deleted' => 'N'), 'id = ?', $id);
+			$numAffectedRows = $db->update('feedmuncher_feeds', array('deleted' => 'N'), 'id = ?', $id);
 
 			// return
-			return $id;
+			return $numAffectedRows > 0;
 		}
 
 		// no feed found

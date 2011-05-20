@@ -10,6 +10,10 @@
         <translation language="nl"><![CDATA[Een feed met deze URL werd vroeger verwijderd. <a href="%1$s">Activeer deze feed</a>.]]></translation>
         <translation language="en"><![CDATA[A feed with this URL was deleted. <a href="%1$s">Restore this feed</a>.]]></translation>
       </item>
+      <item type="error" name="FeedWasDeletedBeforeUsername">
+        <translation language="nl"><![CDATA[Een feed met deze gebruikersnaam werd vroeger verwijderd. <a href="%1$s">Activeer deze feed</a>.]]></translation>
+        <translation language="en"><![CDATA[A feed with this username was deleted. <a href="%1$s">Restore this feed</a>.]]></translation>
+      </item>
       <item type="error" name="GetDataError">
         <translation language="nl"><![CDATA[Er liep iets mis bij het ophalen van de gegevens van jouw feeds. Onze excuses voor het ongemak. Probeer het later nog eens.]]></translation>
         <translation language="en"><![CDATA[Something went wrong while collecting the data from your feeds. Our appologies for the inconvenience. Please try again later.]]></translation>

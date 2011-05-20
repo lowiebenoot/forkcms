@@ -208,8 +208,11 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 							// is there already a feed with that url (and same language)
 							if(BackendFeedmuncherModel::existsByURL($this->frm->getField('url')->getValue()))
 							{
+								// search for deleted feed
+								$deletedFeedId = BackendFeedmuncherModel::searchForDeletedFeed($this->frm->getField('url')->getValue());
+
 								// is it deleted before?
-								if(BackendFeedmuncherModel::feedDeletedBefore($this->frm->getField('url')->getValue())) $this->frm->getField('url')->addError(sprintf(BL::err('FeedWasDeletedBefore'), BackendModel::createURLForAction('undo_delete', null, null, array('url' => $this->frm->getField('url')->getValue()))));
+								if($deletedFeedId != 0) $this->frm->getField('url')->addError(sprintf(BL::err('FeedWasDeletedBefore'), BackendModel::createURLForAction('undo_delete', null, null, array('id' => $deletedFeedId))));
 
 								// not deleted before
 								else $this->frm->getField('url')->addError(BL::getError('FeedAlreadyExists'));
@@ -254,8 +257,11 @@ class BackendFeedmuncherEdit extends BackendBaseActionEdit
 							// already exists?
 							if(BackendFeedmuncherModel::existsByUsernameAndType($username->getValue(), $this->record['feed_type']))
 							{
+								// search for a deleted feed with this username and type
+								$deletedFeedId = BackendFeedmuncherModel::searchForDeletedFeed(null, $username->getValue(), $this->record['feed_type']);
+
 								// is it deleted before?
-								if(BackendFeedmuncherModel::feedDeletedBeforeByUsernameAndType($username->getValue(), $this->record['feed_type'])) $username->addError(sprintf(BL::err('FeedWasDeletedBefore'), BackendModel::createURLForAction('undo_delete', null, null, array('username' => $username->getValue(), 'type' => $this->record['feed_type']))));
+								if($deletedFeedId != 0) $username->addError(sprintf(BL::err('FeedWasDeletedBeforeUsername'), BackendModel::createURLForAction('undo_delete', null, null, array('id' => $deletedFeedId))));
 
 								// not deleted before
 								else $username->addError(BL::getError('UsernameAlreadyExists'));

@@ -178,8 +178,12 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 					// is it a delicious feed?
 					elseif($feed['feed_type'] == 'delicious')
 					{
-						// process the delicious feed
-						$this->processDeliciousFeed($feed, $items);
+						// the feed really exists and it isn't the '404 feed'
+						if($rssFeed->getTitle() != '404 Not Found')
+						{
+							// process the delicious feed
+							$this->processDeliciousFeed($feed, $items);
+						}
 					}
 
 					// update date fetched
@@ -294,8 +298,26 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 		// loop items
 		foreach($items as $feedItem)
 		{
+			// first time the feed is fetched
+			if($feed['date_fetched'] == null)
+			{
+				// unserialize reoccurrence
+				$reoccurrence = unserialize($feed['reoccurrence']);
+
+				// if weekly, set start date to 1 week ago
+				if($reoccurrence['reoccurrence'] == 'weekly') $startTime = BackendModel::getUTCDate(null, strtotime('-1 week'));
+
+				// if weekly, set start date to 1 week ago
+				elseif($reoccurrence['reoccurrence'] == 'daily') $startTime = BackendModel::getUTCDate(null, strtotime('-1 day'));
+			}
+
+			else $startTime = null;
+
+			// get publicationdate
+			$publicationDate = BackendModel::getUTCDate(null, $feedItem->getPublicationDate());
+
 			// is it a new bookmark (not fetched yet)?
-			if($feed['date_fetched'] < BackendModel::getUTCDate(null, $feedItem->getPublicationDate()))
+			if($feed['date_fetched'] < $publicationDate && ($startTime == null || $startTime <= $publicationDate))
 			{
 				// get the bookmark title
 				$title = $feedItem->getTitle();
@@ -363,8 +385,23 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 		// loop items
 		foreach($items as $feedItem)
 		{
-			// is it a new item? (not published yet)
-			if($feed['date_fetched'] < BackendModel::getUTCDate(null, $feedItem->getPublicationDate()))
+			// first time the feed is fetched
+			if($feed['date_fetched'] == null)
+			{
+				// if weekly, set start date to 1 week ago
+				if($reoccurrence['reoccurrence'] == 'weekly') $startTime = BackendModel::getUTCDate(null, strtotime('-1 week'));
+
+				// if weekly, set start date to 1 week ago
+				elseif($reoccurrence['reoccurrence'] == 'daily') $startTime = BackendModel::getUTCDate(null, strtotime('-1 day'));
+			}
+
+			else $startTime = null;
+
+			// get publicationdate
+			$publicationDate = BackendModel::getUTCDate(null, $feedItem->getPublicationDate());
+
+			// is it a new tweet (not fetched yet)?
+			if($feed['date_fetched'] < $publicationDate && ($startTime == null || $startTime <= $publicationDate))
 			{
 				// get the bookmark title
 				$title = $feedItem->getTitle();
@@ -466,8 +503,26 @@ class BackendFeedmuncherCronjobGetArticles extends BackendBaseCronjob
 		// loop items
 		foreach($items as $feedItem)
 		{
+			// first time the feed is fetched
+			if($feed['date_fetched'] == null)
+			{
+				// unserialize reoccurrence
+				$reoccurrence = unserialize($feed['reoccurrence']);
+
+				// if weekly, set start date to 1 week ago
+				if($reoccurrence['reoccurrence'] == 'weekly') $startTime = BackendModel::getUTCDate(null, strtotime('-1 week'));
+
+				// if weekly, set start date to 1 week ago
+				elseif($reoccurrence['reoccurrence'] == 'daily') $startTime = BackendModel::getUTCDate(null, strtotime('-1 day'));
+			}
+
+			else $startTime = null;
+
+			// get publicationdate
+			$publicationDate = BackendModel::getUTCDate(null, $feedItem->getPublicationDate());
+
 			// is it a new tweet (not fetched yet)?
-			if($feed['date_fetched'] < BackendModel::getUTCDate('Y-m-d H:i:s', $feedItem->getPublicationDate()))
+			if($feed['date_fetched'] < $publicationDate && ($startTime == null || $startTime <= $publicationDate))
 			{
 				// get the tweet
 				$tweet = $feedItem->getTitle();

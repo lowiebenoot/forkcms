@@ -45,6 +45,7 @@
 				{$ddmAuthor} {$ddmAuthorError}
 			</p>
 			<ul class="inputList pb0">
+				<li>{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label></li>
 				<li>{$chkAggregateFeed} <label for="aggregateFeed" id="aggregateFeedLabel">{$lblAggregateFeed|ucfirst}</label></li>
 			</ul>
 			<p id="reoccurrenceWrapper">
@@ -55,7 +56,6 @@
 				<span class="helpTxt">{$msgHelpReoccurrence}</span>
 			</p>
 			<ul class="inputList pb0">
-				<li>{$chkAutoPublish} <label for="autoPublish">{$lblAutoPublish|ucfirst}</label></li>
 				<li>{$chkLinkToOriginal} <label for="linkToOriginal">{$lblLinkToOriginal|ucfirst}</label></li>
 			</ul>
 		</div>

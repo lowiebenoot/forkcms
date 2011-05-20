@@ -35,7 +35,6 @@ class BackendFeedmuncherDeleteArticle extends BackendBaseActionDelete
 	private $feedmuncherCategoryId;
 
 
-
 	/**
 	 * Execute the action
 	 *

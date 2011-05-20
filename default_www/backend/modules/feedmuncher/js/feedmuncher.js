@@ -63,69 +63,69 @@ jsBackend.feedmuncher.controls =
 			else jsBackend.feedmuncher.target = 'feedmuncher';
 			
 			$('#addCategoryDialog').dialog(
+			{
+				autoOpen: false,
+				draggable: false,
+				resizable: false,
+				modal: true,
+				buttons:
 				{
-					autoOpen: false,
-					draggable: false,
-					resizable: false,
-					modal: true,
-					buttons:
+					'{$lblOK|ucfirst}': function()
 					{
-						'{$lblOK|ucfirst}': function()
+						// hide errors
+						$('#categoryTitleError').hide();
+						
+						$.ajax(
 						{
-							// hide errors
-							$('#categoryTitleError').hide();
-							
-							$.ajax(
+							url: '/backend/ajax.php?module='+ jsBackend.current.module +'&action=add_category&language={$LANGUAGE}',
+							data: 'value=' + $('#categoryTitle').val() + '&target=' + jsBackend.feedmuncher.target,
+							success: function(json, textStatus)
 							{
-								url: '/backend/ajax.php?module='+ jsBackend.current.module +'&action=add_category&language={$LANGUAGE}',
-								data: 'value=' + $('#categoryTitle').val() + '&target=' + jsBackend.feedmuncher.target,
-								success: function(json, textStatus)
+								if(json.code != 200)
 								{
-									if(json.code != 200)
-									{
-										// show error if needed
-										if(jsBackend.debug) alert(textStatus);
+									// show error if needed
+									if(jsBackend.debug) alert(textStatus);
 
-										// show message
-										$('#categoryTitleError').show();
-									}
+									// show message
+									$('#categoryTitleError').show();
+								}
+								else
+								{
+									// add and set selected
+									if(jsBackend.current.action == 'edit_article') $('#categoryId').append('<option value="'+ json.data.id +'">'+ json.data.title +'</option>');
 									else
 									{
-										// add and set selected
-										if(jsBackend.current.action == 'edit_article') $('#categoryId').append('<option value="'+ json.data.id +'">'+ json.data.title +'</option>');
-										else
-										{
-											if(jsBackend.feedmuncher.target == 'feedmuncher') $('#category').append('<option value="'+ json.data.id +'">'+ json.data.title +'</option>');
-											else $('#categoryBlog').append('<option value="'+ json.data.id +'">'+ json.data.title +'</option>');
-										}
-										
-										// reset value
-										jsBackend.feedmuncher.controls.currentCategory = json.data.id;
-										
-										// close dialog
-										$('#addCategoryDialog').dialog('close');
+										if(jsBackend.feedmuncher.target == 'feedmuncher') $('#category').append('<option value="'+ json.data.id +'">'+ json.data.title +'</option>');
+										else $('#categoryBlog').append('<option value="'+ json.data.id +'">'+ json.data.title +'</option>');
 									}
+									
+									// reset value
+									jsBackend.feedmuncher.controls.currentCategory = json.data.id;
+									
+									// close dialog
+									$('#addCategoryDialog').dialog('close');
 								}
-							});
-						},
-						
-						'{$lblCancel|ucfirst}': function()
-						{
-							// close the dialog
-							$(this).dialog('close');
-						}
+							}
+						});
 					},
-					close: function(event, ui) 
+					
+					'{$lblCancel|ucfirst}': function()
 					{
-						// reset value to previous selected item
-						if(jsBackend.current.action == 'edit_article') $('#categoryId').val(jsBackend.feedmuncher.controls.currentCategory);
-						else
-						{
-							if(jsBackend.feedmuncher.target == 'feedmuncher') $('#category').val(jsBackend.feedmuncher.controls.currentCategory);
-							else $('#categoryBlog').val(jsBackend.feedmuncher.controls.currentCategory);
-						}
+						// close the dialog
+						$(this).dialog('close');
 					}
-				});
+				},
+				close: function(event, ui) 
+				{
+					// reset value to previous selected item
+					if(jsBackend.current.action == 'edit_article') $('#categoryId').val(jsBackend.feedmuncher.controls.currentCategory);
+					else
+					{
+						if(jsBackend.feedmuncher.target == 'feedmuncher') $('#category').val(jsBackend.feedmuncher.controls.currentCategory);
+						else $('#categoryBlog').val(jsBackend.feedmuncher.controls.currentCategory);
+					}
+				}
+			});
 
 			// bind change
 			$('#categoryId, #category, #categoryBlog').change(function(evt)

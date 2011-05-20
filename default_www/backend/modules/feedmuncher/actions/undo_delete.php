@@ -19,26 +19,21 @@ class BackendFeedmuncherUndoDelete extends BackendBaseAction
 	public function execute()
 	{
 		// get parameters
-		$url = $this->getParameter('url', 'string');
-		$username = $this->getParameter('username', 'string');
-		$type = $this->getParameter('type', 'string');
+		$id = $this->getParameter('id', 'int');
 
-		// an url is given?
-		if($url !== null || ($username !== null && $type !== null))
+		// an id is given?
+		if($id != 0)
 		{
 			// call parent, this will probably add some general CSS/JS or other required files
 			parent::execute();
 
-			// undelete feed
-			$id = BackendFeedmuncherModel::undoDelete($url, $username, $type);
-
-			// undelete succeeded?
-			if($id)
+			// undo delete
+			if(BackendFeedmuncherModel::undoDelete($id))
 			{
 				// get user
 				$feed = BackendFeedmuncherModel::get($id);
 
-				// item was deleted, so redirect
+				// item was restored, so redirect to the edit
 				$this->redirect(BackendModel::createURLForAction('edit') . '&id=' . $id . '&report=restored&var=' . $feed['name'] . '&highlight=row-' . $id);
 			}
 		}
