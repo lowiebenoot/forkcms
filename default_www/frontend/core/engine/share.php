@@ -68,7 +68,7 @@ class FrontendShare
 					// the setting is for twitter?
 					case 'twitter':
 						// should the url be shortened?
-						$shortenURLs = FrontendModel::getModuleSetting('share', 'shorten_urls_'. FRONTEND_LANGUAGE);
+						$shortenURLs = FrontendModel::getModuleSetting('share', 'shorten_urls_' . FRONTEND_LANGUAGE);
 
 						// shorten URL if needed
 						if($shortenURLs) $shortenedURL = self::shortenURL($url);
