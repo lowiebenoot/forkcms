@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS `feedmuncher_comments` (
  `created_on` DATETIME NOT NULL ,
  `author` VARCHAR(255) NOT NULL ,
  `email` VARCHAR(255) NOT NULL ,
- `website` VARCHAR(255) DEFAULT NULL ,
+ `website` text,
  `text` TEXT NOT NULL ,
  `type` ENUM('comment','trackback') NOT NULL DEFAULT 'comment' ,
  `status` ENUM('published','moderation','spam') NOT NULL DEFAULT 'moderation' ,

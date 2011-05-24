@@ -133,7 +133,6 @@ $navigation = array(
 			array(
 				'url' => 'feedmuncher/index',
 				'label' => 'Feedmuncher',
-				'selected_for' => 'feedmuncher/loading',
 				'children' => array(
 					array(
 						'url' => 'feedmuncher/index',
@@ -148,6 +147,7 @@ $navigation = array(
 						'label' => 'Articles',
 						'selected_for' => array(
 							'feedmuncher/edit_article',
+							'feedmuncher/loading'
 						)
 					),
 					array(
