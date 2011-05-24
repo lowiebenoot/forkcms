@@ -136,6 +136,10 @@
       </item>
     </settings>
     <core>
+      <item type="label" name="NumShared">
+        <translation language="nl"><![CDATA[%1$s keer gedeeld]]></translation>
+        <translation language="en"><![CDATA[shared %1$s time(s)]]></translation>
+      </item>
       <item type="label" name="Share">
         <translation language="nl"><![CDATA[delen]]></translation>
         <translation language="en"><![CDATA[share]]></translation>
@@ -156,10 +160,6 @@
   </backend>
   <frontend>
     <core>
-      <item type="label" name="NumShared">
-        <translation language="nl"><![CDATA[%1$s keer gedeeld]]></translation>
-        <translation language="en"><![CDATA[shared %1$s time(s)]]></translation>
-      </item>
       <item type="label" name="ShareOnDelicious">
         <translation language="nl"><![CDATA[deel via Delicious]]></translation>
         <translation language="en"><![CDATA[share on Delicious]]></translation>

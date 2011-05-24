@@ -117,6 +117,9 @@ class FrontendBlogDetail extends FrontendBaseBlock
 
 		// reset allow comments
 		if(!$this->settings['allow_comments']) $this->record['allow_comments'] = false;
+
+		// get share options
+		FrontendShare::getShareOptionsForItem('blog', 'article', $this->record, 'title', array('FrontendBlogModel', 'getShareURLForArticles'));
 	}
 
 

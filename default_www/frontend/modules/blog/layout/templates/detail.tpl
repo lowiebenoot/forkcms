@@ -42,6 +42,9 @@
 			<div class="bd content">
 				{$item.text}
 			</div>
+			<div class="bd ft">
+				{$item.share}
+			</div>
 			<footer class="ft">
 				<ul class="pageNavigation">
 					{option:navigation.previous}

@@ -36,9 +36,9 @@ class FrontendShareModel
 	public static function settingExists($id)
 	{
 		return (bool) FrontendModel::getDB()->getVar('SELECT i.id
-															FROM share_settings AS i
-															WHERE i.id = ?',
-															(int) $id);
+														FROM share_settings AS i
+														WHERE i.id = ?',
+														(int) $id);
 	}
 }
 
