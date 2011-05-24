@@ -183,7 +183,7 @@ class BackendBlogEdit extends BackendBaseActionEdit
 		$this->frm->addDropdown('category_id', $categories, $this->record['category_id']);
 		if(count($categories) > 2) $this->frm->getField('category_id')->setDefaultElement('');
 		$this->frm->addDropdown('user_id', BackendUsersModel::getUsers(), $this->record['user_id']);
-		$this->frm->addText('tags', BackendTagsModel::getTags($this->URL->getModule(), $this->record['revision_id']), null, 'inputText tagBox', 'inputTextError tagBox');
+		$this->frm->addText('tags', BackendTagsModel::getTags($this->URL->getModule(), $this->record['id']), null, 'inputText tagBox', 'inputTextError tagBox');
 		$this->frm->addDate('publish_on_date', $this->record['publish_on']);
 		$this->frm->addTime('publish_on_time', date('H:i', $this->record['publish_on']));
 
@@ -311,7 +311,7 @@ class BackendBlogEdit extends BackendBaseActionEdit
 				BackendBlogModel::reCalculateCommentCount(array($this->id));
 
 				// save the tags
-				BackendTagsModel::saveTags($item['revision_id'], $this->frm->getField('tags')->getValue(), $this->URL->getModule());
+				BackendTagsModel::saveTags($item['id'], $this->frm->getField('tags')->getValue(), $this->URL->getModule());
 
 				// save share settings
 				$this->share->save($this->record['id'], $this->URL->getModule(), true);

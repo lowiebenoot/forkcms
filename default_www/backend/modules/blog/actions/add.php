@@ -147,7 +147,7 @@ class BackendBlogAdd extends BackendBaseActionAdd
 				$item['revision_id'] = BackendBlogModel::insert($item);
 
 				// save the tags
-				BackendTagsModel::saveTags($item['revision_id'], $this->frm->getField('tags')->getValue(), $this->URL->getModule());
+				BackendTagsModel::saveTags($item['id'], $this->frm->getField('tags')->getValue(), $this->URL->getModule());
 
 				// save share
 				$this->share->save($item['id']);
