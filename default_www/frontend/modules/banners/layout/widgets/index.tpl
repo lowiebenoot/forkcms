@@ -7,7 +7,7 @@
 			<script type="text/javascript">
 			swfobject.embedSWF("/frontend/files/banners/original/{$item.id}_{$item.file}", "bannerWidgetSWFContent-{$item.id}-{$microtime}", "{$item.width}", "{$item.height}", "9.0.0");
 			</script>
-			<a class="bannerWidgetURL linkedImage" href="{$var|geturlforblock:'banners':'tracker'}?id={$item.id}&url={$item.url|urlencode}" title="{$item.url}" title="{$item.url}" data-id="{$item.id}" data-url="{$item.url}">
+			<a class="bannerWidgetURL linkedImage" href="{$trackerURL}&id={$item.id}&url={$item.url|urlencode}&id={$item.id}&url={$item.url|urlencode}" title="{$item.url}" title="{$item.url}" data-id="{$item.id}" data-url="{$item.url}">
 				{* the flash overlay is a dirty little 'hack' that makes it possible to click on the parent link when the swf contains a click action. *}
 				<div class="flashOverlay" style="width: {$item.width}px; height: {$item.height}px; position: absolute;"></div>
 				<div id="bannerWidgetSWFContent-{$item.id}-{$microtime}"></div>

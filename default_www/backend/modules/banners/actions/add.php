@@ -57,7 +57,7 @@ class BackendBannersAdd extends BackendBaseActionAdd
 		$this->frm->addCheckbox('show_permanently');
 
 		// parse tracker url
-		$this->tpl->assign('trackerUrl', SITE_URL . BackendModel::getURLForBlock('banners', 'tracker') . '?url=');
+		$this->tpl->assign('trackerUrl', SITE_URL . '/frontend/ajax.php?module=banners&action=tracker&language=' . BL::getWorkingLanguage() . '&url=');
 	}
 
 

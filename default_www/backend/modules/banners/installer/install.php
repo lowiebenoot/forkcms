@@ -39,26 +39,6 @@ class BannersInstall extends ModuleInstaller
 		$this->setActionRights(1, 'banners', 'groups');
 		$this->setActionRights(1, 'banners', 'index');
 
-		// insert extra for the tracker page
-		$extraId = $this->insertExtra('banners', 'block', 'tracker', 'tracker', null, true, 9000);
-
-		// loop languages
-		foreach($this->getLanguages() as $language)
-		{
-			// insert page
-			$this->insertPage(array('title' => 'BannerTracker',
-									'language' => $language,
-									'type' => 'root',
-									'allow_delete' => 'N',
-									'allow_edit' => 'N',
-									'allow_move' => 'N',
-									'allow_children' => 'N',
-									'no_follow' => 'Y',
-									'parent_id' => 0),
-									null,
-									array('extra_id' => $extraId));
-		}
-
 		// create directory for the original files
 		if(!SpoonDirectory::exists(PATH_WWW . '/frontend/files/banners/')) SpoonDirectory::create(PATH_WWW . '/frontend/files/banners/');
 

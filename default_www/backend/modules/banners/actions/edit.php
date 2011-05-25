@@ -119,7 +119,7 @@ class BackendBannersEdit extends BackendBaseActionEdit
 		$this->tpl->assign('groups', BackendBannersModel::getGroupsByBanner($this->id));
 
 		// parse tracker url
-		$this->tpl->assign('trackerUrl', SITE_URL . BackendModel::getURLForBlock('banners', 'tracker') . '?url=');
+		$this->tpl->assign('trackerUrl', SITE_URL . '/frontend/ajax.php?module=banners&action=tracker&language=' . BL::getWorkingLanguage() . '&url=');
 		$this->tpl->assign('url', urlencode($this->record['url']));
 	}
 
