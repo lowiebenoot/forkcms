@@ -105,6 +105,7 @@
 					{option:!block2IsHTML}
 						{include:{$block2}}
 					{/option:!block2IsHTML}
+
 					{$page.share}
 				</div>
 

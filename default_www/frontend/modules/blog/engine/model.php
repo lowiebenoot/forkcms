@@ -632,10 +632,10 @@ class FrontendBlogModel implements FrontendTagsInterface
 	{
 		// get urls
 		$urls = FrontendModel::getDB()->getPairs('SELECT i.id, m.url
-												FROM blog_posts AS i
-												INNER JOIN meta AS m ON i.meta_id = m.id
-												WHERE i.status = ? AND i.id IN (' . implode(',', $ids) . ')',
-												array('active'));
+													FROM blog_posts AS i
+													INNER JOIN meta AS m ON i.meta_id = m.id
+													WHERE i.status = ? AND i.id IN (' . implode(',', $ids) . ')',
+													array('active'));
 
 		// loop urls
 		foreach($urls as $id => $url) $urls[$id] = SITE_URL . FrontendNavigation::getURLForBlock('blog', 'detail') . '/' . $url;
