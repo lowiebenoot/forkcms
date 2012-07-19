@@ -22,8 +22,8 @@ jsBackend.mailmotor =
 			$('form#add #email').multipleTextbox(
 			{
 				emptyMessage: '',
-				addLabel: '{$lblAdd|ucfirst}',
-				removeLabel: '{$lblDelete|ucfirst}',
+				addLabel: utils.string.ucfirst(jsBackend.locale.lbl('Add')),
+				removeLabel: utils.string.ucfirst(jsBackend.locale.lbl('Delete')),
 				canAddNew: true
 			});
 		}
@@ -49,8 +49,7 @@ jsBackend.mailmotor.charts =
 					symbolPadding: 12,
 					symbolWidth: 10,
 					itemStyle: { cursor: 'pointer', color: '#000', lineHeight: '18px' },
-					itemHoverStyle: { color: '#666' },
-					style: { right: '0', top: '0', bottom: 'auto', left: 'auto' }
+					itemHoverStyle: { color: '#666' }
 				}
 			});
 		}
@@ -106,7 +105,7 @@ jsBackend.mailmotor.chartPieChart =
 					}
 				}
 			},
-			legend: { style: { right: '10px' } },
+			legend: { enabled: false },
 			series: [ { type: 'pie', data: pieChartData } ]
 		});
 	}
@@ -390,18 +389,24 @@ jsBackend.mailmotor.step4 =
 			modal: true,
 			resizable: false,
 			buttons:
-			{
-				'{$lblSendMailing|ucfirst}': function()
+			[
 				{
-					// send the mailing
-					jsBackend.mailmotor.step4.sendMail();
+					text: utils.string.ucfirst(jsBackend.locale.lbl('SendMailing')),
+					click: function()
+					{
+						// send the mailing
+						jsBackend.mailmotor.step4.sendMail();
+					}
 				},
-				'{$lblCancel|ucfirst}': function()
 				{
-					// close the dialog
-					$(this).dialog('close');
+					text: utils.string.ucfirst(jsBackend.locale.lbl('Cancel')),
+					click: function()
+					{
+						// close the dialog
+						$(this).dialog('close');
+					}
 				}
-			}
+			]
 		});
 
 		// value of date/time has changed
@@ -492,7 +497,7 @@ jsBackend.mailmotor.step4 =
 						modalSendInfo.show();
 
 						// replace the modal values
-						modalSendInfo.text('{$msgSendOn}'.replace('%1$s', sendOnDate).replace('%2$s', sendOnTime));
+						modalSendInfo.text(jsBackend.locale.msg('SendOn').replace('%1$s', sendOnDate).replace('%2$s', sendOnTime));
 					}
 				}
 			}

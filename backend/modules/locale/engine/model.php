@@ -41,6 +41,9 @@ class BackendLocaleModel
 			array((string) $language, (string) $application)
 		);
 
+		// init var
+		$json = array();
+
 		// start generating PHP
 		$value = '<?php' . "\n\n";
 		$value .= '/**' . "\n";
@@ -78,8 +81,16 @@ class BackendLocaleModel
 					}
 
 					// parse
-					if($application == 'backend') $value .= '$' . $type . '[\'' . $item['module'] . '\'][\'' . $item['name'] . '\'] = \'' . str_replace('\"', '"', addslashes($item['value'])) . '\';' . "\n";
-					else $value .= '$' . $type . '[\'' . $item['name'] . '\'] = \'' . str_replace('\"', '"', addslashes($item['value'])) . '\';' . "\n";
+					if($application == 'backend')
+					{
+						$value .= '$' . $type . '[\'' . $item['module'] . '\'][\'' . $item['name'] . '\'] = \'' . str_replace('\"', '"', addslashes($item['value'])) . '\';' . "\n";
+						$json[$type][$item['module']][$item['name']] = $item['value'];
+					}
+					else
+					{
+						$value .= '$' . $type . '[\'' . $item['name'] . '\'] = \'' . str_replace('\"', '"', addslashes($item['value'])) . '\';' . "\n";
+						$json[$type][$item['name']] = $item['value'];
+					}
 
 					// unset
 					unset($locale[$i]);
@@ -92,6 +103,23 @@ class BackendLocaleModel
 
 		// store
 		SpoonFile::setContent(constant(mb_strtoupper($application) . '_CACHE_PATH') . '/locale/' . $language . '.php', $value);
+
+		// get months
+		$monthsLong = SpoonLocale::getMonths($language, false);
+		$monthsShort = SpoonLocale::getMonths($language, true);
+
+		// get days
+		$daysLong = SpoonLocale::getWeekDays($language, false, 'sunday');
+		$daysShort = SpoonLocale::getWeekDays($language, true, 'sunday');
+
+		// build labels
+		foreach($monthsLong as $key => $value) $json['loc']['core']['MonthLong' . SpoonFilter::ucfirst($key)] = $value;
+		foreach($monthsShort as $key => $value) $json['loc']['core']['MonthShort' . SpoonFilter::ucfirst($key)] = $value;
+		foreach($daysLong as $key => $value) $json['loc']['core']['DayLong' . SpoonFilter::ucfirst($key)] = $value;
+		foreach($daysShort as $key => $value) $json['loc']['core']['DayShort' . SpoonFilter::ucfirst($key)] = $value;
+
+		// store
+		SpoonFile::setContent(constant(mb_strtoupper($application) . '_CACHE_PATH') . '/locale/' . $language . '.json', json_encode($json));
 	}
 
 	/**
@@ -205,9 +233,10 @@ class BackendLocaleModel
 	public static function exists($id)
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(id)
+			'SELECT 1
 			 FROM locale
-			 WHERE id = ?',
+			 WHERE id = ?
+			 LIMIT 1',
 			array((int) $id)
 		);
 	}
@@ -237,16 +266,18 @@ class BackendLocaleModel
 
 		// return
 		if($id !== null) return (bool) $db->getVar(
-			'SELECT COUNT(id)
+			'SELECT 1
 			 FROM locale
-			 WHERE name = ? AND type = ? AND module = ? AND language = ? AND application = ? AND id != ?',
+			 WHERE name = ? AND type = ? AND module = ? AND language = ? AND application = ? AND id != ?
+			 LIMIT 1',
 			array($name, $type, $module, $language, $application, $id)
 		);
 
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(id)
+			'SELECT 1
 			 FROM locale
-			 WHERE name = ? AND type = ? AND module = ? AND language = ? AND application = ?',
+			 WHERE name = ? AND type = ? AND module = ? AND language = ? AND application = ?
+			 LIMIT 1',
 			array($name, $type, $module, $language, $application)
 		);
 	}

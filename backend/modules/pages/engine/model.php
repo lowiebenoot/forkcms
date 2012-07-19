@@ -348,8 +348,8 @@ class BackendPagesModel
 			'SELECT i.id, i.navigation_title
 			 FROM pages AS i
 			 WHERE i.id IN(' . implode(',', array_keys($keys)) . ')
-			 AND i.language = ?',
-			array($language)
+			 AND i.language = ? AND i.status = ?',
+			array($language, 'active')
 		);
 
 		// loop the types in the order we want them to appear
@@ -458,9 +458,10 @@ class BackendPagesModel
 	 *
 	 * @param int $id The id of the page to delete.
 	 * @param string[optional] $language The language wherin the page will be deleted, if not provided we will use the working language.
+	 * @param int[optional] $revisionId If specified the given revision will be deleted, used for deleting drafts.
 	 * @return bool
 	 */
-	public static function delete($id, $language = null)
+	public static function delete($id, $language = null, $revisionId = null)
 	{
 		// redefine
 		$id = (int) $id;
@@ -470,7 +471,7 @@ class BackendPagesModel
 		$db = BackendModel::getDB(true);
 
 		// get record
-		$page = self::get($id, null, $language);
+		$page = self::get($id, $revisionId, $language);
 
 		// validate
 		if(empty($page)) return false;
@@ -519,9 +520,10 @@ class BackendPagesModel
 
 		// exists?
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(i.id)
+			'SELECT 1
 			 FROM pages AS i
-			 WHERE i.id = ? AND i.language = ? AND i.status IN (?, ?)',
+			 WHERE i.id = ? AND i.language = ? AND i.status IN (?, ?)
+			 LIMIT 1',
 			array($id, $language, 'active', 'draft')
 		);
 	}
@@ -732,8 +734,8 @@ class BackendPagesModel
 		return (int) BackendModel::getDB()->getVar(
 			'SELECT revision_id
 			 FROM pages AS i
-			 WHERE i.id = ? AND i.language = ? AND i.status = ?',
-			array($id, $language, 'active')
+			 WHERE i.id = ? AND i.language = ? AND i.status != ?',
+			array($id, $language, 'archive')
 		);
 	}
 
@@ -974,10 +976,10 @@ class BackendPagesModel
 			 LEFT OUTER JOIN pages_blocks AS b ON b.revision_id = i.revision_id AND b.extra_id IS NOT NULL
 			 LEFT OUTER JOIN modules_extras AS e ON e.id = b.extra_id AND e.type = ?
 			 WHERE i.parent_id IN (' . implode(', ', $ids) . ')
-			 	AND i.status = ? AND i.language = ?
+			 	AND i.status = ? AND i.language = ? AND i.hidden = ?
 			 GROUP BY i.revision_id
 			 ORDER BY i.sequence ASC',
-			array('block', 'active', $language), 'id'
+			array('block', 'active', $language, 'N'), 'id'
 		);
 
 		// get the childIDs
@@ -1011,7 +1013,7 @@ class BackendPagesModel
 
 		// start HTML
 		$html = '<h4>' . SpoonFilter::ucfirst(BL::lbl('MainNavigation')) . '</h4>' . "\n";
-		$html .= '<div class="clearfix">' . "\n";
+		$html .= '<div class="clearfix" data-tree="main">' . "\n";
 		$html .= '	<ul>' . "\n";
 		$html .= '		<li id="page-1" rel="home">';
 
@@ -1031,7 +1033,7 @@ class BackendPagesModel
 		{
 			// meta pages
 			$html .= '<h4>' . SpoonFilter::ucfirst(BL::lbl('Meta')) . '</h4>' . "\n";
-			$html .= '<div class="clearfix">' . "\n";
+			$html .= '<div class="clearfix" data-tree="meta">' . "\n";
 			$html .= '	<ul>' . "\n";
 
 			// are there any meta pages
@@ -1063,7 +1065,7 @@ class BackendPagesModel
 		$html .= '<h4>' . SpoonFilter::ucfirst(BL::lbl('Footer')) . '</h4>' . "\n";
 
 		// start
-		$html .= '<div class="clearfix">' . "\n";
+		$html .= '<div class="clearfix" data-tree="footer">' . "\n";
 		$html .= '	<ul>' . "\n";
 
 		// are there any footer pages
@@ -1098,7 +1100,7 @@ class BackendPagesModel
 			$html .= '<h4>' . SpoonFilter::ucfirst(BL::lbl('Root')) . '</h4>' . "\n";
 
 			// start
-			$html .= '<div class="clearfix">' . "\n";
+			$html .= '<div class="clearfix" data-tree="root">' . "\n";
 			$html .= '	<ul>' . "\n";
 
 			// loop the items
@@ -1163,17 +1165,14 @@ class BackendPagesModel
 		// no specific id
 		if($id === null)
 		{
-			// get number of childs within this parent with the specified URL
-			$number = (int) $db->getVar(
-				'SELECT COUNT(i.id)
+			// no items?
+			if((bool) $db->getVar(
+				'SELECT 1
 				 FROM pages AS i
 				 INNER JOIN meta AS m ON i.meta_id = m.id
-				 WHERE i.parent_id IN(' . implode(',', $parentIds) . ') AND i.status = ? AND m.url = ? AND i.language = ?',
-				array('active', $URL, BL::getWorkingLanguage())
-			);
-
-			// no items?
-			if($number != 0)
+				 WHERE i.parent_id IN(' . implode(',', $parentIds) . ') AND i.status = ? AND m.url = ? AND i.language = ?
+				 LIMIT 1',
+				array('active', $URL, BL::getWorkingLanguage())))
 			{
 				// add a number
 				$URL = BackendModel::addNumber($URL);
@@ -1186,17 +1185,14 @@ class BackendPagesModel
 		// one item should be ignored
 		else
 		{
-			// get number of childs within this parent with the specified URL
-			$number = (int) $db->getVar(
-				'SELECT COUNT(i.id)
+			// there are items so, call this method again.
+			if((bool) $db->getVar(
+				'SELECT 1
 				 FROM pages AS i
 				 INNER JOIN meta AS m ON i.meta_id = m.id
-				 WHERE i.parent_id IN(' . implode(',', $parentIds) . ') AND i.status = ? AND m.url = ? AND i.id != ? AND i.language = ?',
-				array('active', $URL, $id, BL::getWorkingLanguage())
-			);
-
-			// there are items so, call this method again.
-			if($number != 0)
+				 WHERE i.parent_id IN(' . implode(',', $parentIds) . ') AND i.status = ? AND m.url = ? AND i.id != ? AND i.language = ?
+				 LIMIT 1',
+				array('active', $URL, $id, BL::getWorkingLanguage())))
 			{
 				// add a number
 				$URL = BackendModel::addNumber($URL);
@@ -1291,14 +1287,16 @@ class BackendPagesModel
 	 * @param int $id The id for the page that has to be moved.
 	 * @param int $droppedOn The id for the page where to page has been dropped on.
 	 * @param string $typeOfDrop The type of drop, possible values are: before, after, inside.
+	 * @param string $tree The tree the item is dropped on, possible values are: main, meta, footer, root.
 	 * @param string[optional] $language The language to use, if not provided we will use the working language.
 	 * @return bool
 	 */
-	public static function move($id, $droppedOn, $typeOfDrop, $language = null)
+	public static function move($id, $droppedOn, $typeOfDrop, $tree, $language = null)
 	{
 		$id = (int) $id;
 		$droppedOn = (int) $droppedOn;
 		$typeOfDrop = SpoonFilter::getValue($typeOfDrop, array('before', 'after', 'inside'), 'inside');
+		$tree = SpoonFilter::getValue($tree, array('main', 'meta', 'footer', 'root'), 'inside');
 		$language = ($language === null) ? BackendLanguage::getWorkingLanguage() : (string) $language;
 
 		// get db
@@ -1333,18 +1331,20 @@ class BackendPagesModel
 		else $newParent = $droppedOnPage['parent_id'];
 
 		// decide new type
-		$newType = 'page';
-		if($droppedOn == 0) $newType = 'meta';
-		if($droppedOnPage['type'] == 'meta')
+		if($droppedOn == 0)
 		{
-			if($newParent == 0) $newType = 'meta';
-			else $newType = 'page';
+			if($tree == 'footer') $newType = 'footer';
+			else $newType = 'meta';
 		}
-		if($droppedOnPage['type'] == 'footer') $newType = 'footer';
-		if($droppedOnPage['type'] == 'root')
+
+		elseif($newParent == 0)
 		{
-			if($newParent == 0) $newType = 'root';
-			else $newType = 'page';
+			$newType = $droppedOnPage['type'];
+		}
+
+		else
+		{
+			$newType = 'page';
 		}
 
 		// calculate new sequence for items that should be moved inside

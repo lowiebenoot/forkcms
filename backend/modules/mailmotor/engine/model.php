@@ -11,6 +11,7 @@
  * In this file we store all generic functions that we will be using in the mailmotor module
  *
  * @author Dave Lens <dave.lens@netlash.com>
+ * @author Tijs Verkoyen <tijs@sumocoders.be>
  */
 class BackendMailmotorModel
 {
@@ -199,9 +200,10 @@ class BackendMailmotorModel
 	public static function existsAddress($email)
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(ma.email)
+			'SELECT 1
 			 FROM mailmotor_addresses AS ma
-			 WHERE ma.email = ?',
+			 WHERE ma.email = ?
+			 LIMIT 1',
 			array((string) $email)
 		);
 	}
@@ -215,9 +217,10 @@ class BackendMailmotorModel
 	public static function existsCampaign($id)
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(mc.id)
+			'SELECT 1
 			 FROM mailmotor_campaigns AS mc
-			 WHERE mc.id = ?',
+			 WHERE mc.id = ?
+			 LIMIT 1',
 			array((int) $id)
 		);
 	}
@@ -231,9 +234,10 @@ class BackendMailmotorModel
 	public static function existsCampaignByName($name)
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(mc.id)
+			'SELECT 1
 			 FROM mailmotor_campaigns AS mc
-			 WHERE mc.name = ?',
+			 WHERE mc.name = ?
+			 LIMIT 1',
 			array((string) $name)
 		);
 	}
@@ -247,9 +251,10 @@ class BackendMailmotorModel
 	public static function existsGroup($id)
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(mg.id)
+			'SELECT 1
 			 FROM mailmotor_groups AS mg
-			 WHERE mg.id = ?',
+			 WHERE mg.id = ?
+			 LIMIT 1',
 			array((int) $id)
 		);
 	}
@@ -263,9 +268,10 @@ class BackendMailmotorModel
 	public static function existsGroupByName($name)
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(mg.id)
+			'SELECT 1
 			 FROM mailmotor_groups AS mg
-			 WHERE mg.name = ? AND mg.language = ?',
+			 WHERE mg.name = ? AND mg.language = ?
+			 LIMIT 1',
 			array((string) $name, BL::getWorkingLanguage())
 		);
 	}
@@ -279,9 +285,10 @@ class BackendMailmotorModel
 	public static function existsMailing($id)
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(mm.id)
+			'SELECT 1
 			 FROM mailmotor_mailings AS mm
-			 WHERE mm.id = ?',
+			 WHERE mm.id = ?
+			 LIMIT 1',
 			array((int) $id)
 		);
 	}
@@ -295,9 +302,10 @@ class BackendMailmotorModel
 	public static function existsMailingByName($name)
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(mm.id)
+			'SELECT 1
 			 FROM mailmotor_mailings AS mm
-			 WHERE mm.name = ?',
+			 WHERE mm.name = ?
+			 LIMIT 1',
 			array((string) $name)
 		);
 	}
@@ -310,9 +318,10 @@ class BackendMailmotorModel
 	public static function existsMailingsWithoutCampaign()
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(mm.id)
+			'SELECT 1
 			 FROM mailmotor_mailings AS mm
-			 WHERE mm.campaign_id IS NOT NULL'
+			 WHERE mm.campaign_id IS NOT NULL
+			 LIMIT 1'
 		);
 	}
 
@@ -325,9 +334,10 @@ class BackendMailmotorModel
 	public static function existsSentMailingsByCampaignID($id)
 	{
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(mm.id)
+			'SELECT 1
 			 FROM mailmotor_mailings AS mm
-			 WHERE mm.campaign_id = ? AND mm.status = ?',
+			 WHERE mm.campaign_id = ? AND mm.status = ?
+			 LIMIT 1',
 			array((int) $id, 'sent')
 		);
 	}
@@ -727,7 +737,7 @@ class BackendMailmotorModel
 		);
 
 		// prepend an additional option
-		array_unshift($record, SpoonFilter::ucfirst(BL::lbl('NoCampaign')));
+		$record = array('0' => SpoonFilter::ucfirst(BL::lbl('NoCampaign'))) + $record;
 
 		return $record;
 	}
@@ -1170,6 +1180,66 @@ class BackendMailmotorModel
 	}
 
 	/**
+	 * Get all recent subscriptions
+	 *
+	 * @param int[optional] $limit
+	 * @return array
+	 */
+	public static function getRecentSubscriptions($limit = null)
+	{
+		// build query
+		$query =
+			'SELECT ma.email, mg.name, UNIX_TIMESTAMP(mag.subscribed_on) AS subscribed_on
+			 FROM mailmotor_addresses AS ma
+			 INNER JOIN mailmotor_addresses_groups AS mag ON mag.email = ma.email
+			 INNER JOIN mailmotor_groups AS mg ON mg.id = mag.group_id
+			 WHERE mag.status = ?
+			 ORDER BY mag.subscribed_on DESC';
+
+		$parameters = array('subscribed');
+
+		// limit was found
+		if(!empty($limit))
+		{
+			$query .= ' LIMIT ?';
+			$parameters[] = $limit;
+		}
+
+		// get record and return it
+		return (array) BackendModel::getDB()->getRecords($query, $parameters);
+	}
+
+	/**
+	 * Get all recent unsubscriptions
+	 *
+	 * @param int[optional] $limit
+	 * @return array
+	 */
+	public static function getRecentUnsubscriptions($limit = null)
+	{
+		// build query
+		$query =
+			'SELECT ma.email, mg.name, UNIX_TIMESTAMP(mag.unsubscribed_on) AS unsubscribed_on
+			 FROM mailmotor_addresses AS ma
+			 INNER JOIN mailmotor_addresses_groups AS mag ON mag.email = ma.email
+			 INNER JOIN mailmotor_groups AS mg ON mg.id = mag.group_id
+			 WHERE mag.status = ?
+			 ORDER BY mag.unsubscribed_on DESC';
+
+		$parameters = array('unsubscribed');
+
+		// limit was found
+		if(!empty($limit))
+		{
+			$query .= ' LIMIT ?';
+			$parameters[] = $limit;
+		}
+
+		// get record and return it
+		return (array) BackendModel::getDB()->getRecords($query, $parameters);
+	}
+
+	/**
 	 * Get all sent mailings
 	 *
 	 * @param int[optional] $limit The maximum number of items to retrieve.
@@ -1417,9 +1487,10 @@ class BackendMailmotorModel
 
 		// check if there is a default group set for this language
 		// @todo refactor, this looks like shite
-		if(!(bool) $db->getVar('SELECT COUNT(mg.id)
+		if(!(bool) $db->getVar('SELECT 1
 								FROM mailmotor_groups AS mg
-								WHERE mg.is_default = ? AND mg.language = ?',
+								WHERE mg.is_default = ? AND mg.language = ?
+								LIMIT 1',
 								array('Y', BL::getWorkingLanguage())))
 		{
 			// this list will be a default list
@@ -1486,10 +1557,11 @@ class BackendMailmotorModel
 		$groupId = (int) (empty($groupId) ? self::getDefaultGroupID() : $groupId);
 
 		return (bool) BackendModel::getDB()->getVar(
-			'SELECT COUNT(ma.email)
+			'SELECT 1
 			 FROM mailmotor_addresses AS ma
 			 INNER JOIN mailmotor_addresses_groups AS mag ON mag.email = ma.email
-			 WHERE ma.email = ? AND mag.group_id = ? AND mag.status = ?',
+			 WHERE ma.email = ? AND mag.group_id = ? AND mag.status = ?
+			 LIMIT 1',
 			array((string) $email, $groupId, 'subscribed')
 		);
 	}
