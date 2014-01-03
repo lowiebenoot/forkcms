@@ -113,7 +113,7 @@ class FrontendBlogModel implements FrontendTagsInterface
 			// image?
 			if(isset($row['image']))
 			{
-				foreach($folders as $folder) $items[$key]['image_' . $folder['dirname']] = $folder['url'] . '/' . $row['image'];
+				foreach($folders as $folder) $items[$key]['image_' . $folder['dirname']] =  $folder['url'] . '/' . $folder['dirname'] . '/' . $row['image'];
 			}
 		}
 
